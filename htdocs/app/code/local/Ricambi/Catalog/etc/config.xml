@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Ricambi_Catalog>
+            <version>0.1.1</version>
+        </Ricambi_Catalog>
+    </modules>
+    <global>
+
+        <blocks>
+            <rcatalog>
+                <class>Ricambi_Catalog_Block</class>
+            </rcatalog>   
+            <adminhtml>
+                <rewrite>
+                    <catalog_product_edit_tab_super_group>Ricambi_Catalog_Block_Adminhtml_Product_Edit_Tab_Super_Group</catalog_product_edit_tab_super_group>
+                </rewrite>
+            </adminhtml>         
+        </blocks>
+        <helpers>
+<!--            <rcatalog>
+                <class>Ricambi_Catalog_Helper</class>
+            </rcatalog>  -->          
+        </helpers>       
+        <models>    
+            <rcatalog> 
+                <class>Ricambi_Catalog_Model</class>
+            </rcatalog>
+            <catalog>
+                <rewrite>
+                    <product_type_grouped>Ricambi_Catalog_Model_Product_Type_Grouped</product_type_grouped>
+                </rewrite>
+            </catalog>
+        </models>
+        <frontend> 
+            <routers>
+                <rcatalog>
+                    <use>standard</use>
+                        <args>
+                            <module>Ricambi_Catalog</module>
+                            <frontName>rcatalog</frontName>
+                        </args>
+                </rcatalog>
+            </routers>    
+            <layout>
+                <updates>
+                    <rcatalog>
+                        <file>rcatalog.xml</file>
+                    </rcatalog>
+                </updates>
+            </layout>
+        </frontend>
+        
+<!-- ABilitazione dei prodotti configurabili su raggruppati-->        
+        <catalog>
+            <product>
+                <type>
+                    <grouped>
+                        <allow_product_types module="catalog">
+                            <configurable/>
+                        </allow_product_types>
+                    </grouped>    
+                </type>
+            </product>
+        </catalog>
+    </global>
+</config>
