@@ -18,9 +18,9 @@
             </adminhtml>         
         </blocks>
         <helpers>
-<!--            <rcatalog>
+            <rcatalog>
                 <class>Ricambi_Catalog_Helper</class>
-            </rcatalog>  -->          
+            </rcatalog> 
         </helpers>       
         <models>    
             <rcatalog> 
@@ -32,6 +32,13 @@
                 </rewrite>
             </catalog>
         </models>
+        <resources>
+            <rcatalog_setup>
+                <setup>
+                    <module>Ricambi_Corto</module>
+                </setup>                
+            </rcatalog_setup>
+        </resources>
         <frontend> 
             <routers>
                 <rcatalog>
@@ -64,4 +71,14 @@
             </product>
         </catalog>
     </global>
+    
+    <adminhtml>
+        <layout>
+            <updates>
+                <rcatalog>
+                    <file>rcatalog.xml</file>
+                </rcatalog>
+            </updates>
+        </layout>
+    </adminhtml>
 </config>

@@ -1,0 +1,16 @@
+<layout>
+    
+    <adminhtml_catalog_product_grouped>
+        <reference name="head">
+            <action method="addCss"><name>rcatalog.css</name></action>
+            <action method="addJs"><name>ricambi/kinetic.js</name></action>
+        </reference>
+        <reference name="product_tabs">
+            <action method="addTab">
+                <name>Schema_Canvas_Tab</name>
+                <block>rcatalog/adminhtml_product_edit_tab_scheme_tab</block>
+            </action>
+        </reference>
+    </adminhtml_catalog_product_grouped>
+    
+</layout>

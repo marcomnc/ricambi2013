@@ -1,0 +1,32 @@
+<div class="grouped-grid">
+    <?php echo $this->getGridHtml() ?>   
+</div>
+<div class="grouped-canvas" id="grouped-canvas">
+    
+</div>
+
+<script>
+    var stage = new Kinetic.Stage({
+			container: 'grouped-canvas',
+			width: 544,
+			height: 794
+		});
+                    
+    var layer = new Kinetic.Layer();
+    var imageObj = new Image();
+    imageObj.onload = function() {
+        var image = new Kinetic.Image({
+                x: 0,
+                y: 0,
+                image: imageObj,
+                width: imageObj.width,
+                height:imageObj.height
+            });
+        layer.add(image);
+        stage.add(layer);
+    };
+    
+    imageObj.src = "<?php echo $this->getImage();?>";
+    
+
+</script>
