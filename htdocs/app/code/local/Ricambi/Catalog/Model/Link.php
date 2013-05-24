@@ -40,7 +40,30 @@ class Ricambi_Catalog_Model_Link extends Mage_Core_Model_Abstract {
     public function setProduct($product) {
         
         $this->_getProduct($product);
+        return $this;
+    }
+    
+    public function getProductCollection ($attributeToSelect = array()) {
         
+        
+        $collection = Mage::getModel('catalog/product')->getCollection();
+        foreach ($attributeToSelect as $attribute) {
+            $collection->addAttributeToSelect($attribute);
+        }
+        $collection->getSelect()
+                   ->join(array('_link' => Mage::getSingleton('core/resource')->getTableName('catalog_product_link')),
+                          '_link.linked_product_id = e.entity_id')
+                   ->join(array('_attr' => Mage::getSingleton('core/resource')->getTableName('catalog_product_link_attribute')),
+                          "_attr.link_type_id = _link.link_type_id and product_link_attribute_code ='position'",
+                           null)
+                   ->join(array('_attr_int' => Mage::getSingleton('core/resource')->getTableName('catalog_product_link_attribute_int')),
+                              "_attr_int.product_link_attribute_id = _attr.product_link_attribute_id and _attr_int.link_id = _link.link_id",
+                             array('pos' => 'value'))
+                   ->where('_link.link_type_id = ?', Mage_Catalog_Model_Product_Link::LINK_TYPE_GROUPED)
+                   ->where('_link.product_id = ?', $this->_getProduct()->getId())
+                   ->order('_attr_int.value');
+        
+        return $collection;
     }
     
     /**
