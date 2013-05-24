@@ -2,10 +2,33 @@
 <config>
     <modules>
         <Ricambi_Catalog>
-            <version>0.1.1</version>
+            <version>0.1.0</version>
         </Ricambi_Catalog>
     </modules>
     <global>
+        
+        <events>
+<!-- Verifica integrità dei dati -->            
+            <catalog_product_delete_after_done>
+                <observers>
+                    <ricambi_catalog_observer>
+                        <type>singleton</type>
+                        <class>Ricambi_Catalog_Model_Product_Observer</class>
+                        <method>on_delete</method>
+                    </ricambi_catalog_observer>
+                </observers>
+            </catalog_product_delete_after_done>
+            <catalog_product_save_after>
+                <observers>
+                    <ricambi_catalog_observer>
+                        <type>singleton</type>
+                        <class>Ricambi_Catalog_Model_Product_Observer</class>
+                        <method>after_save</method>
+                    </ricambi_catalog_observer>
+                </observers>
+            </catalog_product_save_after>
+<!-- -->
+        </events>
 
         <blocks>
             <rcatalog>
@@ -25,7 +48,16 @@
         <models>    
             <rcatalog> 
                 <class>Ricambi_Catalog_Model</class>
+                <resourceModel>rcatalog_mysql4</resourceModel>
             </rcatalog>
+            <rcatalog_mysql4>
+                <class>Ricambi_Catalog_Model_Mysql4</class>
+                <entities>
+                    <position>
+                        <table>ricambi_catalog_product_position_links</table>
+                    </position>
+                </entities>
+            </rcatalog_mysql4>
             <catalog>
                 <rewrite>
                     <product_type_grouped>Ricambi_Catalog_Model_Product_Type_Grouped</product_type_grouped>
@@ -35,7 +67,7 @@
         <resources>
             <rcatalog_setup>
                 <setup>
-                    <module>Ricambi_Corto</module>
+                    <module>Ricambi_Catalog</module>
                 </setup>                
             </rcatalog_setup>
         </resources>
@@ -80,5 +112,14 @@
                 </rcatalog>
             </updates>
         </layout>
+        <routers>
+            <rcatalog>
+                <use>admin</use>
+                    <args>
+                        <module>Ricambi_Catalog</module>
+                        <frontName>rcatalog</frontName>
+                    </args>
+            </rcatalog>
+        </routers>    
     </adminhtml>
 </config>

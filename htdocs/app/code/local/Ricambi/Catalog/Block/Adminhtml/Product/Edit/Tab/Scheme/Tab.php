@@ -31,7 +31,7 @@ class Ricambi_Catalog_Block_Adminhtml_Product_Edit_Tab_Scheme_Tab
     
     public function __construct() {
         parent::__construct();        
-        $this->setTemplate('/ricambi/catalog/edit/tab/scheme/tab.phtml');
+        $this->setTemplate('/ricambi/catalog/edit/tab/scheme/tab.phtml'); 
         $this->_product = Mage::Helper('rcatalog')->getCurrentProduct();
         
     }
@@ -52,6 +52,10 @@ class Ricambi_Catalog_Block_Adminhtml_Product_Edit_Tab_Scheme_Tab
     
     public function getImage() {
         return Mage::Helper('rcatalog')->getImage($this->_product, 'admin');
+    }
+    
+    public function getGroupedLink() {
+        return $this->_product->getGroupedLink();
     }
         
     // <editor-fold defaultstate="collapsed" desc="Implementazione dell'interfaccia">

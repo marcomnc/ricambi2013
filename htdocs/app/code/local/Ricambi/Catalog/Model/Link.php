@@ -52,10 +52,11 @@ class Ricambi_Catalog_Model_Link extends Mage_Core_Model_Abstract {
         }
         $collection->getSelect()
                    ->join(array('_link' => Mage::getSingleton('core/resource')->getTableName('catalog_product_link')),
-                          '_link.linked_product_id = e.entity_id')
+                          '_link.linked_product_id = e.entity_id',
+                           array('link' => 'link_id'))
                    ->join(array('_attr' => Mage::getSingleton('core/resource')->getTableName('catalog_product_link_attribute')),
                           "_attr.link_type_id = _link.link_type_id and product_link_attribute_code ='position'",
-                           null)
+                          null)
                    ->join(array('_attr_int' => Mage::getSingleton('core/resource')->getTableName('catalog_product_link_attribute_int')),
                               "_attr_int.product_link_attribute_id = _attr.product_link_attribute_id and _attr_int.link_id = _link.link_id",
                              array('pos' => 'value'))
@@ -72,16 +73,38 @@ class Ricambi_Catalog_Model_Link extends Mage_Core_Model_Abstract {
      * 
      * @return array Collection così strutturata
      * [id_link] => (
-     *      [sku] => (
-     *          [x] => "x position",
-     *          [y] => "y position",
+     *      [id]    => "Id Articolo"
+     *      [sku]   => "Codice Articolo"
+     *      [nome]  => "Nome Articolo"
+     *      [id]    => "Link Id"
+     *      [x]     => "x position",
+     *      [y]     => "y position",
      *      )
      * )
      */
     public function getCollection() {
         
+        $collection = array();
         
+        $links = Mage::getModel('rcatalog/position')->getCollection()->setFilterByProduct($product);
         
+        foreach ($links as $link) {
+            $productLink = array(
+                'id'    => $link->getLinkedProductId(),
+                'sku'   => $link->getLinkedProductSku(),
+                'name'  => $link->getLinkedProduct()->getName(),
+                'id'    => $link->getLinkId(),
+                'x'     => $link->getPositionX(),
+                'y'     => $link->getPositiony(),
+            );
+            $collection[$link->getId()] = $productLink;
+        }
+        
+        return $collection;
+    }
+    
+    public function getCollectionJson() {
+        return Mage::Helper('core')->jsonEncode($this->getCollection());
     }
     
     
@@ -102,6 +125,14 @@ class Ricambi_Catalog_Model_Link extends Mage_Core_Model_Abstract {
         
         return $this->getData('product');
     }
+    
+    private function _getGroupedLink() {
+        
+        return unserialize($this->_getProduct()->getGroupedLink());
+        
+    }
+    
+    
     
 }
 
