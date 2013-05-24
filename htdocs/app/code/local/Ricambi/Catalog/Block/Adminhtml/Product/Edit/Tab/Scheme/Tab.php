@@ -54,8 +54,12 @@ class Ricambi_Catalog_Block_Adminhtml_Product_Edit_Tab_Scheme_Tab
         return Mage::Helper('rcatalog')->getImage($this->_product, 'admin');
     }
     
-    public function getGroupedLink() {
-        return $this->_product->getGroupedLink();
+    public function getBASE64JsonPosition() {
+        return base64_encode(Mage::getModel('rcatalog/link')->setProduct($this->_product)->getCollectionJson());
+    }
+    
+    public function getJsonPosition() {
+        return Mage::getModel('rcatalog/link')->setProduct($this->_product)->getCollectionJson();
     }
         
     // <editor-fold defaultstate="collapsed" desc="Implementazione dell'interfaccia">

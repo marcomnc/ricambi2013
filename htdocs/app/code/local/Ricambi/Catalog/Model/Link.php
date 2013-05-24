@@ -76,26 +76,34 @@ class Ricambi_Catalog_Model_Link extends Mage_Core_Model_Abstract {
      *      [id]    => "Id Articolo"
      *      [sku]   => "Codice Articolo"
      *      [nome]  => "Nome Articolo"
+     *      [pos]   => "Posizione del grouped"
      *      [id]    => "Link Id"
      *      [x]     => "x position",
      *      [y]     => "y position",
      *      )
      * )
+     * @param int $linkId eventuale linkid per cui fare il filtro
      */
-    public function getCollection() {
+    public function getCollection($linkId = 0) {
         
         $collection = array();
         
-        $links = Mage::getModel('rcatalog/position')->getCollection()->setFilterByProduct($product);
+        $links = Mage::getModel('rcatalog/position')->getCollection()->setFilterByProduct($this->_getProduct());
+        if ($linkId != 0) {
+            $links->getSelect()->where('link_id = ?', $linkId);
+        }
         
         foreach ($links as $link) {
+            $l = Mage::getModel('rcatalog/position')->Load($link->getId());
+
             $productLink = array(
-                'id'    => $link->getLinkedProductId(),
-                'sku'   => $link->getLinkedProductSku(),
-                'name'  => $link->getLinkedProduct()->getName(),
-                'id'    => $link->getLinkId(),
-                'x'     => $link->getPositionX(),
-                'y'     => $link->getPositiony(),
+                'id'    => $l->getLinkedProduct()->getId(),
+                'sku'   => $l->getLinkedProduct()->getSku(),
+                'name'  => $l->getLinkedProduct()->getName(),
+                'pos'   => $link->getPos(),
+                'id'    => $l->getLinkId(),
+                'x'     => $l->getPositionX(),
+                'y'     => $l->getPositionY(),
             );
             $collection[$link->getId()] = $productLink;
         }
@@ -103,8 +111,8 @@ class Ricambi_Catalog_Model_Link extends Mage_Core_Model_Abstract {
         return $collection;
     }
     
-    public function getCollectionJson() {
-        return Mage::Helper('core')->jsonEncode($this->getCollection());
+    public function getCollectionJson($linkId = 0) {
+        return Mage::Helper('core')->jsonEncode($this->getCollection($linkId));
     }
     
     

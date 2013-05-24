@@ -35,13 +35,19 @@ class Ricambi_Catalog_Model_Mysql4_Position extends Mage_Core_Model_Mysql4_Abstr
      */
     protected function _afterLoad(Mage_Core_Model_Abstract $object) {
 
+        $object->setData('grouped_product', null);
+        $object->setData('linked_product', null);
+        
         //Arrichisco l'oggetto con il prodotto Gruppato ed il prodotto collegato
-        if ($object->hasProductId() && $object->getProductId() > 0) {
+        if ($object->hasGroupedProductId() && $object->getGroupedProductId() > 0) {
             $object->setData('grouped_product', Mage::getModel('catalog/product')->Load($object->getProductId()));
         } 
         //Arrichisco l'oggetto con il prodotto Gruppato ed il prodotto collegato
-        if ($object->hasLinkedProductId() && $object->getLinkedProductId() > 0) {
-            $object->setData('linked_product', Mage::getModel('catalog/product')->Load($object->getLinkedProductId()));
+        if ($object->hasLinkId() && $object->getLinkId() > 0) {
+            $link = Mage::getModel('catalog/product_link')->Load($object->getLinkId());
+            if ($link->hasLinkedProductId() && $link->getLinkedProductId() > 0) {
+                $object->setData('linked_product', Mage::getModel('catalog/product')->Load($link->getLinkedProductId()));
+            }
         }
         parent::_afterLoad($object);
     }

@@ -1,4 +1,5 @@
-<input type="input" id="associated-scheme" name="associated-scheme" value="<?php echo $this->getGroupedLink();?>"/>
+<input type="input" id="associated-scheme" name="associated-scheme" value="<?php echo $this->getBASE64JsonPosition();?>"/>
+<input type="input" id="dbg" name="" value="" style="width: 200px"/>
 <div class="grouped-grid">
     <?php echo $this->getGridHtml() ?>   
 </div>
@@ -10,8 +11,13 @@
     var stage = new Kinetic.Stage({
 			container: 'grouped-canvas',
 			width: 544,
-			height: 794
+			height: 794,
+                        id: 'gcanvas'
 		});
+    
+    var myCanvas; 
+    
+    var jsonData = '<?php echo $this->getJsonPosition();?>'; 
                     
     var layer = new Kinetic.Layer();
     var imageObj = new Image();
@@ -23,11 +29,69 @@
                 width: imageObj.width,
                 height:imageObj.height
             });
+        
         layer.add(image);
+        
+        if (jsonData!='') {
+            var obj = jsonData.evalJSON();
+            for(var id in obj) {
+               if (obj[id].x!=null && obj[id].x!=null) {
+                   (function() {
+                   var Position = new Kinetic.Group({
+                       x: obj[id].x,
+                       y: obj[id].y,
+                       id: id,
+                       draggable: true,
+                       sku: obj[id].sku,
+                       name: obj[id].name
+                   });
+                   var PosCircle = new Kinetic.Circle({
+                        radius: 10,
+                        fill: 'red',
+                        opacity: 0.50
+                   });
+                   var PosText = new Kinetic.Text({
+                        text: id, //Ci va la position                        
+                        x: 5,
+                        y: 5
+                   });
+                   
+                   Position.add(PosCircle);
+                   Position.add(PosText);
+                   layer.add(Position);
+                   })();
+               }
+            }
+        }
+
         stage.add(layer);
+        myCanvas = $('grouped-canvas').down('canvas');
     };
     
     imageObj.src = "<?php echo $this->getImage();?>";
     
+    $$('.obj-position').each(function(obj){
+        var tableRow = $(obj).up('tr');
+        var rowDrag = new Draggable($(tableRow), { 
+                                    scroll: window,  
+                                    onEnd: function(s,e) {
+                                           console.log(s);
+                                           console.log(e);
+                                           if (e.toElement == myCanvas ) {
+                                                var Position = new Kinetic.Circle({
+                                                 x: e.layerX,
+                                                 y: e.layerY,
+                                                 radius: 10,
+                                                 fill: 'red',
+                                                 opacity: 0.75
+                                             });
+                                             layer.add(Position);
+                                             layer.draw();
+                                           }
+                                        }
+                                    });
+        
+    });
 
+    
 </script>

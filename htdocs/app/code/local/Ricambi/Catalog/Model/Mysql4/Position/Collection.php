@@ -36,7 +36,7 @@ class Ricambi_Catalog_Model_Mysql4_Position_Collection extends Mage_Core_Model_M
                 $product = Mage::getModel('catalog/product')->Load($product);
             }
             else {
-                $id = Mage::getMode('catalog/product')->getIdBySku($product);
+                $id = Mage::getModel('catalog/product')->getIdBySku($product);
                 $product = Mage::getModel('catalog/product')->Load($id);
             }
         }
@@ -47,16 +47,22 @@ class Ricambi_Catalog_Model_Mysql4_Position_Collection extends Mage_Core_Model_M
     }
     
     /**
-     * Arrichisco la collezione con lo sku del prodotto collegato e l'id
+     * Arrichisco la collezione con lo sku del prodotto collegato e l'id e la posizione nel grouped
      */
     protected function _beforLoad() {
         
         $this->getSelect()->join(array('_link' => Mage::getSingleton('core/resource')->getTableName('catalog_product_link')),
                                  '_link.link_id = e.link_id',
                                  null)
+                          ->join(array('_attr' => Mage::getSingleton('core/resource')->getTableName('catalog_product_link_attribute')),
+                                 "_attr.link_type_id = _link.link_type_id and product_link_attribute_code ='position'",
+                                 null)
+                          ->join(array('_attr_int' => Mage::getSingleton('core/resource')->getTableName('catalog_product_link_attribute_int')),
+                                 "_attr_int.product_link_attribute_id = _attr.product_link_attribute_id and _attr_int.link_id = _link.link_id",
+                                 array('pos' => '_attr_int.value'))
                           ->join(array('_link_prod' => Mage::getSingleton('core/resource')->getTableName('catalog_product')),
                                  '_link.linked_product_id = _link_prod.entity_id',
-                                 array('linked_proudct_sku' => '_link_prod.sku', 'linked_product_id' => '_link_prod.entity_id'));
+                                 array('linked_proudct_sku' => '_link_prod.sku', 'linked_product_id' => '_link_prod.entity_id'));        
         return $this;
     }
     

@@ -47,7 +47,6 @@ class Ricambi_Catalog_Block_Adminhtml_Product_Edit_Tab_Scheme_Grid extends Mage_
     protected function _prepareCollection() {
  
         $this->setCollection(Mage::getModel('rcatalog/link')->setProduct($this->_product)->getProductCollection(array('name')));
-
         return parent::_prepareCollection();
         
     }
@@ -69,6 +68,13 @@ class Ricambi_Catalog_Block_Adminhtml_Product_Edit_Tab_Scheme_Grid extends Mage_
             'header'    => Mage::helper('rcatalog')->__('Pos.'),
             'index'      => 'pos',
             'width'     => '30px',
+        ));
+        
+        $this->addColumn('objposition', array(
+            'header'    => Mage::helper('rcatalog')->__('In Sc.'),
+            'index'     => 'link',
+            'renderer'  => $this->getLayout()->createBlock('rcatalog/adminhtml_widget_grid_column_renderer_objposition'),
+            'width'     => '20px',
         ));
         
         return parent::_prepareColumns();
