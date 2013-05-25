@@ -102,22 +102,66 @@
                  fontStyle: 'bold',
                  align: 'center'
             });
-
+            
             Position.add(PosCircle);
             Position.add(PosText);
+            var startAt = {x: x, y: y};
             this.layer.add(Position);
-            this.layer.draw()
+            
+            Position.on('dragstart', function(e) {
+                startAt.x = PosCircle.getX();
+                startAt.y = PosCircle.getY();
+                PosCircle.setAttrs({
+                    fill: 'green',
+                    opacity: 0.20
+                });                
+                $('dbg').setAttribute('value', 'S:' + startAt.x + "-" + startAt.y);
+            });
+            
+            
+            Position.on('dragend', function(e) {
+                console.log(e);
+                if (this.parent.parent.get('#DeleteBox')[0]===e.targetNode) {
+                    if (confirm('Cancello il posizionamento?')) {
+                        this.destroy();
+                    } else {
+                
+                    var ReturnAnim = new Kinetic.Tween({
+                       node: this,
+                       x: 0, 
+                       y: 0,
+                       duration: 1,
+                       onFinish: function() {
+                           $('dbg').setAttribute('value', 'F:' + PosCircle.getX() + "-" + PosCircle.getY());
+                       }
+                    });
+
+                    ReturnAnim.play();
+                    }
+                }
+                PosCircle.setAttrs({
+//                    x: parseInt(PosCircle.getX()) + parseInt(this.getX()),
+//                    y: parseInt(PosCircle.getY()) + parseInt(this.getY()),
+                    fill: 'red',
+                    opacity: 0.50
+                });
+                this.parent.draw();
+                $('dbg').setAttribute('value', 'F:' + this.getX() + "-" + this.getY() + "-- C:" + PosCircle.getX() + "-" + PosCircle.getY() );
+            });
+            Position.setZIndex(10);
+            this.layer.draw();
         },
         LayerAddImageDelete: function() {
             var bkg = this.stage.get('#bkg')[0];
             var img = new Kinetic.Image({
-                                    x: bkg.getWidth() - imgDel.width,
-                                    y: 0,
-                                    image: imgDel,
-                                    width: imgDel.width,
-                                    height:imgDel.height,
-                                    draggable: false
-                                });
+                            x: bkg.getWidth() - imgDel.width,
+                            y: 0,
+                            id: 'DeleteBox',
+                            image: imgDel,
+                            width: imgDel.width,
+                            height:imgDel.height,
+                            draggable: false
+                        });
             this.layer.add(img);
             this.layer.draw();
         }
