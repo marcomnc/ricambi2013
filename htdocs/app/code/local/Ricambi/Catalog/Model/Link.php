@@ -77,7 +77,7 @@ class Ricambi_Catalog_Model_Link extends Mage_Core_Model_Abstract {
      *      [sku]   => "Codice Articolo"
      *      [nome]  => "Nome Articolo"
      *      [pos]   => "Posizione del grouped"
-     *      [id]    => "Link Id"
+     *      [linkid]=> "Link Id"
      *      [x]     => "x position",
      *      [y]     => "y position",
      *      )
@@ -90,9 +90,9 @@ class Ricambi_Catalog_Model_Link extends Mage_Core_Model_Abstract {
         
         $links = Mage::getModel('rcatalog/position')->getCollection()->setFilterByProduct($this->_getProduct());
         if ($linkId != 0) {
-            $links->getSelect()->where('link_id = ?', $linkId);
+            $links->getSelect()->where('main_table.link_id = ?', $linkId);
         }
-        
+
         foreach ($links as $link) {
             $l = Mage::getModel('rcatalog/position')->Load($link->getId());
 
@@ -101,7 +101,7 @@ class Ricambi_Catalog_Model_Link extends Mage_Core_Model_Abstract {
                 'sku'   => $l->getLinkedProduct()->getSku(),
                 'name'  => $l->getLinkedProduct()->getName(),
                 'pos'   => $link->getPos(),
-                'id'    => $l->getLinkId(),
+                'linkid'=> $l->getLinkId(),
                 'x'     => $l->getPositionX(),
                 'y'     => $l->getPositionY(),
             );

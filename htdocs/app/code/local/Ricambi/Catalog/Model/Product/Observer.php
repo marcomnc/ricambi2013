@@ -49,7 +49,7 @@ class Ricambi_Catalog_Model_Product_Observer {
         foreach (Mage::getModel('rcatalog/position')->getCollection()->setFilterByProduct($product) as $link) {
             $groupedLink = MAge::getModel('catalog/product_link')->Load($link->getLinkId());
 
-            if (!$groupedLink->hasLinkedId()) {
+            if (!$groupedLink->hasLinkId()) {
                 $this->_deleteLink($link->getId());
             }
         }
@@ -60,7 +60,6 @@ class Ricambi_Catalog_Model_Product_Observer {
     
     private function _deleteLink($id){
         $link = Mage::getModel('rcatalog/position')->Load($id);
-MAge::Log($link);
         $link->delete();
     }
             

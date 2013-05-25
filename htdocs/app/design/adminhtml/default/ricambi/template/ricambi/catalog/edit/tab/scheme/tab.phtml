@@ -8,90 +8,182 @@
 </div>
 
 <script>
-    var stage = new Kinetic.Stage({
-			container: 'grouped-canvas',
+    
+    var AdminCanvasManagerGrid = new Class.create();
+    
+    AdminCanvasManagerGrid.prototype = {
+        initialize: function(objFlat, imgUrl, container, imgDelete) {
+            this.imgUrl = imgUrl;
+            this.imgDelete = imgDelete;
+            this.link = null;
+            if (objFlat!="") {
+                this.link=objFlat.evalJSON();
+            }
+            this.stage = new Kinetic.Stage({
+			container: container,
 			width: 544,
 			height: 794,
                         id: 'gcanvas'
 		});
-    
-    var myCanvas; 
-    
-    var jsonData = '<?php echo $this->getJsonPosition();?>'; 
-                    
-    var layer = new Kinetic.Layer();
-    var imageObj = new Image();
-    imageObj.onload = function() {
-        var image = new Kinetic.Image({
-                x: 0,
-                y: 0,
-                image: imageObj,
-                width: imageObj.width,
-                height:imageObj.height
+            this.layer = new Kinetic.Layer();
+            this.myCanvas = myCanvas = $('grouped-canvas').down(container);
+            
+            this.trInitializeImage = this.InitializeImage.bindAsEventListener(this);
+            this.trInitializeCanvas = this.InitializeCanvas.bindAsEventListener(this);
+            this.trLayerAddImageDelete = this.LayerAddImageDelete.bindAsEventListener(this);
+            
+            this.image = new Image();
+            this.image.onload = this.trInitializeCanvas;
+            
+            Event.observe(window, 'load', this.trInitializeImage);
+        },
+        DecorateGrid: function(idGrid) {
+            this.idGrid = idGrid;
+            $$('span.counter').each(function(el) {
+                $(el).setAttribute('rel',0);
             });
-        
-        layer.add(image);
-        
-        if (jsonData!='') {
-            var obj = jsonData.evalJSON();
-            for(var id in obj) {
-               if (obj[id].x!=null && obj[id].x!=null) {
-                   (function() {
-                   var Position = new Kinetic.Group({
-                       x: obj[id].x,
-                       y: obj[id].y,
-                       id: id,
-                       draggable: true,
-                       sku: obj[id].sku,
-                       name: obj[id].name
-                   });
-                   var PosCircle = new Kinetic.Circle({
-                        radius: 10,
-                        fill: 'red',
-                        opacity: 0.50
-                   });
-                   var PosText = new Kinetic.Text({
-                        text: id, //Ci va la position                        
-                        x: 5,
-                        y: 5
-                   });
-                   
-                   Position.add(PosCircle);
-                   Position.add(PosText);
-                   layer.add(Position);
-                   })();
-               }
+            for(var id in this.link) {
+                var idLink = this.link[id].linkid;
+                $$('#'+this.idGrid+' tr:not(.headings)').each(function(el) {
+                    if ($(el).hasClassName('link_id_'+idLink)) {
+                        $(el).addClassName('assigned');
+                        $('count_'+idLink).setAttribute('rel',parseInt($('count_'+idLink).getAttribute('rel'))+1);
+                    }
+                });
+            }            
+            this.RefrehCounter();
+        },
+        RefrehCounter: function() {
+            $$('span.counter').each(function(el) {
+                $(el).update($(el).getAttribute('rel'));
+            });
+        },
+        InitializeImage: function() {
+            
+            this.image.src = this.imgUrl;
+        },
+        InitializeCanvas: function() {
+            var image = new Kinetic.Image({
+                                    x: 0,
+                                    y: 0,
+                                    image: this.image,
+                                    width: this.image.width,
+                                    height:this.image.height,
+                                    id: 'bkg'
+                                });
+            imgDel = new Image();
+            imgDel.onload = this.trLayerAddImageDelete;
+            imgDel.src = this.imgDelete;
+            this.layer.add(image);
+            for(var id in this.link) {
+                this.PlacePosition(this.link[id].id, this.link[id].x, this.link[id].y, this.link[id].linkid, this.link[id].pos);
             }
-        }
+            this.stage.add(this.layer);
+        },  
+        PlacePosition: function(id, x, y, linkid, pos) {
+            var Position = new Kinetic.Group({
+                id: id,
+                draggable: true,
+                linkid: linkid
+            });
+            var PosCircle = new Kinetic.Circle({
+                x: x,
+                y: y,
+                radius: 10,
+                fill: 'red',
+                opacity: 0.50
+            });
+            var PosText = new Kinetic.Text({
+                 x: pos.length>1?(x-5):(x-3),
+                 y: y-4,
+                 text: pos, 
+                 fill: 'balck',
+                 fontSize: 10,
+                 fontStyle: 'bold',
+                 align: 'center'
+            });
 
-        stage.add(layer);
-        myCanvas = $('grouped-canvas').down('canvas');
+            Position.add(PosCircle);
+            Position.add(PosText);
+            this.layer.add(Position);
+            this.layer.draw()
+        },
+        LayerAddImageDelete: function() {
+            var bkg = this.stage.get('#bkg')[0];
+            var img = new Kinetic.Image({
+                                    x: bkg.getWidth() - imgDel.width,
+                                    y: 0,
+                                    image: imgDel,
+                                    width: imgDel.width,
+                                    height:imgDel.height,
+                                    draggable: false
+                                });
+            this.layer.add(img);
+            this.layer.draw();
+        }
     };
     
-    imageObj.src = "<?php echo $this->getImage();?>";
-    
-    $$('.obj-position').each(function(obj){
-        var tableRow = $(obj).up('tr');
-        var rowDrag = new Draggable($(tableRow), { 
-                                    scroll: window,  
-                                    onEnd: function(s,e) {
-                                           console.log(s);
-                                           console.log(e);
-                                           if (e.toElement == myCanvas ) {
-                                                var Position = new Kinetic.Circle({
-                                                 x: e.layerX,
-                                                 y: e.layerY,
-                                                 radius: 10,
-                                                 fill: 'red',
-                                                 opacity: 0.75
-                                             });
-                                             layer.add(Position);
-                                             layer.draw();
-                                           }
-                                        }
-                                    });
-        
+    var objJsGrid = new AdminCanvasManagerGrid('<?php echo $this->getJsonPosition();?>', '<?php echo $this->getImage();?>', 'grouped-canvas','<?php echo $this->getSkinUrl('images/delete.png'); ?>');
+    Event.observe(window, 'load', function () {
+        objJsGrid.DecorateGrid("<?php echo $this->getChild('grouped.grid')->getId() . '_table';?>");
     });
+    
+//    
+//    
+//    var jsonData = '<?php echo $this->getJsonPosition();?>'; 
+//                    
+//    var layer = new Kinetic.Layer();
+//    var imageObj = new Image();
+//    imageObj.onload = function() {
+//        var image = new Kinetic.Image({
+//                x: 0,
+//                y: 0,
+//                image: imageObj,
+//                width: imageObj.width,
+//                height:imageObj.height
+//            });
+//        
+//        layer.add(image);
+//        
+//        if (jsonData!='') {
+//            var obj = jsonData.evalJSON();
+//            for(var id in obj) {
+//               if (obj[id].x!=null && obj[id].x!=null) {
+//                   (function() {
+
+//                   })();
+//               }
+//            }
+//        }
+//
+//        stage.add(layer);
+//        myCanvas = $('grouped-canvas').down('canvas');
+//    };
+//    
+//    imageObj.src = "<?php echo $this->getImage();?>";
+//    
+//    $$('.obj-position').each(function(obj){
+//        var tableRow = $(obj).up('tr');
+//        var rowDrag = new Draggable($(tableRow), { 
+//                                    scroll: window,  
+//                                    onEnd: function(s,e) {
+//                                           console.log(s);
+//                                           console.log(e);
+//                                           if (e.toElement == myCanvas ) {
+//                                                var Position = new Kinetic.Circle({
+//                                                 x: e.layerX,
+//                                                 y: e.layerY,
+//                                                 radius: 10,
+//                                                 fill: 'red',
+//                                                 opacity: 0.75
+//                                             });
+//                                             layer.add(Position);
+//                                             layer.draw();
+//                                           }
+//                                        }
+//                                    });
+//        
+//    });
 
     
 </script>

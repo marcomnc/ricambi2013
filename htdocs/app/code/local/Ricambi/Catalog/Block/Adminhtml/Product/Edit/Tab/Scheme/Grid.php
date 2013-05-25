@@ -29,10 +29,11 @@ class Ricambi_Catalog_Block_Adminhtml_Product_Edit_Tab_Scheme_Grid extends Mage_
     {
         parent::__construct();
         $this->setUseAjax(true);
-        $this->setId('sku');        
+        $this->setId('position_list');        
         $this->setSaveParametersInSession(true);
         $this->setFilterVisibility(false);
         $this->setPagerVisibility(false);
+        $this->setSortable(false);
         
         $this->_product = Mage::Helper('rcatalog')->getCurrentProduct();
     }
@@ -74,7 +75,7 @@ class Ricambi_Catalog_Block_Adminhtml_Product_Edit_Tab_Scheme_Grid extends Mage_
             'header'    => Mage::helper('rcatalog')->__('In Sc.'),
             'index'     => 'link',
             'renderer'  => $this->getLayout()->createBlock('rcatalog/adminhtml_widget_grid_column_renderer_objposition'),
-            'width'     => '20px',
+            'width'     => '50px',
         ));
         
         return parent::_prepareColumns();
@@ -83,6 +84,15 @@ class Ricambi_Catalog_Block_Adminhtml_Product_Edit_Tab_Scheme_Grid extends Mage_
     public function getGridUrl()
     {
         return $this->getUrl('*/*/bhoo', array('_current'=>true));
+    }
+    
+    public function getRowClickCallback()
+    {
+        return false;
+    }
+    
+    public function getRowClass(Varien_Object $row) {
+        return "position_list_table link_id_" . $row->getLink();
     }
 
 }

@@ -1,2 +1,7 @@
 .grouped-grid {width: 380px; float: left;}
 .grouped-canvas {float: right}
+
+.position_list_table .position-add-to {width: 20px; height: 20px; background: transparent url('images/add.png') no-repeat 0 0; float: right; cursor: move}
+
+.grid tr.position_list_table.assigned {background-color: #CFFFBF;}
+.grid tr.position_list_table.on-mouse {cursor: default;}
