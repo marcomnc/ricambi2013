@@ -1,3 +1,9 @@
+<!-- Posizionamento
+x: parseInt(PosCircle.getX()) + parseInt(Position.getX()), 
+y: parseInt(PosCircle.getY()) + parseInt(Position.getY()),
+-->
+
+
 <input type="input" id="associated-scheme" name="associated-scheme" value="<?php echo $this->getBASE64JsonPosition();?>"/>
 <input type="input" id="dbg" name="" value="" style="width: 200px"/>
 <div class="grouped-grid">
@@ -81,6 +87,14 @@
             this.stage.add(this.layer);
         },  
         PlacePosition: function(id, x, y, linkid, pos) {
+    
+            var evidenceRow = function(linkId, yes) {
+                $$('.position_list_table.link_id_'+linkId).each(function(el) {
+                    if (yes) $(el).addClassName('evidence');
+                    else $(el).removeClassName('evidence');
+                });
+            };
+    
             var Position = new Kinetic.Group({
                 id: id,
                 draggable: true,
@@ -94,11 +108,11 @@
                 opacity: 0.50
             });
             var PosText = new Kinetic.Text({
-                 x: pos.length>1?(x-5):(x-3),
-                 y: y-4,
+                 x: pos.length>1?(x-7):(x-5),
+                 y: y-6,
                  text: pos, 
                  fill: 'balck',
-                 fontSize: 10,
+                 fontSize: 14,
                  fontStyle: 'bold',
                  align: 'center'
             });
@@ -108,9 +122,19 @@
             var startAt = {x: x, y: y};
             this.layer.add(Position);
             
+            var layer = this.layer;
+            var stage = this.stage;
+            
+            Position.on('mouseover', function (e) {
+                evidenceRow(this.attrs.linkid, true);
+            });
+            Position.on('mouseout', function (e) {
+                evidenceRow(this.attrs.linkid, false);
+            });
+            
             Position.on('dragstart', function(e) {
-                startAt.x = PosCircle.getX();
-                startAt.y = PosCircle.getY();
+                startAt.x = this.getX();
+                startAt.y = this.getY();
                 PosCircle.setAttrs({
                     fill: 'green',
                     opacity: 0.20
@@ -118,35 +142,38 @@
                 $('dbg').setAttribute('value', 'S:' + startAt.x + "-" + startAt.y);
             });
             
-            
             Position.on('dragend', function(e) {
                 console.log(e);
-                if (this.parent.parent.get('#DeleteBox')[0]===e.targetNode) {
-                    if (confirm('Cancello il posizionamento?')) {
-                        this.destroy();
-                    } else {
-                
-                    var ReturnAnim = new Kinetic.Tween({
-                       node: this,
-                       x: 0, 
-                       y: 0,
-                       duration: 1,
-                       onFinish: function() {
-                           $('dbg').setAttribute('value', 'F:' + PosCircle.getX() + "-" + PosCircle.getY());
-                       }
-                    });
-
-                    ReturnAnim.play();
-                    }
-                }
                 PosCircle.setAttrs({
-//                    x: parseInt(PosCircle.getX()) + parseInt(this.getX()),
-//                    y: parseInt(PosCircle.getY()) + parseInt(this.getY()),
                     fill: 'red',
                     opacity: 0.50
                 });
-                this.parent.draw();
-                $('dbg').setAttribute('value', 'F:' + this.getX() + "-" + this.getY() + "-- C:" + PosCircle.getX() + "-" + PosCircle.getY() );
+                var ReturnAnim = new Kinetic.Tween({
+                    node: Position,
+                    x: 0, 
+                    y: 0, 
+                    duration: 1,
+                    onFinish: function() {
+                        evidenceRow(Position.attrs.linkid, false);
+                    }
+                 });
+
+                var usrPosition=stage.getPointerPosition();
+                console.log(PosCircle.getAbsolutePosition());
+                
+                if (stage.get('#DeleteBox')[0].intersects(PosCircle.getAbsolutePosition())) {
+                    if (confirm('Cancello il posizionamento?')) {
+                        this.destroy();
+                    } else {
+                        ReturnAnim.play();
+                    }
+                }
+                if (typeof(usrPosition)=='undefined') {
+                    //ReturnAnim.play();
+                    evidenceRow(Position.attrs.linkid, false);
+                }
+                layer.draw();
+                $('dbg').setAttribute('value', 'F:' + Position.getX() + "-" + Position.getY() + "-- C:" + PosCircle.getX() + "-" + PosCircle.getY() );
             });
             Position.setZIndex(10);
             this.layer.draw();

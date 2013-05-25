@@ -4,4 +4,6 @@
 .position_list_table .position-add-to {width: 20px; height: 20px; background: transparent url('images/add.png') no-repeat 0 0; float: right; cursor: move}
 
 .grid tr.position_list_table.assigned {background-color: #CFFFBF;}
+.grid tr.position_list_table.assigned.evidence,
+.grid tr.position_list_table.evidence {background-color: #BFFFEF}
 .grid tr.position_list_table.on-mouse {cursor: default;}
