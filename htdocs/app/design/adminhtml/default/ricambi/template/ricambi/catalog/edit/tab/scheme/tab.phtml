@@ -21,6 +21,7 @@ y: parseInt(PosCircle.getY()) + parseInt(Position.getY()),
         initialize: function(objFlat, imgUrl, container, imgDelete) {
             this.imgUrl = imgUrl;
             this.imgDelete = imgDelete;
+            this.idGrid = null;
             this.link = null;
             if (objFlat!="") {
                 this.link=objFlat.evalJSON();
@@ -32,16 +33,19 @@ y: parseInt(PosCircle.getY()) + parseInt(Position.getY()),
                         id: 'gcanvas'
 		});
             this.layer = new Kinetic.Layer();
+            this.layerGroup = new Kinetic.Layer();
+            this.layerDelete = new Kinetic.Layer();
             this.myCanvas = myCanvas = $('grouped-canvas').down(container);
             
             this.trInitializeImage = this.InitializeImage.bindAsEventListener(this);
             this.trInitializeCanvas = this.InitializeCanvas.bindAsEventListener(this);
             this.trLayerAddImageDelete = this.LayerAddImageDelete.bindAsEventListener(this);
+            this.trRecalculateObject = this.RecalculateObject.bindAsEventListener(this);
             
             this.trDragPosition = this.DragPosition.bind(this);
             
             this.isEvidence = false;
-            this.trEvidenceRow = this.EvidenceRow.bindAsEventListener(this);
+            this.trEvidenceRow = this.EvidenceRow.bind(this);
             
             this.image = new Image();
             this.image.onload = this.trInitializeCanvas;
@@ -50,7 +54,7 @@ y: parseInt(PosCircle.getY()) + parseInt(Position.getY()),
         },
         DecorateGrid: function(idGrid) {
             this.idGrid = idGrid;
-            $$('span.counter').each(function(el) {
+            $$('#'+this.idGrid+' span.counter').each(function(el) {
                 $(el).setAttribute('rel',0);
             });
             for(var id in this.link) {
@@ -87,17 +91,21 @@ y: parseInt(PosCircle.getY()) + parseInt(Position.getY()),
             imgDel.onload = this.trLayerAddImageDelete;
             imgDel.src = this.imgDelete;
             this.layer.add(image);
-            for(var id in this.link) {
-                this.PlacePosition(this.link[id].id, this.link[id].x, this.link[id].y, this.link[id].linkid, this.link[id].pos);
+            for(var id=0; id<this.link.length;id++) {
+                this.PlacePosition(this.link[id].id_link, this.link[id].x, this.link[id].y, this.link[id].linkid, this.link[id].pos);
             }
+            this.stage.add(this.layerGroup);
             this.stage.add(this.layer);
+            this.layer.setZIndex(0);
+            this.layerGroup.setZIndex(10);
         },  
         PlacePosition: function(id, x, y, linkid, pos) {
     
             var Position = new Kinetic.Group({
                 id: id,
                 draggable: true,
-                linkid: linkid
+                linkid: linkid,
+                positionText: pos
             });
             var PosCircle = new Kinetic.Circle({
                 x: x,
@@ -121,20 +129,18 @@ y: parseInt(PosCircle.getY()) + parseInt(Position.getY()),
             Position.add(PosCircle);
             Position.add(PosText);
             var startAt = {x: x, y: y};
-            this.layer.add(Position);
+            this.layerGroup.add(Position);
             
-            var layer = this.layer;
-            var stage = this.stage;
+            //var layer = this.layer;
+            //var stage = this.stage;
             
             //Position.on('mouseenter', this.EvidenceRow);
             var evidence = this.EvidenceRow;
             Position.on('mouseout.position'+linkid, function(ev) {
-                console.log('out');
                 evidence(linkid,false);
                 ev.cancelBubble=true;
             });
             Position.on('mouseenter.position'+linkid, function(ev) {
-                console.log('enter');
                 evidence(linkid,true);
                 ev.cancelBubble=true;
             });
@@ -151,7 +157,7 @@ y: parseInt(PosCircle.getY()) + parseInt(Position.getY()),
             
             Position.on('dragend', this.trDragPosition);
             Position.setZIndex(10);
-            this.layer.draw();
+            this.layerGroup.draw();
         },
         DragPosition: function(e) {
             console.log(e);
@@ -184,9 +190,31 @@ y: parseInt(PosCircle.getY()) + parseInt(Position.getY()),
             if (typeof(usrPosition)=='undefined') {
                 position.fire('mouseout');
             }
-            this.layer.draw();
+            this.layerGroup.draw();
+            this.RecalculateObject();
             $('dbg').setAttribute('value', 'F:' + position.getX() + "-" + position.getY() + "-- C:" + circle.getX() + "-" + circle.getY() );
 
+        },
+        RecalculateObject: function() {
+            var arr=[];
+            this.layerGroup.children.each( function(pos) {
+                console.log(pos);
+                var obj={};
+                obj.id_link = pos.attrs.id;
+                obj.linkid = pos.attrs.linkid;
+                obj.pos = pos.attrs.positionText;
+                for (var child in pos.children) {
+                    if (pos.children[child].shapeType=='Circle') {
+                        var linkPos = pos.children[child].getAbsolutePosition();
+                        obj.x = linkPos.x;
+                        obj.y = linkPos.y;
+                    }
+                }
+                arr.push(obj);
+            });
+            this.link = arr;
+            this.DecorateGrid(this.idGrid);
+            $('associated-scheme').setAttribute('value', Base64.encode(Object.toJSON(arr)));
         },
         EvidenceRow: function(linkid, yes) {
             var cls='tr.position_list_table.link_id_'+linkid;
@@ -207,8 +235,10 @@ y: parseInt(PosCircle.getY()) + parseInt(Position.getY()),
                             height:imgDel.height,
                             draggable: false
                         });
-            this.layer.add(img);
-            this.layer.draw();
+            this.layerDelete.add(img);
+            this.stage.add(this.layerDelete);
+            this.layerDelete.draw();
+            this.layerDelete.setZIndex(1);
         }
     };
     

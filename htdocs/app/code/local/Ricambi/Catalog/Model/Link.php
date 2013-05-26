@@ -72,7 +72,8 @@ class Ricambi_Catalog_Model_Link extends Mage_Core_Model_Abstract {
      * Se non ci sono dati impostati ritorno FALSE
      * 
      * @return array Collection così strutturata
-     * [id_link] => (
+     *  []=> (
+     *      [id_link] =>
      *      [id]    => "Id Articolo"
      *      [sku]   => "Codice Articolo"
      *      [nome]  => "Nome Articolo"
@@ -97,6 +98,7 @@ class Ricambi_Catalog_Model_Link extends Mage_Core_Model_Abstract {
             $l = Mage::getModel('rcatalog/position')->Load($link->getId());
 
             $productLink = array(
+                'id_link'=> $link->getId(),
                 'id'    => $l->getLinkedProduct()->getId(),
                 'sku'   => $l->getLinkedProduct()->getSku(),
                 'name'  => $l->getLinkedProduct()->getName(),
@@ -105,7 +107,7 @@ class Ricambi_Catalog_Model_Link extends Mage_Core_Model_Abstract {
                 'x'     => $l->getPositionX(),
                 'y'     => $l->getPositionY(),
             );
-            $collection[$link->getId()] = $productLink;
+            $collection[] = $productLink;
         }
         
         return $collection;
