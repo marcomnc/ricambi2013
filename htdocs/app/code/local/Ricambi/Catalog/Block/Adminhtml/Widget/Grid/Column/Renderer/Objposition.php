@@ -36,7 +36,7 @@ class Ricambi_Catalog_Block_Adminhtml_Widget_Grid_Column_Renderer_Objposition ex
     {
         //$pos = Mage::getModel('rcatalog/link')->getCollection($row->getData($this->getColumn()->getIndex()));
         
-        $html  = '<span style="float:left" rel="0" class="counter" id="count_' . $row->getData($this->getColumn()->getIndex()) . '">';
+        $html  = '<span style="float:right" rel="0" class="counter" id="count_' . $row->getData($this->getColumn()->getIndex()) . '">';
         //$html .= (sizeof($pos) > 0) ? sizeof($pos) : $this->__('No');
         $html .= "</span>";
 //        $html .= '<input type="hidden" ';

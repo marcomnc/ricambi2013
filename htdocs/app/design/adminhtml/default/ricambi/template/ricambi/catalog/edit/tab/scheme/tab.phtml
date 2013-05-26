@@ -41,6 +41,7 @@ y: parseInt(PosCircle.getY()) + parseInt(Position.getY()),
             this.trInitializeCanvas = this.InitializeCanvas.bindAsEventListener(this);
             this.trLayerAddImageDelete = this.LayerAddImageDelete.bindAsEventListener(this);
             this.trRecalculateObject = this.RecalculateObject.bindAsEventListener(this);
+            this.trDragEnd = this.DragEnd.bindAsEventListener(this);
             
             this.trDragPosition = this.DragPosition.bind(this);
             
@@ -51,6 +52,7 @@ y: parseInt(PosCircle.getY()) + parseInt(Position.getY()),
             this.image.onload = this.trInitializeCanvas;
             
             Event.observe(window, 'load', this.trInitializeImage);
+            this.DragManager();
         },
         DecorateGrid: function(idGrid) {
             this.idGrid = idGrid;
@@ -239,6 +241,15 @@ y: parseInt(PosCircle.getY()) + parseInt(Position.getY()),
             this.stage.add(this.layerDelete);
             this.layerDelete.draw();
             this.layerDelete.setZIndex(1);
+        },
+        DragManager: function() {
+            for(var addTo=0;addTo<$$('.position-add-to').length;addTo++){
+                new Draggable($$('.position-add-to')[addTo],{ revert: true, ghosting: true,
+                                                              onEnd: this.DragEnd});
+            }
+        },
+        DragEnd: function(sender, event) {
+            console.log(sender);
         }
     };
     
