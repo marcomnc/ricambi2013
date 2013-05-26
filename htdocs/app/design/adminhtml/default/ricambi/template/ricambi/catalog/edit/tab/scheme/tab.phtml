@@ -38,6 +38,11 @@ y: parseInt(PosCircle.getY()) + parseInt(Position.getY()),
             this.trInitializeCanvas = this.InitializeCanvas.bindAsEventListener(this);
             this.trLayerAddImageDelete = this.LayerAddImageDelete.bindAsEventListener(this);
             
+            this.trDragPosition = this.DragPosition.bind(this);
+            
+            this.isEvidence = false;
+            this.trEvidenceRow = this.EvidenceRow.bindAsEventListener(this);
+            
             this.image = new Image();
             this.image.onload = this.trInitializeCanvas;
             
@@ -77,6 +82,7 @@ y: parseInt(PosCircle.getY()) + parseInt(Position.getY()),
                                     height:this.image.height,
                                     id: 'bkg'
                                 });
+            image.setListening(false);
             imgDel = new Image();
             imgDel.onload = this.trLayerAddImageDelete;
             imgDel.src = this.imgDelete;
@@ -88,13 +94,6 @@ y: parseInt(PosCircle.getY()) + parseInt(Position.getY()),
         },  
         PlacePosition: function(id, x, y, linkid, pos) {
     
-            var evidenceRow = function(linkId, yes) {
-                $$('.position_list_table.link_id_'+linkId).each(function(el) {
-                    if (yes) $(el).addClassName('evidence');
-                    else $(el).removeClassName('evidence');
-                });
-            };
-    
             var Position = new Kinetic.Group({
                 id: id,
                 draggable: true,
@@ -105,7 +104,8 @@ y: parseInt(PosCircle.getY()) + parseInt(Position.getY()),
                 y: y,
                 radius: 10,
                 fill: 'red',
-                opacity: 0.50
+                opacity: 0.50,
+                linkid: linkid
             });
             var PosText = new Kinetic.Text({
                  x: pos.length>1?(x-7):(x-5),
@@ -114,7 +114,8 @@ y: parseInt(PosCircle.getY()) + parseInt(Position.getY()),
                  fill: 'balck',
                  fontSize: 14,
                  fontStyle: 'bold',
-                 align: 'center'
+                 align: 'center',
+                 linkid: linkid
             });
             
             Position.add(PosCircle);
@@ -125,11 +126,17 @@ y: parseInt(PosCircle.getY()) + parseInt(Position.getY()),
             var layer = this.layer;
             var stage = this.stage;
             
-            Position.on('mouseover', function (e) {
-                evidenceRow(this.attrs.linkid, true);
+            //Position.on('mouseenter', this.EvidenceRow);
+            var evidence = this.EvidenceRow;
+            Position.on('mouseout.position'+linkid, function(ev) {
+                console.log('out');
+                evidence(linkid,false);
+                ev.cancelBubble=true;
             });
-            Position.on('mouseout', function (e) {
-                evidenceRow(this.attrs.linkid, false);
+            Position.on('mouseenter.position'+linkid, function(ev) {
+                console.log('enter');
+                evidence(linkid,true);
+                ev.cancelBubble=true;
             });
             
             Position.on('dragstart', function(e) {
@@ -142,41 +149,52 @@ y: parseInt(PosCircle.getY()) + parseInt(Position.getY()),
                 $('dbg').setAttribute('value', 'S:' + startAt.x + "-" + startAt.y);
             });
             
-            Position.on('dragend', function(e) {
-                console.log(e);
-                PosCircle.setAttrs({
-                    fill: 'red',
-                    opacity: 0.50
-                });
-                var ReturnAnim = new Kinetic.Tween({
-                    node: Position,
-                    x: 0, 
-                    y: 0, 
-                    duration: 1,
-                    onFinish: function() {
-                        evidenceRow(Position.attrs.linkid, false);
-                    }
-                 });
-
-                var usrPosition=stage.getPointerPosition();
-                console.log(PosCircle.getAbsolutePosition());
-                
-                if (stage.get('#DeleteBox')[0].intersects(PosCircle.getAbsolutePosition())) {
-                    if (confirm('Cancello il posizionamento?')) {
-                        this.destroy();
-                    } else {
-                        ReturnAnim.play();
-                    }
-                }
-                if (typeof(usrPosition)=='undefined') {
-                    //ReturnAnim.play();
-                    evidenceRow(Position.attrs.linkid, false);
-                }
-                layer.draw();
-                $('dbg').setAttribute('value', 'F:' + Position.getX() + "-" + Position.getY() + "-- C:" + PosCircle.getX() + "-" + PosCircle.getY() );
-            });
+            Position.on('dragend', this.trDragPosition);
             Position.setZIndex(10);
             this.layer.draw();
+        },
+        DragPosition: function(e) {
+            console.log(e);
+            var position = e.dragEndNode;
+            var circle = position.children[0];
+            circle.setAttrs({
+                fill: 'red',
+                opacity: 0.50
+            });
+            var ReturnAnim = new Kinetic.Tween({
+                node: position,
+                x: 0, 
+                y: 0, 
+                duration: 1,
+                onFinish: function() {
+                    position.fire('mouseout');
+                }
+             });
+
+            var usrPosition=this.stage.getPointerPosition();
+            console.log(circle.getAbsolutePosition());
+
+            if (this.stage.get('#DeleteBox')[0].intersects(circle.getAbsolutePosition())) {
+                if (confirm('Cancello il posizionamento?')) {
+                    position.destroy();
+                } else {
+                    ReturnAnim.play();
+                }
+            }
+            if (typeof(usrPosition)=='undefined') {
+                position.fire('mouseout');
+            }
+            this.layer.draw();
+            $('dbg').setAttribute('value', 'F:' + position.getX() + "-" + position.getY() + "-- C:" + circle.getX() + "-" + circle.getY() );
+
+        },
+        EvidenceRow: function(linkid, yes) {
+            var cls='tr.position_list_table.link_id_'+linkid;
+
+            $$(cls).each(function(el) {
+                if (yes) $(el).addClassName('evidence');
+                else $(el).removeClassName('evidence');
+            });
         },
         LayerAddImageDelete: function() {
             var bkg = this.stage.get('#bkg')[0];
