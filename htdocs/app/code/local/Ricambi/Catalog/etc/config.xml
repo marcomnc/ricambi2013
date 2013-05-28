@@ -26,7 +26,18 @@
                         <method>after_save</method>
                     </ricambi_catalog_observer>
                 </observers>
-            </catalog_product_save_after>
+            </catalog_product_save_after>            
+<!-- -->
+<!-- Momorizzazione -->
+            <catalog_product_prepare_save>
+                <observers>
+                    <ricambi_catalog_observer>
+                        <type>singleton</type>
+                        <class>Ricambi_Catalog_Model_Product_Observer</class>
+                        <method>prepare_save</method>
+                    </ricambi_catalog_observer>
+                </observers>
+            </catalog_product_prepare_save>
 <!-- -->
         </events>
 

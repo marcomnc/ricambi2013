@@ -42,7 +42,7 @@ AdminCanvasManagerGrid.prototype = {
         this.layerDragRect = null;
         this.layerGroup = new Kinetic.Layer();
         this.layerDelete = new Kinetic.Layer();
-
+        
         this.myCanvas = $('grouped-canvas').down(container);
 
         this.trInitializeImage = this.InitializeImage.bindAsEventListener(this);
@@ -51,6 +51,7 @@ AdminCanvasManagerGrid.prototype = {
         this.trRecalculateObject = this.RecalculateObject.bindAsEventListener(this);
 
         //Drag Manager
+        this.startAt={x:0,y:0};
         this.trDragPosition = this.DragPosition.bind(this); // Drag di un pallino
         this.trDragOnLayer = this.DragOnLayer.bind(this);
         this.trDragManagerStart = this.DragManagerStart.bind(this);
@@ -73,13 +74,15 @@ AdminCanvasManagerGrid.prototype = {
             $(el).setAttribute('rel',0);
         });
         for(var id in this.link) {
-            var idLink = this.link[id].linkid;
-            $$('#'+this.idGrid+' tr:not(.headings)').each(function(el) {
-                if ($(el).hasClassName('link_id_'+idLink)) {
-                    $(el).addClassName('assigned');
-                    $('count_'+idLink).setAttribute('rel',parseInt($('count_'+idLink).getAttribute('rel'))+1);
-                }
-            });
+            if (typeof(this.link[id].state) == 'undefined' || this.link[id].state != 'delete') {
+                var idLink = this.link[id].linkid;
+                $$('#'+this.idGrid+' tr:not(.headings)').each(function(el) {
+                    if ($(el).hasClassName('link_id_'+idLink)) {
+                        $(el).addClassName('assigned');
+                        $('count_'+idLink).setAttribute('rel',parseInt($('count_'+idLink).getAttribute('rel'))+1);
+                    }
+                });
+            }
         }            
         this.RefrehCounter();
     },
@@ -131,8 +134,6 @@ AdminCanvasManagerGrid.prototype = {
         this.layerDragRect.setZIndex(5);
 
         this.stage.draw();
-
-
     },  
     PlacePosition: function(id, x, y, linkid, pos) {
 
@@ -140,7 +141,8 @@ AdminCanvasManagerGrid.prototype = {
             id: id,
             draggable: true,
             linkid: linkid,
-            positionText: pos
+            positionText: pos,
+            state: (id=='new')?'create':'update'
         });
         var PosCircle = new Kinetic.Circle({
             x: x,
@@ -163,7 +165,6 @@ AdminCanvasManagerGrid.prototype = {
 
         Position.add(PosCircle);
         Position.add(PosText);
-        var startAt = {x: x, y: y};
         this.layerGroup.add(Position);
 
         //var layer = this.layer;
@@ -181,15 +182,14 @@ AdminCanvasManagerGrid.prototype = {
         });
 
         Position.on('dragstart', function(e) {
-            startAt.x = this.getX();
-            startAt.y = this.getY();
+            this.setAttrs({origCircleX: PosCircle.getPosition().x,
+                           origCircleY: PosCircle.getPosition().y});
             PosCircle.setAttrs({
                 fill: 'green',
                 opacity: 0.20
-            });                
-            $('dbg').setAttribute('value', 'S:' + startAt.x + "-" + startAt.y);
+            }); 
         });
-
+        
         Position.on('dragend', this.trDragPosition);
         Position.setZIndex(10);
         this.layerGroup.draw();
@@ -207,6 +207,7 @@ AdminCanvasManagerGrid.prototype = {
             y: 0, 
             duration: 1,
             onFinish: function() {
+                circle.setPosition({x:parseInt(position.attrs.origCircleX), y:parseInt(position.attrs.origCircleY)});
                 position.fire('mouseout');
             }
          });
@@ -215,17 +216,21 @@ AdminCanvasManagerGrid.prototype = {
 
         if (this.stage.get('#DeleteBox')[0].intersects(circle.getAbsolutePosition())) {
             if (confirm('Cancello il posizionamento?')) {
-                position.destroy();
+                position.setAttrs({state: 'delete'});
+                position.setVisible(false);
+                this.layerGroup.draw();
+                this.RecalculateObject();        
             } else {
                 ReturnAnim.play();
+                position.fire('mouseout');                
             }
+            return;
         }
         if (typeof(usrPosition)=='undefined') {
             position.fire('mouseout');
         }
         this.layerGroup.draw();
-        this.RecalculateObject();
-        $('dbg').setAttribute('value', 'F:' + position.getX() + "-" + position.getY() + "-- C:" + circle.getX() + "-" + circle.getY() );
+        this.RecalculateObject();        
 
     },
     RecalculateObject: function() {
@@ -242,6 +247,7 @@ AdminCanvasManagerGrid.prototype = {
                     obj.y = linkPos.y;
                 }
             }
+            obj.state = pos.attrs.state;
             arr.push(obj);
         });
         this.link = arr;
@@ -298,7 +304,7 @@ AdminCanvasManagerGrid.prototype = {
     DragManagerEnd: function(sender, event) {
         this.layerDragRect.setZIndex(5);
         if (this.isExternalDragged && this.PositionDragged != null) {
-            this.PlacePosition(this.PositionDragged.id, (event.x - this.stage.content.offsetLeft), (event.y - this.stage.content.offsetTop), this.PositionDragged.linkid, this.PositionDragged.pos );
+            this.PlacePosition(this.PositionDragged.id, (event.pageX - this.stage.content.offsetLeft), (event.pageY - this.stage.content.offsetTop), this.PositionDragged.linkid, this.PositionDragged.pos );
             this.layerDragRect.setOpacity(0);
             this.layerDrag.draw();
             this.RecalculateObject();
@@ -307,7 +313,7 @@ AdminCanvasManagerGrid.prototype = {
         this.PalcePostion = null;
     },
     DragOnLayer: function(sender, event) {    
-        var obj = this.stage.getIntersection({x:event.x - this.stage.content.offsetLeft, y:event.y - this.stage.content.offsetTop})
+        var obj = this.stage.getIntersection({x:event.pageX - this.stage.content.offsetLeft, y:event.pageY - this.stage.content.offsetTop})
         if (!this.isExternalDragged) {
             if (obj != null && obj.shape.attrs.id == 'DragLayer') {
                 this.layerDragRect.setOpacity(0.5);

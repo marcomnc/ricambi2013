@@ -46,16 +46,62 @@ class Ricambi_Catalog_Model_Product_Observer {
      */
     public function after_save($observer) {
         $product = $observer->getProduct();
+        
+        if ($product->hasSchemeLink()) {
+            //Sono in salvataggio da controller del backend
+            foreach ($product->getSchemeLink() as $link) {
+                if (isset($link['state'])) {
+                    if ($link['state'] == 'delete') {
+                        $this->_deleteLink($link['id_link']);
+                    } else {
+                        $positionLink = Mage::getModel('rcatalog/position');
+                        if ($link["state"] == 'create') {
+                            $positionLink->setData('grouped_product_id', $product->getId());
+                            $positionLink->setData('link_id', $link["linkid"]);
+
+                            $positionLink->setData('position_x', ($link["x"] + 0));
+                            $positionLink->setData('position_y', ($link["y"] + 0));                        
+                        } else {
+                            $positionLink->Load($link["id_link"]);
+                            $positionLink->setData('position_x', ($link["x"] + 0));
+                            $positionLink->setData('position_y', ($link["y"] + 0));
+                        }
+                        $positionLink->save();
+
+                    }
+                }
+            }
+        } 
         foreach (Mage::getModel('rcatalog/position')->getCollection()->setFilterByProduct($product) as $link) {
-            $groupedLink = MAge::getModel('catalog/product_link')->Load($link->getLinkId());
+            $groupedLink = Mage::getModel('catalog/product_link')->Load($link->getLinkId());
 
             if (!$groupedLink->hasLinkId()) {
                 $this->_deleteLink($link->getId());
             }
         }
+
         
         return $observer;
         
+    }
+    
+    /**
+     * Assengo al prodotto un attributo fittizio SchemeLink che poi gestisco in fase di salvataggio
+     * @param type $observer
+     * @return type
+     */
+    public function prepare_save($observer) {
+        
+        $product = $observer->getProduct();
+        $request = $observer->getRequest();
+        
+        if (($links=$request->getParam('associated-scheme','')) != '') {
+            $link = Mage::Helper('core')->jsonDecode(base64_decode($links));
+            $product->setData('scheme_link', $link);
+            $observer->setProduct($product);
+        }                
+        
+        return $observer;
     }
     
     private function _deleteLink($id){
