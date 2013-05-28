@@ -5,6 +5,7 @@
             <action method="addCss"><name>rcatalog.css</name></action>
             <action method="addJs"><name>ricambi/kinetic.js</name></action>
             <action method="addJs"><name>ricambi/webtoolkit.base64.js</name></action>
+            <action method="addJs"><name>ricambi/scheme.js</name></action>
         </reference>
         <reference name="product_tabs">
             <action method="addTab">

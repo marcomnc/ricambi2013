@@ -46,7 +46,7 @@ class Ricambi_Catalog_Block_Adminhtml_Widget_Grid_Column_Renderer_Objposition ex
 //        $html .= 'value="' . base64_encode(Mage::Helper('core')->jsonEncode($pos)) . '"';
 //        $html .= 'rel="' . $row->getData($this->getColumn()->getIndex()) . '" ';
 //        $html .= 'class="input-text obj-position ' . $this->getColumn()->getInlineCss() . '"/>';
-        $html .= '<div class="position-add-to" id="link_id_' . $row->getData($this->getColumn()->getIndex()) . '"></div>';
+        $html .= '<div class="position-add-to" rel="' . $row->getData('pos') . '" id="link_id_' . $row->getData($this->getColumn()->getIndex()) . '"></div>';
         return $html;
     }
 }
