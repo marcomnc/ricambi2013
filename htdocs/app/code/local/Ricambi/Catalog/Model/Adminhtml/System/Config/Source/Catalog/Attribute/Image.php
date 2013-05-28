@@ -17,7 +17,7 @@ class Ricambi_Catalog_Model_Adminhtml_System_Config_Source_Catalog_Attribute_Ima
                         ->setEntityTypeFilter(Mage::getModel('catalog/product')->getResource()->getTypeId());
         foreach ($attrColl as $attr) {
             if ($attr->getFrontend()->getInputType() == 'media_image')
-                $ret[] = array('value'=>$attr->getAttributeCode(), 'label'=>$attr->getAttributeLabel());
+                $ret[] = array('value'=>$attr->getAttributeCode(), 'label'=>$attr->getFrontendLabel());
         }
         return $ret;
     }
