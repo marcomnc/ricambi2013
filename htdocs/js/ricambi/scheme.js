@@ -216,8 +216,12 @@ AdminCanvasManagerGrid.prototype = {
 
         if (this.stage.get('#DeleteBox')[0].intersects(circle.getAbsolutePosition())) {
             if (confirm('Cancello il posizionamento?')) {
-                position.setAttrs({state: 'delete'});
-                position.setVisible(false);
+                if (position.attrs.id != "new") {
+                    position.setAttrs({state: 'delete'});
+                    position.setVisible(false);
+                } else {
+                    position.destroy()
+                }
                 this.layerGroup.draw();
                 this.RecalculateObject();        
             } else {
@@ -292,6 +296,7 @@ AdminCanvasManagerGrid.prototype = {
     },
     DragManagerStart: function(sender, event) {
         this.layerDragRect.setZIndex(30);
+        this.layerDelete.setZIndex(35);
         this.PositionDragged = {
             id: 'new',
             x: 0,
@@ -303,6 +308,7 @@ AdminCanvasManagerGrid.prototype = {
     },
     DragManagerEnd: function(sender, event) {
         this.layerDragRect.setZIndex(5);
+        this.layerDelete.setZIndex(1);
         if (this.isExternalDragged && this.PositionDragged != null) {
             this.PlacePosition(this.PositionDragged.id, (event.pageX - this.stage.content.offsetLeft), (event.pageY - this.stage.content.offsetTop), this.PositionDragged.linkid, this.PositionDragged.pos );
             this.layerDragRect.setOpacity(0);
@@ -319,9 +325,9 @@ AdminCanvasManagerGrid.prototype = {
                 this.layerDragRect.setOpacity(0.5);
                 this.layerDrag.draw();
                 this.isExternalDragged = true;
-            }
+            } 
         } else {
-            if (obj == null) {
+            if (obj == null || obj.shape.attrs.id == 'DeleteBox') {
                 this.layerDragRect.setOpacity(0);
                 this.layerDrag.draw();
                 this.isExternalDragged = false;
