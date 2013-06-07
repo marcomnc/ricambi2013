@@ -2435,8 +2435,11 @@ a.email2friend:hover { background-position: -54px -27px; }
 /* Grouped Product
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 */
-.product-view .grouped-items-table { margin:0 0 15px; }
+.product-view .grouped-items-table { margin:0 0 15px; font-size: 12px}
 .product-view .grouped-items-table thead th { font-weight:bold; }
+.product-view .grouped-items-table.data-table th, 
+.product-view .grouped-items-table.data-table td { padding: 0px 5px}
+.product-view .grouped-items-table.data-table tr.even {background-color: #eee}
 .product-view .grouped-items-table .price-box { margin:0; padding:0; border:0; }
 .product-view .grouped-items-table .price-box .price-including-tax .price { font-size:15px; }
 

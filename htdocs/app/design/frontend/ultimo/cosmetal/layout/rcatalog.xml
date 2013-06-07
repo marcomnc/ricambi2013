@@ -1,0 +1,10 @@
+<layout version="0.1.0">
+
+
+    <PRODUCT_TYPE_grouped>
+        <reference name="head">
+            <action method="addItem"><type>skin_js</type><name>js/ricambi.js</name></action>
+        </reference>
+    </PRODUCT_TYPE_grouped>
+
+</layout>

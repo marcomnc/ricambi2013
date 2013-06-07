@@ -1,0 +1,19 @@
+<?php
+$_product    = $this->getProduct();
+$_attributes = Mage::helper('core')->decorateArray($this->getAllowAttributes());
+?>
+ 
+<tr class="no-decorate">
+<?php foreach($_attributes as $_attribute): ?>
+    <td class="data">
+        <div>
+        <select name="super_attribute[<?php $_product->getId(); ?>][<?php echo $_attribute->getAttributeId() ?>]" id="attribute<?php echo $_attribute->getAttributeId() ?>" class="required-entry super-attribute-select_<?php echo $_product->getId()?>">
+        <option><?php echo $this->__('Choose an Option...') ?></option>
+        </select>
+        </div>
+    </td>
+<?php endforeach; ?>
+<script type="text/javascript">
+    var spConfig_<?php echo $_product->getId()?> = new Inchoo_Product.Config(<?php echo $this->getJsonConfig() ?>);
+</script>
+</tr>

@@ -72,6 +72,7 @@
             <catalog>
                 <rewrite>
                     <product_type_grouped>Ricambi_Catalog_Model_Product_Type_Grouped</product_type_grouped>
+                    <product_type_configurable>Ricambi_Catalog_Model_Product_Type_Configurable</product_type_configurable>
                 </rewrite>
             </catalog>
         </models>
@@ -82,24 +83,6 @@
                 </setup>                
             </rcatalog_setup>
         </resources>
-        <frontend> 
-            <routers>
-                <rcatalog>
-                    <use>standard</use>
-                        <args>
-                            <module>Ricambi_Catalog</module>
-                            <frontName>rcatalog</frontName>
-                        </args>
-                </rcatalog>
-            </routers>    
-            <layout>
-                <updates>
-                    <rcatalog>
-                        <file>rcatalog.xml</file>
-                    </rcatalog>
-                </updates>
-            </layout>
-        </frontend>
         
 <!-- ABilitazione dei prodotti configurabili su raggruppati-->        
         <catalog>
@@ -114,7 +97,26 @@
             </product>
         </catalog>
     </global>
-    
+
+    <frontend> 
+        <routers>
+            <rcatalog>
+                <use>standard</use>
+                    <args>
+                        <module>Ricambi_Catalog</module>
+                        <frontName>rcatalog</frontName>
+                    </args>
+            </rcatalog>
+        </routers>    
+        <layout>
+            <updates>
+                <rcatalog>
+                    <file>rcatalog.xml</file>
+                </rcatalog>
+            </updates>
+        </layout>
+    </frontend>
+            
     <adminhtml>
         <layout>
             <updates>

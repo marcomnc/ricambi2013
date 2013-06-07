@@ -58,37 +58,181 @@
 				$primaryColUnits += 12 - ($imgColUnits + $primaryColUnits);
 			}
 		?>
-
+		 
         <div class="product-img-box grid12-<?php echo $imgColUnits; ?>">
-            <?php echo $this->getChildHtml('media') ?>
-            <?php //Product labels
-				echo $this->helper('ultimo/labels')->getLabels($_product);
-			?>
+			<div id="container" style="background:url(/media/wysiwyg/cosmetal/nives_sp.png); width:544px; height:794px"></div>
+	<input type="button" value="invia" id="inviaDati" />
+    <script defer="defer">
+	jQuery(function(){
+		//alert('caio');
+		//console.log(json);
+		var etichette=[{"x":"108","y":"282","numero":"1","codice":"2521371","desc":"PASSAPARETE JG 8"},{"x":"361","y":"647","numero":"2","codice":"2801363","desc":"TUBO PE 8x6"},{"x":"253","y":"673","numero":"3","codice":"2521410","desc":"RIDUZIONE INTERMEDIO JG 1/4 - 8"},{"x":"285","y":"253","numero":"51","codice":"4741734","desc":"RONDELLA RIDUZIONE PORTATA Ø11"}];
+		var stage = new Kinetic.Stage({
+			container: 'container',
+			width: 544,
+			height: 794
+		});
+		var layerPallini = new Kinetic.Layer();
+		var layerTooltip= new Kinetic.Layer();
+		var tooltip = new Kinetic.Label({
+			x: 10,
+			y: 10,
+			opacity: 0.75,
+			listening: false,
+			text: {
+			  text: 'Tooltip pointing down',
+			  fontFamily: 'Arial',
+			  fontSize: 14,
+			  padding: 5,
+			  fill: 'white'
+			},
+			rect: {
+			  fill: 'black',
+			  pointerDirection: 'left',
+			  pointerWidth: 10,
+			  pointerHeight: 10,
+			  lineJoin: 'round',
+			  shadowColor: 'black',
+			  shadowBlur: 10,
+			  shadowOffset: 10,
+			  shadowOpacity: 0.5
+			},
+			visible:false
+		  });
+		  layerTooltip.add(tooltip);
+		for(var n = 0; n < etichette.length; n++) {
+		// anonymous function to induce scope
+			var i = n;
+			var yellowGroup = new Kinetic.Group({
+				x: parseInt(etichette[i].x),
+				y: parseInt(etichette[i].y),
+				draggable: false,
+				id:etichette[i].codice,
+				name:'pallini', 
+				cod: etichette[i].codice,
+				desc: etichette[i].desc
+			});
+			//alert(etichette[i].codice);
+			var yellowCircle = new Kinetic.Circle({
+				radius: 12,
+				fill: '#EB9999',
+				stroke: 'black'
+			});
+			  
+			var simpleText = new Kinetic.Text({
+				x: -10,
+				y: -7,
+				text: etichette[i].numero,
+				fontSize: 14,
+				fontStyle: 'bold',
+				fontFamily: 'Arial',
+				fill: 'black',
+				width:20,
+				align:'center'
+			});
+			  
+			yellowGroup.on('mouseover', function() {
+				var arrayFigli= this.getChildren();
+				arrayFigli[0].setFill('#0096d9');
+				var posizione = this.getPosition();
+				var largezzaStage=stage.getWidth();
+				//var pallino = this;
+				var idPallino=this.getAttrs().cod;
+				var righeTabella= jQuery('.lista');
+				righeTabella.each(function (chiave,valore) {
+					var idElemento=valore.id;
+					if(idPallino==idElemento){
+						jQuery('#'+idElemento+' td').css('background-color','#B2C8DD');
+					}
+				});
+				if(posizione.x<largezzaStage/2){
+					tooltip.setPosition(posizione.x+10,posizione.y-10);
+					tooltip.getRect().setPointerDirection('left');
+				} else {
+					tooltip.setPosition(posizione.x-10,posizione.y-10);
+					tooltip.getRect().setPointerDirection('right');
+				}
+				//console.log(this.getAttrs().cod);
+				var valoreInput = jQuery('#'+idPallino+' input').attr('value');
+				tooltip.getText().setText(this.getAttrs().desc+"\n <?php echo $this->__('quantità') ?>: "+valoreInput);
+				tooltip.show();
+				layerPallini.draw();
+				layerTooltip.draw();
+				document.body.style.cursor = 'pointer';
+				jQuery('#'+this.getAttrs().cod).ScrollTo();
+			});
+			yellowGroup.on('mouseout', function() {
+				var arrayFigli= this.getChildren();
+				arrayFigli[0].setFill('#EB9999');
+				//jQuery('.lista td').css('background','none');
+				tooltip.hide();
+				layerPallini.draw();
+				layerTooltip.draw();
+				document.body.style.cursor = 'default';
+				jQuery('.lista input').each(function(indice,valore){
+					var el=jQuery(valore).parent().parent().attr('id');
+					if(parseInt(jQuery(valore).attr('value'))>0){
+						//jQuery(valore).css('background-color','#0096d9');
+						jQuery('#'+el+' td').css('background-color','#B2C8DD');
+					} else {
+						//jQuery(valore).css('background-color','#FFFFFF');
+						jQuery('#'+el+' td').css('background-color','transparent');
+					}
+				});
+			});
+			  
+			yellowGroup.on('click', function() {
+				var idPallino=this.getAttrs().cod;
+				var valoreInput = parseInt(jQuery('#'+idPallino+' input').attr('value'));
+				var valoreAumentato=valoreInput+1;
+				var n = String.fromCharCode(65); 
+				jQuery('#'+idPallino+' input').attr('value',valoreAumentato);	
+				tooltip.getText().setText(this.getAttrs().desc+"\n <?php echo $this->__('quantità') ?>: "+valoreAumentato);
+				layerTooltip.draw();
+			});	  
+			yellowGroup.add(yellowCircle);
+			yellowGroup.add(simpleText);
+			layerPallini.add(yellowGroup);
+		}
+		// build node tree
+		stage.add(layerPallini);
+		stage.add(layerTooltip);
+		jQuery("#inviaDati").bind("click",function (event) {
+			var json = stage.toJSON();
+			//var shape = stage.get('#101')[0];
+			alert(json);
+			//alert(shape.getId());
+			/*jQuery.ajax({
+				url : "dati.php",
+				data : json,
+				//dataType : 'json', //restituisce un oggetto JSON
+				success : function (data,stato) {
+				   // $("#risultati").html(data);
+				   // $("#statoChiamata").text(stato);
+				   alert(json);
+				},
+				error : function (richiesta,stato,errori) {
+					alert("E' evvenuto un errore. "+stato);
+				}
+			});*/
+		});
+	});
+    </script>
         </div>
         
-        <div class="product-shop grid12-<?php echo $primaryColUnits; ?>">
+        <div class="scrollcol product-shop grid12-<?php echo $primaryColUnits; ?>">
 
-            <div class="product-name">
+			<table>
+			<tr>
+			<td>
+				<?php echo $this->getChildHtml('media') ?>
+			</td>
+			<td>
+			
+			<div class="product-name">
                 <h1><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></h1>
             </div>
-            
-            <?php echo $this->getReviewsSummaryHtml($_product, false, true); //reviews ?>
-            
-            <?php if ($_product->getShortDescription()): ?>
-                <div class="short-description">
-                    <div class="std"><?php echo $_helper->productAttribute($_product, nl2br($_product->getShortDescription()), 'short_description') ?></div>
-                </div>
-            <?php endif;?>
-            
-            <?php if ($extrahint_html = $this->getChildHtml('extrahint')): //qty increments ?>
-                <div class="extrahint-wrapper"><?php echo $extrahint_html; ?></div>
-            <?php endif; ?>
-            
-            <div class="product-type-data"><?php echo $this->getChildHtml('product_type_data'); ?></div>
-            
-            <?php echo $this->getTierPriceHtml(); //tier prices ?>
-
-            <?php if (!$this->hasOptions()): //add to cart when no options ?>
+			<?php if (!$this->hasOptions()): //add to cart when no options ?>
                 <?php if($_product->isSaleable()): ?>
                     <div class="add-to-box">
                         <?php echo $this->getChildHtml('addtocart') ?>
@@ -96,6 +240,23 @@
                 <?php endif; ?>
                 <?php echo $this->getChildHtml('extra_buttons') ?>
             <?php endif; ?>
+			</td>
+			<tr>
+			</table>
+		
+            
+            
+            <?php if ($extrahint_html = $this->getChildHtml('extrahint')): //qty increments ?>
+                <div class="extrahint-wrapper"><?php echo $extrahint_html; ?></div>
+            <?php endif; ?>
+            
+			
+
+			
+            <div class="product-type-data"><?php echo $this->getChildHtml('product_type_data'); ?></div>
+            
+            <?php echo $this->getTierPriceHtml(); //tier prices ?>
+
 
             <?php if ($_product->isSaleable() && $this->hasOptions()): ?>
                 <?php if ($container1_html = $this->getChildChildHtml('container1', '', true, true)): ?>
@@ -103,14 +264,7 @@
                 <?php endif; ?>
             <?php endif;?>
             
-            <?php if ($addtoBoxHtml = $this->getChildHtml('addto')): //compare, wishlist ?>
-                <div class="action-box addto-textlink clearer">
-					<?php echo $addtoBoxHtml; ?>
-					<?php if ($this->canEmailToFriend()): ?>
-                    	<p class="email-friend"><a href="<?php echo $this->helper('catalog/product')->getEmailToFriendUrl($_product) ?>"><?php echo $this->__('Email to a Friend') ?></a></p>
-                    <?php endif; ?>
-				</div>
-            <?php endif; ?>
+
             
             <?php echo $this->getChildHtml('alert_urls'); //alerts ?>
             <?php echo $this->getChildHtml('other'); ?>
@@ -123,22 +277,13 @@
         </div> <!-- end: product-shop -->
         
         <?php if (!empty($secondaryColUnits)): ?>
-            <div class="product-secondary-column grid12-<?php echo $secondaryColUnits; ?>">
-            	<div class="inner">
 
-					<?php //Placeholder for extensions ?>
-					<?php if ($tmpHtml = trim($this->getChildHtml('product_secondary_top_placeholder'))): ?>
-						<div class="feature-wrapper bottom-border"><?php echo $tmpHtml; ?></div>
-                    <?php endif; ?>
-                    
-                    <?php if ($tmpHtml = $this->getChildHtml('block_product_secondary_bottom')): ?>
-                        <div class="block_product_secondary_bottom"><?php echo $tmpHtml; ?></div>
-                    <?php endif; ?>
-                    
-                    <?php //echo $this->getChildHtml('additional'); ?>
+			<div class="scrollcol product-secondary-column grid12-<?php echo $secondaryColUnits; ?>">
 
-				</div>
             </div> <!-- end: product-secondary-column -->
+
+			<div>
+			</div>
         <?php endif; ?>
 
         <?php if ($_product->isSaleable() && $this->hasOptions()): ?>
