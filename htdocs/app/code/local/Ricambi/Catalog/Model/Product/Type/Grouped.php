@@ -104,18 +104,26 @@ class Ricambi_Catalog_Model_Product_Type_Grouped extends Mage_Catalog_Model_Prod
 
                                     $res->setCartQty($qty);
                                     $res->addCustomOption('product_type', self::TYPE_CODE, $product);
-                                    $infoBuyRequest = $res->getCustomOptions();
-                                    if (!isset($infoBuyRequest['info_buyRequest'])) {
-                                        $infoBuyRequest['info_buyRequest'] = array();
+
+                                    if ($res->getTypeId() == 'configurable') {
+                                        $infoBuyRequest = unserialize($res->getCustomOption('info_buyRequest')->getValue());
+                                        $infoBuyRequest['super_product_config'] = array(
+                                                                                        'product_type'  => self::TYPE_CODE,
+                                                                                        'product_id'    => $product->getId()
+                                                                                    );
+                                        $res->addCustomOption('info_buyRequest', serialize($infoBuyRequest));
+                                    } else {
+                                        $res->addCustomOption('info_buyRequest',
+                                            serialize(array(
+                                                'super_product_config' => array(
+                                                    'product_type'  => self::TYPE_CODE,
+                                                    'product_id'    => $product->getId()
+                                                )
+                                            ))
+                                        );
+
                                     }
-                                    $infoBuyRequest['info_buyRequest']['super_product_config'] = array(
-                                                'product_type'  => self::TYPE_CODE,
-                                                'product_id'    => $product->getId()
-                                            );
-                                    $res->addCustomOption('info_buyRequest', serialize($infoBuyRequest['info_buyRequest']));
-
-
-
+                                    
                                     $products[] = $res;
 
                                 }
