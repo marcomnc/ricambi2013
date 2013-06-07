@@ -1,0 +1,435 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2011 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+/**
+ * Product view template
+ *
+ * @see Mage_Catalog_Block_Product_View
+ * @see Mage_Review_Block_Product_View
+ */
+?>
+<?php $_helper = $this->helper('catalog/output'); ?>
+<?php $_product = $this->getProduct(); ?>
+<?php $theme = $this->helper('ultimo'); ?>
+<script type="text/javascript">
+    var optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
+</script>
+<div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+<div class="product-view nested-container">
+
+    <form action="<?php echo $this->getSubmitUrl($_product) ?>" method="post" id="product_addtocart_form"<?php if($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+    
+        <div class="no-display">
+            <input type="hidden" name="product" value="<?php echo $_product->getId() ?>" />
+            <input type="hidden" name="related_product" id="related-products-field" value="" />
+        </div>
+
+		<?php
+			//Calculate the width (in grid units) of the product page columns
+			$imgColUnits = $theme->getCfg('product_page/image_column');
+			$primaryColUnits = $theme->getCfg('product_page/primary_column');
+			$secondaryColUnits = $theme->getCfg('product_page/secondary_column');
+			
+			if (empty($secondaryColUnits))
+			{
+				$primaryColUnits += 12 - ($imgColUnits + $primaryColUnits);
+			}
+		?>
+		 
+        <div class="product-img-box grid12-<?php echo $imgColUnits; ?>">
+			<div id="container" style="background:url(/media/wysiwyg/cosmetal/nives_sp.png); width:544px; height:794px"></div>
+	<input type="button" value="invia" id="inviaDati" />
+    <script defer="defer">
+	jQuery(function(){
+		//alert('caio');
+		//console.log(json);
+		var etichette=[{"x":"108","y":"282","numero":"1","codice":"2521371","desc":"PASSAPARETE JG 8"},{"x":"361","y":"647","numero":"2","codice":"2801363","desc":"TUBO PE 8x6"},{"x":"253","y":"673","numero":"3","codice":"2521410","desc":"RIDUZIONE INTERMEDIO JG 1/4 - 8"},{"x":"285","y":"253","numero":"51","codice":"4741734","desc":"RONDELLA RIDUZIONE PORTATA Ø11"}];
+		var stage = new Kinetic.Stage({
+			container: 'container',
+			width: 544,
+			height: 794
+		});
+		var layerPallini = new Kinetic.Layer();
+		var layerTooltip= new Kinetic.Layer();
+		var tooltip = new Kinetic.Label({
+			x: 10,
+			y: 10,
+			opacity: 0.75,
+			listening: false,
+			text: {
+			  text: 'Tooltip pointing down',
+			  fontFamily: 'Arial',
+			  fontSize: 14,
+			  padding: 5,
+			  fill: 'white'
+			},
+			rect: {
+			  fill: 'black',
+			  pointerDirection: 'left',
+			  pointerWidth: 10,
+			  pointerHeight: 10,
+			  lineJoin: 'round',
+			  shadowColor: 'black',
+			  shadowBlur: 10,
+			  shadowOffset: 10,
+			  shadowOpacity: 0.5
+			},
+			visible:false
+		  });
+		  layerTooltip.add(tooltip);
+		for(var n = 0; n < etichette.length; n++) {
+		// anonymous function to induce scope
+			var i = n;
+			var yellowGroup = new Kinetic.Group({
+				x: parseInt(etichette[i].x),
+				y: parseInt(etichette[i].y),
+				draggable: false,
+				id:etichette[i].codice,
+				name:'pallini', 
+				cod: etichette[i].codice,
+				desc: etichette[i].desc
+			});
+			//alert(etichette[i].codice);
+			var yellowCircle = new Kinetic.Circle({
+				radius: 12,
+				fill: '#EB9999',
+				stroke: 'black'
+			});
+			  
+			var simpleText = new Kinetic.Text({
+				x: -10,
+				y: -7,
+				text: etichette[i].numero,
+				fontSize: 14,
+				fontStyle: 'bold',
+				fontFamily: 'Arial',
+				fill: 'black',
+				width:20,
+				align:'center'
+			});
+			  
+			yellowGroup.on('mouseover', function() {
+				var arrayFigli= this.getChildren();
+				arrayFigli[0].setFill('#0096d9');
+				var posizione = this.getPosition();
+				var largezzaStage=stage.getWidth();
+				//var pallino = this;
+				var idPallino=this.getAttrs().cod;
+				var righeTabella= jQuery('.lista');
+				righeTabella.each(function (chiave,valore) {
+					var idElemento=valore.id;
+					if(idPallino==idElemento){
+						jQuery('#'+idElemento+' td').css('background-color','#B2C8DD');
+					}
+				});
+				if(posizione.x<largezzaStage/2){
+					tooltip.setPosition(posizione.x+10,posizione.y-10);
+					tooltip.getRect().setPointerDirection('left');
+				} else {
+					tooltip.setPosition(posizione.x-10,posizione.y-10);
+					tooltip.getRect().setPointerDirection('right');
+				}
+				//console.log(this.getAttrs().cod);
+				var valoreInput = jQuery('#'+idPallino+' input').attr('value');
+				tooltip.getText().setText(this.getAttrs().desc+"\n <?php echo $this->__('quantità') ?>: "+valoreInput);
+				tooltip.show();
+				layerPallini.draw();
+				layerTooltip.draw();
+				document.body.style.cursor = 'pointer';
+				jQuery('#'+this.getAttrs().cod).ScrollTo();
+			});
+			yellowGroup.on('mouseout', function() {
+				var arrayFigli= this.getChildren();
+				arrayFigli[0].setFill('#EB9999');
+				//jQuery('.lista td').css('background','none');
+				tooltip.hide();
+				layerPallini.draw();
+				layerTooltip.draw();
+				document.body.style.cursor = 'default';
+				jQuery('.lista input').each(function(indice,valore){
+					var el=jQuery(valore).parent().parent().attr('id');
+					if(parseInt(jQuery(valore).attr('value'))>0){
+						//jQuery(valore).css('background-color','#0096d9');
+						jQuery('#'+el+' td').css('background-color','#B2C8DD');
+					} else {
+						//jQuery(valore).css('background-color','#FFFFFF');
+						jQuery('#'+el+' td').css('background-color','transparent');
+					}
+				});
+			});
+			  
+			yellowGroup.on('click', function() {
+				var idPallino=this.getAttrs().cod;
+				var valoreInput = parseInt(jQuery('#'+idPallino+' input').attr('value'));
+				var valoreAumentato=valoreInput+1;
+				var n = String.fromCharCode(65); 
+				jQuery('#'+idPallino+' input').attr('value',valoreAumentato);	
+				tooltip.getText().setText(this.getAttrs().desc+"\n <?php echo $this->__('quantità') ?>: "+valoreAumentato);
+				layerTooltip.draw();
+			});	  
+			yellowGroup.add(yellowCircle);
+			yellowGroup.add(simpleText);
+			layerPallini.add(yellowGroup);
+		}
+		// build node tree
+		stage.add(layerPallini);
+		stage.add(layerTooltip);
+		jQuery("#inviaDati").bind("click",function (event) {
+			var json = stage.toJSON();
+			//var shape = stage.get('#101')[0];
+			alert(json);
+			//alert(shape.getId());
+			/*jQuery.ajax({
+				url : "dati.php",
+				data : json,
+				//dataType : 'json', //restituisce un oggetto JSON
+				success : function (data,stato) {
+				   // $("#risultati").html(data);
+				   // $("#statoChiamata").text(stato);
+				   alert(json);
+				},
+				error : function (richiesta,stato,errori) {
+					alert("E' evvenuto un errore. "+stato);
+				}
+			});*/
+		});
+	});
+    </script>
+        </div>
+        
+        <div class="scrollcol product-shop grid12-<?php echo $primaryColUnits; ?>">
+
+			<table>
+			<tr>
+			<td>
+				<?php echo $this->getChildHtml('media') ?>
+			</td>
+			<td>
+			
+			<div class="product-name">
+                <h1><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></h1>
+            </div>
+			<?php if (!$this->hasOptions()): //add to cart when no options ?>
+                <?php if($_product->isSaleable()): ?>
+                    <div class="add-to-box">
+                        <?php echo $this->getChildHtml('addtocart') ?>
+                    </div>
+                <?php endif; ?>
+                <?php echo $this->getChildHtml('extra_buttons') ?>
+            <?php endif; ?>
+			</td>
+			<tr>
+			</table>
+		
+            
+            
+            <?php if ($extrahint_html = $this->getChildHtml('extrahint')): //qty increments ?>
+                <div class="extrahint-wrapper"><?php echo $extrahint_html; ?></div>
+            <?php endif; ?>
+            
+			
+
+			
+            <div class="product-type-data"><?php echo $this->getChildHtml('product_type_data'); ?></div>
+            
+            <?php echo $this->getTierPriceHtml(); //tier prices ?>
+
+
+            <?php if ($_product->isSaleable() && $this->hasOptions()): ?>
+                <?php if ($container1_html = $this->getChildChildHtml('container1', '', true, true)): ?>
+                    <div class="container1-wrapper"><?php echo $container1_html; ?></div>
+                <?php endif; ?>
+            <?php endif;?>
+            
+
+            
+            <?php echo $this->getChildHtml('alert_urls'); //alerts ?>
+            <?php echo $this->getChildHtml('other'); ?>
+            <?php echo $this->getChildHtml('product_primary_bottom_placeholder'); //Placeholder for extensions ?>
+            
+            <?php if ($tmpHtml = $this->getChildHtml('block_product_primary_bottom')): ?>
+                <div class="block_product_primary_bottom"><?php echo $tmpHtml; ?></div>
+            <?php endif; ?>
+
+        </div> <!-- end: product-shop -->
+        
+        <?php if (!empty($secondaryColUnits)): ?>
+
+			<div class="scrollcol product-secondary-column grid12-<?php echo $secondaryColUnits; ?>">
+
+            </div> <!-- end: product-secondary-column -->
+
+			<div>
+			</div>
+        <?php endif; ?>
+
+        <?php if ($_product->isSaleable() && $this->hasOptions()): ?>
+			<?php if ($container2_html = $this->getChildChildHtml('container2', '', true, true)): ?>
+        		<div class="box-additional grid-full">
+					<div class="container2-wrapper"><?php echo $container2_html; ?></div>
+				</div>
+        	<?php endif; ?>
+        <?php endif; ?>
+
+    </form>
+    <script type="text/javascript">
+    //<![CDATA[
+        var productAddToCartForm = new VarienForm('product_addtocart_form');
+        productAddToCartForm.submit = function(button, url) {
+            if (this.validator.validate()) {
+                var form = this.form;
+                var oldUrl = form.action;
+
+                if (url) {
+                   form.action = url;
+                }
+                var e = null;
+                try {
+                    this.form.submit();
+                } catch (e) {
+                }
+                this.form.action = oldUrl;
+                if (e) {
+                    throw e;
+                }
+
+                if (button && button != 'undefined') {
+                    button.disabled = true;
+                }
+            }
+        }.bind(productAddToCartForm);
+
+        productAddToCartForm.submitLight = function(button, url){
+            if(this.validator) {
+                var nv = Validation.methods;
+                delete Validation.methods['required-entry'];
+                delete Validation.methods['validate-one-required'];
+                delete Validation.methods['validate-one-required-by-name'];
+                if (this.validator.validate()) {
+                    if (url) {
+                        this.form.action = url;
+                    }
+                    this.form.submit();
+                }
+                Object.extend(Validation.methods, nv);
+            }
+        }.bind(productAddToCartForm);
+    //]]>
+    </script>
+    <!-- end of product-essential (class was removed) -->
+
+
+
+	<?php //Product collaterals ?>
+    <?php
+    	$section = array();
+		
+		//Related products 
+		//---------------------------------------------------------------------------
+		$replaceRelated = $theme->getCfg('product_page/replace_related');
+		if ($replaceRelated == 1) //don't replace with static block
+		{
+			if ($tmpHtml = trim($this->getChildHtml('catalog.product.related')))
+				$section['related'] = $tmpHtml;
+			//$section['related'] = trim($this->getChildHtml('catalog.product.related'));
+		}
+		elseif ($replaceRelated == 2) //if related is empty, replace with static block
+		{
+			if ($tmpHtml = trim($this->getChildHtml('catalog.product.related')))
+				$section['related'] = $tmpHtml;
+			else //related empty
+				if ($tmpHtml = $this->getChildHtml('block_product_replace_related'))
+					$section['related'] = '<div class="block_product_replace_related">'. $tmpHtml .'</div>';
+		}
+		elseif ($replaceRelated == 3) //replace with static block
+		{
+			if ($tmpHtml = $this->getChildHtml('block_product_replace_related'))
+				$section['related'] = '<div class="block_product_replace_related">'. $tmpHtml .'</div>';
+		}
+
+		//Up-sell products
+		//---------------------------------------------------------------------------
+		$replaceUpsell = $theme->getCfg('product_page/replace_upsell');
+		if ($replaceUpsell == 1) //don't replace with static block
+		{
+			if ($tmpHtml = trim($this->getChildHtml('upsell_products')))
+				$section['upsell'] = $tmpHtml;
+			//$section['upsell'] = $this->getChildHtml('upsell_products');
+		}
+		elseif ($replaceUpsell == 2) //if upsell is empty, replace with static block
+		{
+			if ($tmpHtml = trim($this->getChildHtml('upsell_products')))
+				$section['upsell'] = $tmpHtml;
+			else //upsell empty
+				if ($tmpHtml = $this->getChildHtml('block_product_replace_upsell'))
+					$section['upsell'] = '<div class="block_product_replace_upsell">'. $tmpHtml .'</div>';
+		}
+		elseif ($replaceUpsell == 3) //replace with static block
+		{
+			if ($tmpHtml = $this->getChildHtml('block_product_replace_upsell'))
+				$section['upsell'] = '<div class="block_product_replace_upsell">'. $tmpHtml .'</div>';
+		}
+		
+		//Compute grid units etc. for collateral blocks
+		//---------------------------------------------------------------------------
+		$sidebarGridClass 	= 'grid12-3';
+		$tabsGridClass 		= 'grid-full';
+		$upsellGridClass 	= 'grid-full';
+		$upsellClasses = '';
+		
+		if (isset($section['related']))
+		{
+			$tabsGridClass		= 'grid12-9';
+			$upsellGridClass	= 'grid12-9';
+			$upsellClasses = 'narrow-slider'; //If sidebar displayed, upsell slider is narrow
+		}
+	?>
+    
+    
+    <?php //Display collateral blocks
+		  //--------------------------------------------------------------------------- ?>
+    
+	<div class="box-additional box-tabs <?php echo $tabsGridClass; ?>">
+    	<?php $info_tabs_html = $this->getChildHtml('info_tabs');
+			if (trim($info_tabs_html)) echo $info_tabs_html; ?>
+
+		<?php //Open the "Reviews" tab, when "X Review(s)" or "Be the first to review this product" links are clicked ?>
+		<script type="text/javascript">
+			jQuery(function($){$("#goto-reviews, #goto-reviews-form").click(function(){if($("#product-tabs").hasClass("accor")){$("#product-tabs .tabs-panels").data("tabs").click($(".tabs-panels .acctab").index($("#acctab-tabreviews")))}else{$("#product-tabs .tabs").data("tabs").click($("#tab-tabreviews").index())}})});
+		</script>
+        
+        <?php echo $this->getChildHtml('product_additional_data') ?>
+	</div> <!-- end: box-tabs -->
+    
+    <?php
+		if (isset($section['related']))
+			echo '<div class="box-additional box-sidebar '. $sidebarGridClass .'"><div class="box-sidebar-inner">'. $section['related'] .'</div></div>';	
+		if (isset($section['upsell']))
+			echo '<div class="box-additional box-up-sell '. $upsellGridClass .' '. $upsellClasses .'">'. $section['upsell'] .'</div>';
+	?>
+    
+    
+</div> <!-- end: product-view -->

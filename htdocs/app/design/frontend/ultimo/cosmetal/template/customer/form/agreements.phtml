@@ -1,0 +1,31 @@
+<?php
+?>
+<?php
+/**
+ * @see Mage_Checkout_Block_Agreements
+ */
+?>
+
+<?php $agreements = Mage::getModel('checkout/agreement')->getCollection()
+                    ->addStoreFilter(Mage::app()->getStore()->getId())
+                    ->addFieldToFilter('is_active', 1)
+                    ->addFieldToFilter('name', array('in' => array('Consenso registrazione')));
+?>
+
+<?php foreach ($agreements as $_a) : ?>
+	<li class="control">
+		<div class="input-box">
+        	<input type="checkbox" id="agreement-<?php echo $_a->getId()?>" name="agreement[<?php echo $_a->getId()?>]" value="1" title="<?php echo $this->htmlEscape($_a->getCheckboxText()) ?>" class="checkbox required-entry" />
+        	<label for="agreement-<?php echo $_a->getId()?>"><?php echo $_a->getIsHtml() ? $_a->getCheckboxText() : $this->htmlEscape($_a->getCheckboxText()) ?></label>
+        </div>        
+	</li>
+	<li>
+        <div class="agreement-content"<?php echo ($_a->getContentHeight() ? ' style="height:' . $_a->getContentHeight() . '"' : '')?>>
+            <?php if ($_a->getIsHtml()):?>
+                <?php echo $_a->getContent() ?>
+            <?php else:?>
+                <?php echo nl2br($this->htmlEscape($_a->getContent())) ?>
+            <?php endif; ?>
+        </div>
+    </li>
+<?php endforeach ?>

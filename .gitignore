@@ -2,6 +2,7 @@
 nbproject/
 htdocs/app/code/community/
 htdocs/app/code/core/
+htdocs/app/code/local/MpsSistemi/
 htdocs/app/design/adminhtml/default/default/
 htdocs/app/design/frontend/base/
 htdocs/app/design/frontend/default/blank/
@@ -39,6 +40,7 @@ htdocs/app/etc/modules/Ebizmarts_AbandonedCart.xml
 htdocs/app/etc/modules/Ebizmarts_MageMonkey.xml
 htdocs/app/etc/modules/Ebizmarts_Mandrill.xml
 htdocs/app/etc/modules/My_Ieditor.xml
+htdocs/app/etc/modules/MpsSistemi_PrivateSales.xml
 htdocs/app/locale/
 htdocs/app/shell/
 htdocs/app/.htaccess
