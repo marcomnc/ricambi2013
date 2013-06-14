@@ -1,5 +1,5 @@
 /**
- * Riscritta la funzinoe custom per docarorae correttamente la griglia de prodotti associati
+ * Riscritta la funzione custom per docarorae correttamente la griglia de prodotti associati
  * @see decorateGeneric()
  */
 function decorateTableGrouped(table, options) {

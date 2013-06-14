@@ -53,7 +53,7 @@ $hasCanvas = !Mage::Helper('rcatalog')->isNotImage($_product->getData(Mage::Help
         endif;
     ?>
     <?php if ($hasCanvas): ?>
-    <div class="grouped-canvas grid12-<?php echo $imgColUnits; ?>">
+    <div id="grouped-canvas" class="grouped-canvas grid12-<?php echo $imgColUnits; ?>">
         
     </div>
     <?php endif; ?>
@@ -312,3 +312,115 @@ $hasCanvas = !Mage::Helper('rcatalog')->isNotImage($_product->getData(Mage::Help
     
     
 </div> <!-- end: product-view -->
+
+<script>
+    var myLink = '<?php echo Mage::getModel("rcatalog/link")->setProduct($product)->getCollectionJson();?>';
+    var src = '<?php echo Mage::Helper("rcatalog")->getImage($this->_product, "frontend");?>'
+    
+    console.log(myLink.evalJSON());
+    
+    (function($) {
+        $.fn.LinkManager = function (params) {
+            
+            var canvas = $(this);
+            
+            var stage = null;
+            var imgLayer = new Kinetic.Layer();
+            var linkLayer = new Kinetic.Layer();
+            
+            
+            var obj = $.parseJSON(params.link);
+            var imgSrc = params.imageSource;
+            
+            if (typeof(obj) != 'undefined' && imgSrc != "") {
+                $(window).load(function() {
+                    InitializeCanvas();
+                });
+            }
+            
+                        function InitializeCanvas() {
+            
+                var bkgImage = new Image();
+                bkgImage.src = imgSrc;
+                bkgImage.onload =  function () {
+                    stage = new Kinetic.Stage({ container: canvas.attr('id'),
+                                                width: bkgImage.width,
+                                                height: bkgImage.height });
+//                    imgLayer = new Kinetic.Layer();
+//                    linkLayer = new Kinetic.Layer();
+                    var img = new Kinetic.Image({ x: 0,
+                                                  y: 0,
+                                                  image: bkgImage,
+                                                  width: bkgImage.width,
+                                                  height:bkgImage.height,
+                                                  id: 'bkg' });
+                    
+                    imgLayer.add(img);
+                    
+                    for (var i=0; i < obj.length; i++) {
+                        PlacePosition(obj[i]);
+                    }
+                    
+                    stage.add(imgLayer);
+                    stage.add(linkLayer);
+                    
+                    stage.draw();
+                };
+            }
+        
+            function PlacePosition(objPosition) {
+
+                var Position = new Kinetic.Group({
+                    id: objPosition.id,
+                    draggable: false,
+                    positionText: objPosition.pos, 
+                    sku: objPosition.sku,
+                    name: objPosition.name,
+                });
+                var PosCircle = new Kinetic.Circle({
+                    x: objPosition.x,
+                    y: objPosition.y,
+                    radius: 12,
+                    fill: '#EB9999',
+                    stroke: 'black'
+                });
+                var PosText = new Kinetic.Text({
+                     x: objPosition.x-10,
+                     y: objPosition.y-7,
+                     text: objPosition.pos, 
+                     fill: 'balck',
+                     fontSize: 14,
+                     width: 20,
+                     fontStyle: 'bold',
+                     align: 'center',
+                });
+                
+                Position.add(PosCircle);
+                Position.add(PosText);
+                linkLayer.add(Position);
+
+           }
+       }
+    })(jQuery);
+    
+    
+    jQuery('#grouped-canvas').LinkManager({ 'link': myLink, 'imageSource': src });
+
+//    var myOpentip = new Opentip(
+//        $("grouped-canvas"), //target element 
+//        "DummyContent", // will be replaced
+//        "My Title", // title
+//        {
+//            showOn: null, // I'll manually manage the showOn effect
+//        });
+//        
+//    myOpentip.setContent("New content"); // Updates Opentips content
+//    
+//    Event.observe('super_group[77]', 'click', function(event) {
+//
+//        myOpentip.show();
+//        //$("#opentip-1").offset({ left: event.offsetX, top: event.offsetY });
+//
+//    });
+    
+</script>

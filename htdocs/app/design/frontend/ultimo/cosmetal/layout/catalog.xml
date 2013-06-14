@@ -186,10 +186,6 @@ Product view
             <action method="addItem"><type>js</type><name>calendar/calendar.js</name><!--<params/><if/><condition>can_load_calendar_js</condition>--></action>
             <action method="addItem"><type>js</type><name>calendar/calendar-setup.js</name><!--<params/><if/><condition>can_load_calendar_js</condition>--></action>
 	
-<!-- libreria per canvas -->
-			<action method="addItem"><type>skin_js</type><name>js/jquery.scrollto.js</name></action>
-            <action method="addItem"><type>skin_js</type><name>js/kinetic-v4.4.3.min.js</name></action>
-
         </reference>
         <reference name="content">
             <block type="catalog/product_view" name="product.info" template="catalog/product/view.phtml">
@@ -292,19 +288,12 @@ Additional block dependant on product type
     </PRODUCT_TYPE_configurable>
     <PRODUCT_TYPE_grouped translate="label" module="catalog">
         <label>Catalog Product View (Grouped)</label>
-        <reference name="head">
-            <action method="addItem"><type>skin_css</type><name>css/ricambi/grouped.css</name><params/></action>
-        </reference>
         <reference name="product.info">
-            <action method="setTemplate">
-                <template>catalog/product/view.grouped.phtml</template>
-            </action>
             <block type="catalog/product_view_type_grouped" name="product.info.grouped" as="product_type_data" template="catalog/product/view/type/grouped.phtml">
                 <block type="core/text_list" name="product.info.grouped.extra" as="product_type_data_extra" translate="label">
                     <label>Product Extra Info</label>
                 </block>
             </block>
-            <block type="catalog/product_list_related" name="catalog.product.related" as="catalog.product.related" template="catalog/product/list/related.grouped.phtml"/>
         </reference>
     </PRODUCT_TYPE_grouped>
     <PRODUCT_TYPE_virtual translate="label" module="catalog">

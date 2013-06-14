@@ -3,7 +3,17 @@
 
     <PRODUCT_TYPE_grouped>
         <reference name="head">
-            <action method="addItem"><type>skin_js</type><name>js/ricambi.js</name></action>
+            <action method="addItem"><type>js</type><name>ricambi/jquery.scrollto.js</name></action>
+            <action method="addItem"><type>js</type><name>ricambi/kinetic.js</name></action>
+            <action method="addItem"><type>skin_css</type><name>css/ricambi/grouped.css</name><params/></action>
+            <action method="addItem"><type>js</type><name>ricambi/opentip.js</name></action>
+            <action method="addItem"><type>css</type><name>ricambi/css/opentip.css</name></action>
+        </reference>
+        <reference name="product.info">
+            <action method="setTemplate">
+                <template>catalog/product/view.grouped.phtml</template>
+            </action>
+            <block type="catalog/product_list_related" name="catalog.product.related" as="catalog.product.related" template="catalog/product/list/related.grouped.phtml"/>
         </reference>
     </PRODUCT_TYPE_grouped>
 
