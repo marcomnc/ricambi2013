@@ -1,0 +1,34 @@
+/* 
+    Document   : grouped
+    Created on : 14-giu-2013, 12.58.34
+    Author     : doctor
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.product-view.grouped ,
+.product-view.grouped .grouped-canvas,
+.product-view.grouped .grouped-data {height: 800px}
+.product-view.grouped .product-shop.grid-full {overflow-y: auto}
+.product-view.grouped .product-shop.grid-full .product-type-data { width: 99% }
+
+.product-view.grouped .product-img-box {margin-right: 10px; margin-bottom: 10px }
+
+.product-view.grouped .add-to-box {padding: 0px; margin: 0px; float: right}
+.product-view.grouped .action-box {margin-top: 0px;}
+.product-view.grouped .action-box,
+.product-view.grouped .add-to-cart {float: left; margin-top: 0px}
+.product-view.grouped .add-to-links, 
+.product-view.grouped .email-friend {float: none}
+.product-view.grouped .add-to-links li {float: none}
+
+.grouped .block-related {float: left; margin: 0px}
+.grouped .block-related .link {font-weight: bold}
+
+@media (max-width: 950px) {
+  .product-view .grouped-canvas {
+      display: none!important
+  }
+  .product-view.grouped .add-to-box {
+      float: none!important
+  }
+}

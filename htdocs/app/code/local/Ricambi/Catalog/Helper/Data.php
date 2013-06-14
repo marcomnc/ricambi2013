@@ -25,7 +25,8 @@ class Ricambi_Catalog_Helper_Data extends Mage_Core_Helper_Abstract {
     
     const LINK_ATTRIBUTE = 'grouped_link';
     
-    protected  $_schemaAttribute = null;
+    protected $_schemaAttribute = null;
+    protected $_product = null;
     
     public function __construct() {
         $this->_schemaAttribute = Mage::getStoreConfig('catalog/ricambi/image_scheme');
@@ -38,7 +39,7 @@ class Ricambi_Catalog_Helper_Data extends Mage_Core_Helper_Abstract {
      */
     public function IsNotImage($string) {
         $string = $string . '';
-        return ($string == '' || $string == 'no_image');
+        return ($string == '' || $string == 'no_image' || $string == 'no_selection');
     }
     
     /**
@@ -47,8 +48,15 @@ class Ricambi_Catalog_Helper_Data extends Mage_Core_Helper_Abstract {
      * @return Mage_Catalog_Model_Product
      */
     public function getCurrentProduct()
-    {
-        return Mage::registry('current_product');
+    {       
+        if (is_null($this->_product)) {
+            $this->_product = Mage::registry('current_product');
+            If (!$this->_product instanceof Mage_Catalog_Model_Product) {
+                //Sono sul forntend
+                $this->_product = Mage::registry('product');
+            }
+        }
+        return $this->_product;
     }
     
     public function getSchemaAttribute() {

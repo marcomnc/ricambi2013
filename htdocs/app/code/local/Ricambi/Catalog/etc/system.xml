@@ -20,6 +20,16 @@
                             <show_in_store>0</show_in_store>
                             <comment>Identifica l'attributo immagine</comment>
                         </image_scheme>
+                        <type_scheme translate="label">
+                            <label>Attributo schema</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>rcatalog/adminhtml_system_config_source_catalog_attribute_schematype</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Attributo che identifica la tipologia dello schema per la gestione dei prodotti correlati</comment>
+                        </type_scheme>
                     </fields>
                 </ricambi>
             </groups>
