@@ -245,7 +245,7 @@ AdminCanvasManagerGrid.prototype = {
             obj.linkid = pos.attrs.linkid;
             obj.pos = pos.attrs.positionText;
             for (var child in pos.children) {
-                if (pos.children[child].shapeType=='Circle') {
+                if (pos.children[child].className=='Circle') {
                     var linkPos = pos.children[child].getAbsolutePosition();
                     obj.x = linkPos.x;
                     obj.y = linkPos.y;

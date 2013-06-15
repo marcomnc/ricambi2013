@@ -315,9 +315,7 @@ $hasCanvas = !Mage::Helper('rcatalog')->isNotImage($_product->getData(Mage::Help
 
 <script>
     var myLink = '<?php echo Mage::getModel("rcatalog/link")->setProduct($product)->getCollectionJson();?>';
-    var src = '<?php echo Mage::Helper("rcatalog")->getImage($this->_product, "frontend");?>'
-    
-    console.log(myLink.evalJSON());
+    var src = '<?php echo Mage::Helper("rcatalog")->getImage($this->_product, "frontend");?>';
     
     (function($) {
         $.fn.LinkManager = function (params) {
@@ -327,6 +325,7 @@ $hasCanvas = !Mage::Helper('rcatalog')->isNotImage($_product->getData(Mage::Help
             var stage = null;
             var imgLayer = new Kinetic.Layer();
             var linkLayer = new Kinetic.Layer();
+            var tooltipLayer = new Kinetic.Layer();
             
             
             var obj = $.parseJSON(params.link);
@@ -338,7 +337,7 @@ $hasCanvas = !Mage::Helper('rcatalog')->isNotImage($_product->getData(Mage::Help
                 });
             }
             
-                        function InitializeCanvas() {
+            function InitializeCanvas() {
             
                 var bkgImage = new Image();
                 bkgImage.src = imgSrc;
@@ -358,17 +357,81 @@ $hasCanvas = !Mage::Helper('rcatalog')->isNotImage($_product->getData(Mage::Help
                     imgLayer.add(img);
                     
                     for (var i=0; i < obj.length; i++) {
-                        PlacePosition(obj[i]);
+                        PlacePosition(i, obj[i]);
                     }
                     
                     stage.add(imgLayer);
                     stage.add(linkLayer);
-                    
+                    stage.add(tooltipLayer);
                     stage.draw();
+                    
+                    CreateToolTip();
                 };
             }
-        
-            function PlacePosition(objPosition) {
+            
+            function CreateToolTip() {
+                 var tooltip = new Kinetic.Label({
+                    x: 0,
+                    y: 0,
+                    id: 'myToolTip',
+                    opacity: 0.75,                    
+                  });
+
+                  tooltip.add(new Kinetic.Tag({
+                    fill: 'black',
+                    pointerDirection: 'down',
+                    pointerWidth: 10,
+                    pointerHeight: 20,
+                    lineJoin: 'round',
+                    shadowColor: 'black',
+                    shadowBlur: 10,
+                    shadowOffset: 10,
+                    shadowOpacity: 0.5,
+                    cornerRadius: 10
+                  }));
+                  
+                  tooltip.add(new Kinetic.Text({
+                    id: 'Description',  
+                    fontFamily: 'Calibri',
+                    fontSize: 14,
+                    padding: 5,
+                    fill: 'white',
+                    width: 300,
+                    height: 150
+                  }));
+                  tooltipLayer.add(tooltip);
+            }
+            
+            function ShowToolTip(posX, posY, objId) {
+                
+                var toolTip = stage.get('#myToolTip')[0];
+                toolTip.setX(posX);
+                toolTip.setY(posY);
+                var child= toolTip.getChildren() || [];
+                for (var i=0; i < child.length; i++) {
+                    switch (child[i].getId()) {
+                        case 'Description':
+                            child[i].setText(obj[objId].sku.toUpperCase() + "\n\n" + obj[objId].name);
+                            break;
+                    }
+                    
+                }
+                var imageObj = new Image();
+
+                imageObj.onload = function() {
+                  stage.drawImage(imageObj, 69, 50);
+                };
+                imageObj.src = 'http://www.html5canvastutorials.com/demos/assets/darth-vader.jpg';
+                tooltipLayer.setVisible(true);
+                tooltipLayer.draw();
+            }
+            
+            function HideToolTip() {
+                tooltipLayer.setVisible(false);
+                tooltipLayer.draw();
+            }
+            
+            function PlacePosition(index, objPosition) {
 
                 var Position = new Kinetic.Group({
                     id: objPosition.id,
@@ -376,13 +439,15 @@ $hasCanvas = !Mage::Helper('rcatalog')->isNotImage($_product->getData(Mage::Help
                     positionText: objPosition.pos, 
                     sku: objPosition.sku,
                     name: objPosition.name,
+                    objId: index
                 });
                 var PosCircle = new Kinetic.Circle({
                     x: objPosition.x,
                     y: objPosition.y,
                     radius: 12,
                     fill: '#EB9999',
-                    stroke: 'black'
+                    stroke: 'black',
+                    objId: index
                 });
                 var PosText = new Kinetic.Text({
                      x: objPosition.x-10,
@@ -398,29 +463,32 @@ $hasCanvas = !Mage::Helper('rcatalog')->isNotImage($_product->getData(Mage::Help
                 Position.add(PosCircle);
                 Position.add(PosText);
                 linkLayer.add(Position);
-
+                
+                Position.on('mouseenter', function(e) {
+                    var child= this.getChildren();
+                    ShowToolTip(e.layerX, e.layerY, child[0].attrs.objId) 
+                });
+                
+                Position.on('mouseover', function(e) {
+                    var child= this.getChildren();
+                    child[0].setFill('#0096d9');
+                    linkLayer.draw();
+                    console.log(e);
+                });
+                
+                Position.on('mouseout', function(e) {
+                    var child= this.getChildren();
+                    child[0].setFill('#EB9999');
+                    HideToolTip();
+                    linkLayer.draw();                    
+                    console.log(e);
+                });
+                
            }
        }
     })(jQuery);
     
     
     jQuery('#grouped-canvas').LinkManager({ 'link': myLink, 'imageSource': src });
-
-//    var myOpentip = new Opentip(
-//        $("grouped-canvas"), //target element 
-//        "DummyContent", // will be replaced
-//        "My Title", // title
-//        {
-//            showOn: null, // I'll manually manage the showOn effect
-//        });
-//        
-//    myOpentip.setContent("New content"); // Updates Opentips content
-//    
-//    Event.observe('super_group[77]', 'click', function(event) {
-//
-//        myOpentip.show();
-//        //$("#opentip-1").offset({ left: event.offsetX, top: event.offsetY });
-//
-//    });
     
 </script>

@@ -100,8 +100,8 @@ class Ricambi_Catalog_Model_Link extends Mage_Core_Model_Abstract {
             $productLink = array(
                 'id_link'=> $link->getId(),
                 'id'    => $l->getLinkedProduct()->getId(),
-                'sku'   => $l->getLinkedProduct()->getSku(),
-                'name'  => $l->getLinkedProduct()->getName(),
+                'sku'   => str_replace('"', "", $l->getLinkedProduct()->getSku()) ,
+                'name'  => str_replace('"', "", $l->getLinkedProduct()->getName()),
                 'pos'   => $link->getPos(),
                 'linkid'=> $l->getLinkId(),
                 'x'     => $l->getPositionX(),

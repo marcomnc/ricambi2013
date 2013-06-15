@@ -35,8 +35,8 @@ class Ricambi_Catalog_Block_Adminhtml_Widget_Grid_Column_Renderer_Objposition ex
     public function render(Varien_Object $row)
     {
         //$pos = Mage::getModel('rcatalog/link')->getCollection($row->getData($this->getColumn()->getIndex()));
-        
-        $html  = '<span style="float:right" rel="0" class="counter" id="count_' . $row->getData($this->getColumn()->getIndex()) . '">';
+        $html  = '<div class="relative-draggable">';
+        $html  .= '<span style="float:right" rel="0" class="counter" id="count_' . $row->getData($this->getColumn()->getIndex()) . '">';
         //$html .= (sizeof($pos) > 0) ? sizeof($pos) : $this->__('No');
         $html .= "</span>";
 //        $html .= '<input type="hidden" ';
@@ -47,6 +47,7 @@ class Ricambi_Catalog_Block_Adminhtml_Widget_Grid_Column_Renderer_Objposition ex
 //        $html .= 'rel="' . $row->getData($this->getColumn()->getIndex()) . '" ';
 //        $html .= 'class="input-text obj-position ' . $this->getColumn()->getInlineCss() . '"/>';
         $html .= '<div class="position-add-to" rel="' . $row->getData('pos') . '" id="link_id_' . $row->getData($this->getColumn()->getIndex()) . '"></div>';
+        $html .= '</div>';
         return $html;
     }
 }

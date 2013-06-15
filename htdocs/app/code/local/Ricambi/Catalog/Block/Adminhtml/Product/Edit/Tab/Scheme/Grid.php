@@ -76,7 +76,7 @@ class Ricambi_Catalog_Block_Adminhtml_Product_Edit_Tab_Scheme_Grid extends Mage_
             'index'     => 'link',
             'renderer'  => $this->getLayout()->createBlock('rcatalog/adminhtml_widget_grid_column_renderer_objposition'),
             'width'     => '50px',
-            'column_css_class'      => 'relative-draggable',
+            //'column_css_class'      => 'relative-draggable',
         ));
         
         return parent::_prepareColumns();
