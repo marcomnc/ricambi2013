@@ -21,6 +21,9 @@
 .product-view.grouped .email-friend {float: none}
 .product-view.grouped .add-to-links li {float: none}
 
+.product-view.grouped tr.selected,
+.product-view.grouped tr.has-qty {background-color: #B2C8DD!important}
+
 .grouped .block-related {float: left; margin: 0px}
 .grouped .block-related .link {font-weight: bold}
 

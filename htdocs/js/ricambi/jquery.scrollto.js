@@ -28,7 +28,8 @@
 				duration: 400,
 				easing: 'swing',
 				callback: undefined,
-				durationMode: 'each'
+				durationMode: 'each',
+                                noFinal: false
 			},
 
 			/**
@@ -142,11 +143,12 @@
 				}
 
 				// Add the final collection
+                                if (!config.noFinal) {
 				collections.push({
 					'$container': $($.browser.msie ? 'html' : 'body'),
 					'$target': $target
 				});
-
+                                }
 				// Adjust the Config
 				if ( config.durationMode === 'all' ) {
 					config.duration /= collections.length;

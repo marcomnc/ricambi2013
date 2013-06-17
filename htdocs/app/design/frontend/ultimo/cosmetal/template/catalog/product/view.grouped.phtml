@@ -366,6 +366,8 @@ $hasCanvas = !Mage::Helper('rcatalog')->isNotImage($_product->getData(Mage::Help
                     stage.draw();
                     
                     CreateToolTip();
+                    if ($(window).outerHeight() < ($('.header-container').height()+$('.main-container').height()))
+                        setTimeout(function() {$('.main-container').ScrollTo();}, 500);
                 };
             }
             
@@ -395,9 +397,9 @@ $hasCanvas = !Mage::Helper('rcatalog')->isNotImage($_product->getData(Mage::Help
                     fontFamily: 'Calibri',
                     fontSize: 14,
                     padding: 5,
-                    fill: 'white',
-                    width: 300,
-                    height: 150
+                    fill: 'white'//,
+//                    width: 300,
+//                    height: 150
                   }));
                   tooltipLayer.add(tooltip);
             }
@@ -411,24 +413,42 @@ $hasCanvas = !Mage::Helper('rcatalog')->isNotImage($_product->getData(Mage::Help
                 for (var i=0; i < child.length; i++) {
                     switch (child[i].getId()) {
                         case 'Description':
-                            child[i].setText(obj[objId].sku.toUpperCase() + "\n\n" + obj[objId].name);
+                            child[i].setText("("+obj[objId].pos+") "+obj[objId].sku.toUpperCase() + "\n\n" + obj[objId].name);
                             break;
                     }
                     
                 }
-                var imageObj = new Image();
-
-                imageObj.onload = function() {
-                  stage.drawImage(imageObj, 69, 50);
-                };
-                imageObj.src = 'http://www.html5canvastutorials.com/demos/assets/darth-vader.jpg';
                 tooltipLayer.setVisible(true);
                 tooltipLayer.draw();
+                $('#'+obj[objId].sku).ScrollTo({'noFinal': true}).addClass('selected');
+                canvas.css( 'cursor', 'pointer' );
+//                var imageObj = new Image();
+//
+//                imageObj.onload = function() {
+//                  tooltipLayer.add(new Kinetic.Image({ x: 0,
+//                                                  y: 0,
+//                                                  image: imageObj,
+//                                                  width: imageObj.width,
+//                                                  height:imageObj.height,
+//                                                  id: 'bkg' }));
+//                    tooltipLayer.setVisible(true);
+//                    tooltipLayer.draw();
+//                };
+//                imageObj.src = 'http://www.html5canvastutorials.com/demos/assets/darth-vader.jpg';                
             }
             
-            function HideToolTip() {
+            function HideToolTip(objId) {
                 tooltipLayer.setVisible(false);
                 tooltipLayer.draw();
+                canvas.css( 'cursor', 'default' );
+                $('#'+obj[objId].sku).removeClass('selected');
+            }
+            
+            function AddQty(objId) {
+                $('#super_group_'+obj[objId].id).attr('value', parseInt($('#super_group_'+obj[objId].id).attr('value')) + 1);
+                if (!$('#'+obj[objId].sku).hasClass('has-qty')) {
+                    $('#'+obj[objId].sku).addClass('has-qty');
+                }
             }
             
             function PlacePosition(index, objPosition) {
@@ -469,6 +489,11 @@ $hasCanvas = !Mage::Helper('rcatalog')->isNotImage($_product->getData(Mage::Help
                     ShowToolTip(e.layerX, e.layerY, child[0].attrs.objId) 
                 });
                 
+                Position.on('click', function(e) {
+                    var child= this.getChildren();
+                    AddQty(child[0].attrs.objId) 
+                });
+                
                 Position.on('mouseover', function(e) {
                     var child= this.getChildren();
                     child[0].setFill('#0096d9');
@@ -479,7 +504,7 @@ $hasCanvas = !Mage::Helper('rcatalog')->isNotImage($_product->getData(Mage::Help
                 Position.on('mouseout', function(e) {
                     var child= this.getChildren();
                     child[0].setFill('#EB9999');
-                    HideToolTip();
+                    HideToolTip(child[0].attrs.objId);
                     linkLayer.draw();                    
                     console.log(e);
                 });

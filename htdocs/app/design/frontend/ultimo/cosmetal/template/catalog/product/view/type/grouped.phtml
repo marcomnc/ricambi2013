@@ -82,7 +82,7 @@
                     $rowSpan += sizeof($opt['options']);
                 endforeach;
              endif; ?>
-        <tr id="<?php echo $_item->getSku() ?>" class="lista<?php //if($qty>0):?> has-qty<?php //endif;?>">
+        <tr id="<?php echo $_item->getSku() ?>" class="lista<?php if(1==0):?> has-qty<?php endif;?>">
             <td<?php if ($_item->getTypeId() == 'configurable'): ?> rowspan="<?php echo $rowSpan; ?>"<?php endif;?>>
                 <?php echo $_item->getPosition()?>
             </td>
@@ -103,7 +103,7 @@
             <?php if ($_product->isSaleable()): ?>            
                 <td>
                 <?php if ($_item->isSaleable()) : ?>
-                    <input type="text" name="super_group[<?php echo $_item->getId() ?>]" id="super_group[<?php echo $_item->getId() ?>]" maxlength="12" value="<?php echo $_item->getQty()*1 ?>" title="<?php echo $this->__('Qty') ?>" class="input-text qty" />
+                    <input type="text" name="super_group[<?php echo $_item->getId() ?>]" id="super_group_<?php echo $_item->getId() ?>" maxlength="12" value="<?php echo $_item->getQty()*1 ?>" title="<?php echo $this->__('Qty') ?>" class="input-text qty" />
                 <?php else: ?>
                     <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
                 <?php endif; ?>
