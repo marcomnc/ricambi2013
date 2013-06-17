@@ -38,6 +38,14 @@
 <?php $_product = $this->getProduct(); ?>
 <?php $_associatedProducts = $this->getAssociatedProducts(); ?>
 <?php $_hasAssociatedProducts = count($_associatedProducts) > 0; ?>
+
+<?php
+$_cartItems = array();
+if (Mage::getSingleton('checkout/session')->hasQuote()):
+    $_cartItems = Mage::getSingleton('checkout/session')->getQuote()->getAllVisibleItems();
+endif;    
+?>
+
 <?php if ($_product->isAvailable() && $_hasAssociatedProducts): ?>
     <?php /*my:del <p class="availability in-stock"><?php echo $this->__('Availability:') ?> <span><?php echo $this->__('In stock') ?></span></p>*/ ?>
 <?php else: ?>
@@ -72,7 +80,7 @@
 
     <?php foreach ($_associatedProducts as $_item): ?>
         <?php $_finalPriceInclTax = $this->helper('tax')->getPrice($_item, $_item->getFinalPrice(), true) ?>
-        <?php if ($_item->getTypeId() == 'configurable'): 
+        <?php if ($_item->getTypeId() == Mage_Catalog_Model_Product_Type_Configurable::TYPE_CODE): 
                 $blockAttribute = new Mage_Catalog_Block_Product_View_Type_Configurable();
                 $blockAttribute->setProduct($_item);
                 $_attributes = Mage::helper('core')->decorateArray($blockAttribute->getAllowAttributes());
@@ -81,18 +89,32 @@
                 foreach ($options['attributes'] as $opt):
                     $rowSpan += sizeof($opt['options']);
                 endforeach;
-             endif; ?>
-        <tr id="<?php echo $_item->getSku() ?>" class="lista<?php if(1==0):?> has-qty<?php endif;?>">
-            <td<?php if ($_item->getTypeId() == 'configurable'): ?> rowspan="<?php echo $rowSpan; ?>"<?php endif;?>>
+             endif; 
+             
+             $qty = 0;
+             $gOptions = null;
+             foreach ($_cartItems as $_cartItem):
+                 $gOptions = unserialize($_cartItem->getProduct()->getCustomOption('info_buyRequest')->getValue());
+                if (isset($gOptions['super_product_config']) && $gOptions['super_product_config']['product_type'] == Mage_Catalog_Model_Product_Type_Grouped::TYPE_CODE &&
+                    $gOptions['super_product_config']['product_id'] == $_product->getId() && $_cartItem->getProductId() == $_item->getId()):
+                        $qty = $_cartItem->getQty();
+
+                    break;
+                endif;
+             endforeach;
+             
+             ?>
+        <tr id="<?php echo $_item->getSku() ?>" class="lista<?php if($qty>0):?> has-qty<?php endif;?>">
+            <td<?php if ($_item->getTypeId() == Mage_Catalog_Model_Product_Type_Configurable::TYPE_CODE): ?> rowspan="<?php echo $rowSpan; ?>"<?php endif;?>>
                 <?php echo $_item->getPosition()?>
             </td>
-            <td<?php if ($_item->getTypeId() == 'configurable'): ?> rowspan="<?php echo $rowSpan ?>"<?php endif;?>>
+            <td<?php if ($_item->getTypeId() == Mage_Catalog_Model_Product_Type_Configurable::TYPE_CODE): ?> rowspan="<?php echo $rowSpan ?>"<?php endif;?>>
                 <?php echo $_item->getSku() ?>
             </td>
-            <td <?php if ($_item->getTypeId() == 'configurable'): ?>colspan="2"<?php endif?>>
+            <td <?php if ($_item->getTypeId() == Mage_Catalog_Model_Product_Type_Configurable::TYPE_CODE): ?>colspan="2"<?php endif?>>
                 <?php echo $this->htmlEscape($_item->getName()) ?>
             </td>
-            <?php if ($_item->getTypeId() != 'configurable'): ?>
+            <?php if ($_item->getTypeId() != Mage_Catalog_Model_Product_Type_Configurable::TYPE_CODE): ?>
                 <?php if ($this->getCanShowProductPrice($_product)): ?>
                 <td class="a-right">
                     <?php echo $this->getPriceHtml($_item, true) ?>
@@ -103,7 +125,12 @@
             <?php if ($_product->isSaleable()): ?>            
                 <td>
                 <?php if ($_item->isSaleable()) : ?>
-                    <input type="text" name="super_group[<?php echo $_item->getId() ?>]" id="super_group_<?php echo $_item->getId() ?>" maxlength="12" value="<?php echo $_item->getQty()*1 ?>" title="<?php echo $this->__('Qty') ?>" class="input-text qty" />
+                    <input type="text" name="super_group[<?php echo $_item->getId() ?>]" 
+                           id="super_group_<?php echo $_item->getId() ?>" 
+                           maxlength="12" 
+                           value="<?php echo ($qty>0) ? $qty : ($_item->getQty()*1); ?>" 
+                           title="<?php echo $this->__('Qty') ?>" class="input-text qty grouped-input-qty-field" 
+                           rel="<?php echo $qty ?>"/>
                 <?php else: ?>
                     <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
                 <?php endif; ?>
@@ -114,14 +141,22 @@
                 <input type="hidden" name="related_product" id="related-products-field" value="">
             <?php endif;?>
         </tr>
-        <?php if ($_item->getTypeId() == 'configurable'):
+        <?php if ($_item->getTypeId() == Mage_Catalog_Model_Product_Type_Configurable::TYPE_CODE):
                 foreach ($options['attributes'] as $k=>$v) :
                       foreach ($v['options'] as $option):
                         if (isset($option['products'][0])):
                             $productOptions = Mage::getModel('catalog/product')->Load($option['products'][0]);?>
          <tr class='no-decorate'>    
             <td class="">
-                <input type="radio" name="super_attribute[<?php echo $_item->getId(); ?>][<?php echo $k ?>]" value="<?php echo $option['id'] ?>" class="required" />
+                <?php 
+                $checked = "";
+                if (!is_null($gOptions) && $qty > 0):
+                    if (isset($gOptions['super_attribute'][$k]) && $gOptions['super_attribute'][$k] == $option['id']):
+                        $checked = "checked";
+                    endif;
+                endif;
+                ?>
+                <input type="radio" <?php echo $checked; ?> name="super_attribute[<?php echo $_item->getId(); ?>][<?php echo $k ?>]" value="<?php echo $option['id'] ?>" class="required" />
                 <label for="super_attribute[<?php echo $_item->getId(); ?>][<?php echo $k ?>]" ><?php echo Mage::Helper('catalog/output')->productAttribute($productOptions, $productOptions->getName(), 'name'); ?></label>
             </td>
             <td class="a-right">
