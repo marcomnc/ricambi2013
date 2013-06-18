@@ -8,10 +8,10 @@ provare a fare un layer che si sovrappone all'immagine e che al mouse up se drag
 
 <input type="input" id="associated-scheme" name="associated-scheme" value="<?php echo $this->getBASE64JsonPosition();?>" style="display: none"/>
 <!--<input type="input" id="dbg" name="" value="" style="width: 200px"/>-->
-<div class="grouped-grid">
+<div class="grouped-grid" unselectable="on">
     <?php echo $this->getGridHtml() ?>   
 </div>
-<div class="grouped-canvas" id="grouped-canvas">
+<div class="grouped-canvas" id="grouped-canvas" unselectable="on">
     
 </div>
 

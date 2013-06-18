@@ -45,7 +45,7 @@
 		}
                 
                 if ($('.grouped .product-shop').length > 0) {
-                    var h = $('.grouped-data').outerHeight() - $('.grouped-accessories').outerHeight(true);
+                    var h = $('.grouped-data').outerHeight() - $('.grouped .product-shop').position().top;// $('.grouped-accessories').outerHeight(true);
                     $('.grouped .product-shop').animate({'height': h+'px'}, 'easeInCubic');
                 }
 	}

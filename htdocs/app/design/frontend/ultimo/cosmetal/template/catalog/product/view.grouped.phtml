@@ -327,6 +327,7 @@ $hasCanvas = !Mage::Helper('rcatalog')->isNotImage($_product->getData(Mage::Help
     
 </div> <!-- end: product-view -->
 
+<?php if ($hasCanvas): ?>
 <script>
     var myLink = '<?php echo Mage::getModel("rcatalog/link")->setProduct($product)->getCollectionJson();?>';
     var src = '<?php echo Mage::Helper("rcatalog")->getImage($this->_product, "frontend");?>';
@@ -531,3 +532,5 @@ $hasCanvas = !Mage::Helper('rcatalog')->isNotImage($_product->getData(Mage::Help
     jQuery('#grouped-canvas').LinkManager({ 'link': myLink, 'imageSource': src });
     
 </script>
+
+<?php endif;?>

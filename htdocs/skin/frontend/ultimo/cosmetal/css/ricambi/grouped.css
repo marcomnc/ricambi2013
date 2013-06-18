@@ -28,10 +28,14 @@
 .grouped .block-related .link {font-weight: bold}
 
 @media (max-width: 950px) {
-  .product-view .grouped-canvas {
-      display: none!important
-  }
   .product-view.grouped .add-to-box {
       float: none!important
   }
 }
+@media (max-width: 1140px) {
+    .product-view .grouped-canvas {
+          display: none!important
+      }
+    .product-view.grouped .grouped-data {width: 98%}
+}
+  
