@@ -20,10 +20,16 @@
         </reference>
     </PRODUCT_TYPE_grouped>
     
-    <checkout_cart_index translate="label">
+    <checkout_cart_index>
         <reference name="head">
             <action method="addItem"><type>skin_css</type><name>css/ricambi/grouped.css</name><params/></action>
         </reference>
     </checkout_cart_index>
+    
+    <checkout_onepage_index>
+        <reference name="head">
+            <action method="addItem"><type>skin_css</type><name>css/ricambi/grouped.css</name><params/></action>
+        </reference>
+    </checkout_onepage_index>
 
 </layout>

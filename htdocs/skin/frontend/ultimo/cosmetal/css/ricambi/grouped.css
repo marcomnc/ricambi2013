@@ -27,7 +27,10 @@
 .grouped .block-related {float: left; margin: 0px}
 .grouped .block-related .link {font-weight: bold}
 
-.cart-table .product-position {text-align: center}
+.cart-table .product-position,
+#checkout-review-table .product-position {text-align: center}
+
+#checkout-review-table h3 {font-size: 1em; line-height: 1em;}
 
 @media (max-width: 950px) {
   .product-view.grouped .add-to-box {
