@@ -28,7 +28,7 @@
                 </observers>
             </catalog_product_save_after>            
 <!-- -->
-<!-- Momorizzazione -->
+<!-- Memorizzazione -->
             <catalog_product_prepare_save>
                 <observers>
                     <ricambi_catalog_observer>
@@ -39,6 +39,16 @@
                 </observers>
             </catalog_product_prepare_save>
 <!-- -->
+<!-- Gestione dell'updateoption su grouped -->
+            <checkout_cart_add_product_complete>
+                <observers>
+                    <Ricambi_Catalog_Observer>
+                        <type>singleton</type>
+                        <class>Ricambi_Catalog_Model_Cart_Observer</class>
+                        <method>after_save</method>
+                    </Ricambi_Catalog_Observer>
+                </observers>
+            </checkout_cart_add_product_complete>
         </events>
 
         <blocks>
