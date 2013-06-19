@@ -27,6 +27,8 @@
 .grouped .block-related {float: left; margin: 0px}
 .grouped .block-related .link {font-weight: bold}
 
+.cart-table .product-position {text-align: center}
+
 @media (max-width: 950px) {
   .product-view.grouped .add-to-box {
       float: none!important
