@@ -55,6 +55,11 @@
             <rcatalog>
                 <class>Ricambi_Catalog_Helper</class>
             </rcatalog> 
+            <catalog>
+                <rewrite>
+                    <product_compare>Ricambi_Catalog_Helper_Catalog_Compare</product_compare>
+                </rewrite>
+            </catalog>
         </helpers>       
         <models>    
             <rcatalog> 

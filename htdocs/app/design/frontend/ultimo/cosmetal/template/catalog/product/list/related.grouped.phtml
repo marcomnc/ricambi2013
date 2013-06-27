@@ -28,19 +28,15 @@
 $_schemaType = Mage::getStoreConfig('catalog/ricambi/type_scheme');
 if ($_schemaType != ""): ?>
 <?php if($this->getItems()->getSize()): ?>
-    <div class="block block-related">
-        <ul>
-            <?php foreach($this->getItems() as $_item): 
-                $_productItem = Mage::getModel('catalog/product')->Load($_item->getId());?>          
-                <li class="product">
-                    <a href="<?php echo $_item->getProductUrl()  ?>">
-                        <?php echo $this->__('Schema'); ?>&nbsp;
-                        <?php echo $_productItem->getResource()->getAttribute($_schemaType)->getSource()->getOptionText($_productItem->getData($_schemaType)); ?> &nbsp;
-                        <span class="link"><?php echo $_productItem->getName(); ?></span>
-                    </a>
-                </li>
-            <?php endforeach;?>
-        </ul>
-    </div>
+        <?php foreach($this->getItems() as $_item): 
+            $_productItem = Mage::getModel('catalog/product')->Load($_item->getId());?>          
+            <li class="product">
+                <a href="<?php echo $_item->getProductUrl()  ?>">
+                    <?php echo $this->__('Schema'); ?>&nbsp;
+                    <?php echo $_productItem->getResource()->getAttribute($_schemaType)->getSource()->getOptionText($_productItem->getData($_schemaType)); ?> &nbsp;
+                    <span class="link"><?php echo $_productItem->getName(); ?></span>
+                </a>
+            </li>
+        <?php endforeach;?>
     <?php endif ; ?>
 <?php endif ; ?>

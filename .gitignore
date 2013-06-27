@@ -1,6 +1,8 @@
 .modgit/
 nbproject/
-htdocs/app/code/community/
+htdocs/app/code/community/Ebizmarts
+htdocs/app/code/community/Ebizmarts/My
+htdocs/app/code/community/Ebizmarts/Phoenix
 htdocs/app/code/core/
 htdocs/app/code/local/MpsSistemi/
 htdocs/app/design/adminhtml/default/default/

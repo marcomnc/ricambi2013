@@ -100,9 +100,10 @@
 
             }
             tooltipLayer.setVisible(true);
-            tooltipLayer.draw();
             $('#'+obj[objId].sku).ScrollTo({'noFinal': true}).addClass('selected');
             canvas.css( 'cursor', 'pointer' );
+            tooltipLayer.draw();
+            
 //                var imageObj = new Image();
 //
 //                imageObj.onload = function() {
@@ -191,5 +192,13 @@
             });
 
        }
+       
+       $('.input-text.qty').change(function(evt) {
+           if ($(this).val() > 0) {
+               $(this).parent().parent().addClass('has-qty');               
+           } else {
+               $(this).parent().parent().removeClass('has-qty')
+           }
+       });
    }
 })(jQuery);
