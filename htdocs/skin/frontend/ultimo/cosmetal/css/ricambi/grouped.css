@@ -22,7 +22,7 @@
 .product-view.grouped .email-friend {float: none}
 .product-view.grouped .add-to-links li {float: none}
 .product-view.grouped .schema-type {color: black; font-weight: bold}
-.product-view.grouped .prodcut-action {margin-top: 5px}
+.product-view.grouped .prodcut-action {margin-top: 15px; min-height: 90px}
 .product-view.grouped .prodcut-action li a { padding-left: 20px; background: url(../../images/puntatoreRosso.gif) no-repeat 0 0}
 
 .product-view.grouped tr.selected,
