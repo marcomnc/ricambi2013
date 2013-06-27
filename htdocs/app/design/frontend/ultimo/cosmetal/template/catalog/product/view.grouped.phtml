@@ -79,8 +79,7 @@ $_schemaType = Mage::getStoreConfig('catalog/ricambi/type_scheme');
                 <?php if ($_product->getData($_schemaType)): ?>
                     <div class="schema-type">
                         <div class="std">
-                            ( <?php echo $this->__('Schema'); ?>&nbsp;
-                            <?php echo $_product->getResource()->getAttribute($_schemaType)->getSource()->getOptionText($_product->getData($_schemaType)); ?> )
+                            ( <?php echo $_product->getResource()->getAttribute($_schemaType)->getSource()->getOptionText($_product->getData($_schemaType)); ?> )
                         </div>
                     </div>
                 <?php endif;?>

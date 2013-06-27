@@ -32,8 +32,7 @@ if ($_schemaType != ""): ?>
             $_productItem = Mage::getModel('catalog/product')->Load($_item->getId());?>          
             <li class="product">
                 <a href="<?php echo $_item->getProductUrl()  ?>">
-                    <?php echo $this->__('Schema'); ?>&nbsp;
-                    <?php echo $_productItem->getResource()->getAttribute($_schemaType)->getSource()->getOptionText($_productItem->getData($_schemaType)); ?> &nbsp;
+                    <?php echo $_productItem->getResource()->getAttribute($_schemaType)->getSource()->getOptionText($_productItem->getData($_schemaType)); ?>
                     <span class="link"><?php echo $_productItem->getName(); ?></span>
                 </a>
             </li>
