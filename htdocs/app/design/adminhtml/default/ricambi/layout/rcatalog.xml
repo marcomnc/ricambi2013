@@ -12,6 +12,10 @@
                 <name>Schema_Canvas_Tab</name>
                 <block>rcatalog/adminhtml_product_edit_tab_scheme_tab</block>
             </action>
+            <action method="addTab">
+                <name>Options_Spare_Parts_Tab</name>
+                <block>rcatalog/adminhtml_product_edit_tab_options_tab</block>
+            </action>
         </reference>
     </adminhtml_catalog_product_grouped>
     

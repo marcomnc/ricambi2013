@@ -130,14 +130,16 @@
                 </rcatalog>
             </updates>
         </layout>
+    </adminhtml>
+    <admin>
         <routers>
-            <rcatalog>
+            <radmincatalog>
                 <use>admin</use>
                     <args>
                         <module>Ricambi_Catalog</module>
-                        <frontName>rcatalog</frontName>
+                        <frontName>radmincatalog</frontName>
                     </args>
-            </rcatalog>
+            </radmincatalog>
         </routers>    
-    </adminhtml>
+    </admin>
 </config>

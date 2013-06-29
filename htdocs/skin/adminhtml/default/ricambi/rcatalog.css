@@ -10,3 +10,5 @@
 .grid tr.position_list_table.on-mouse {cursor: default;}
 .relative-draggable {position:relative}
 .grouped-grid .hor-scroll {overflow: visible!important}
+
+.group-option-grid .pager select {display: none}
