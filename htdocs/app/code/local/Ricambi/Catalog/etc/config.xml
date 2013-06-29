@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Ricambi_Catalog>
-            <version>0.1.0</version>
+            <version>0.1.1</version>
         </Ricambi_Catalog>
     </modules>
     <global>
@@ -72,6 +72,9 @@
                     <position>
                         <table>ricambi_catalog_product_position_links</table>
                     </position>
+                    <options>
+                        <table>ricambi_catalog_product_gruoped_associate_options</table>
+                    </options>
                 </entities>
             </rcatalog_mysql4>
             <catalog>

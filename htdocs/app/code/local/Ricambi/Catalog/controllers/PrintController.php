@@ -27,5 +27,16 @@ class Ricambi_Catalog_PrintController extends Mage_Core_Controller_Front_Action 
         $this->renderLayout();
     }
     
+    
+    public function testAction() 
+    {
+        $collection = Mage::getModel('rcatalog/options')->getCollection();
+        
+        echo "<pre>";
+        foreach ($collection as $c) {
+            print_r($c);
+        }
+        die();
+    }
 }
 ?>
