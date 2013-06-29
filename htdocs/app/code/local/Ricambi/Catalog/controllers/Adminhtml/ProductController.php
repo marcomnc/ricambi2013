@@ -39,6 +39,25 @@ class Ricambi_Catalog_Adminhtml_ProductController extends Mage_Adminhtml_Control
         $this->getResponse()->setBody($this->getLayout()->createBlock('rcatalog/adminhtml_product_edit_tab_options_spareparts_grid')->toHtml());
 
     }
+    
+    public function selectoptiongridAction() {
+      
+        $associateProduct = Mage::getModel('catalog/product')->Load($this->getRequest()->getParam('ass_id'));
+        $groupedProduct = Mage::getModel('catalog/product')->Load($this->getRequest()->getParam('grp_id'));
+        
+        $link = Mage::getModel('catalog/product')->Load($this->getRequest()->getParam('link_id'));
+
+        $this->loadLayout();
+        
+        $blockGrid = $this->getLayout()->createBlock("rcatalog/adminhtml_product_edit_tab_options_grid");
+        $blockGrid->setAssociateProduct($associateProduct);
+        $blockGrid->setGroupedProduct($groupedProduct);
+        $blockGrid->setLinkId($link);
+        
+        $this->getResponse()->setBody($blockGrid->toHtml());
+                
+        
+    }
 }
 
 ?>

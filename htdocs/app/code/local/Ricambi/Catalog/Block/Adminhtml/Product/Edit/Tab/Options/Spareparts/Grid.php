@@ -100,16 +100,7 @@ MAge::Log($collection->getSelect()->__toString());
         $this->addColumn('action',
             array(
                 'header'    => Mage::helper('rcatalog')->__('Associa'),
-                'type'      => 'action',
-                'getter'     => 'getId',
-                'actions'   => array(
-                    array(
-                        'caption' => Mage::helper('catalog')->__('Link'),
-                        'url'     => "url",
-                        'field'   => 'id',
-                        'onclick'  => 'superProduct.createPopup(this.href);return false;'
-                    )
-                ),
+                'renderer'  => $this->getLayout()->createBlock('rcatalog/adminhtml_widget_grid_column_renderer_options_link'),
                 'filter'    => false,
                 'sortable'  => false
         ));
