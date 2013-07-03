@@ -43,10 +43,19 @@ class Ricambi_Catalog_Block_Adminhtml_Product_Edit_Tab_Options_Tab
                 'adminhtml.product.edit.tab.options.spareparts.grid')
         );
         
+        $this->setChild('options.grid',
+            $this->getLayout()->createBlock('rcatalog/adminhtml_product_edit_tab_options_grid',
+                'adminhtml.product.edit.tab.options.grid')
+        );
+        
         return parent::_prepareLayout();
     }
     
-    protected function getGroupedGridHtml() {
+    protected function getOptionsGridHtml() {
+        return $this->getChildHtml('options.grid');
+    }
+    
+    protected function getSparePartsGridHtml() {
         return $this->getChildHtml('spareparts.grid');
     }
 

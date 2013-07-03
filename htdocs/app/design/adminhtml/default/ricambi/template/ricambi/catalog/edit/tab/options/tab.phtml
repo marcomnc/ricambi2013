@@ -1,3 +1,104 @@
 <div class='group-option-grid'>
-    <?php echo $this->getGroupedGridHtml() ?>   
+    <?php echo $this->getSparePartsGridHtml() ?>   
 </div>
+
+<div id="content" class="entry-edit">
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend"><?php echo Mage::helper('rcatalog')->__('Prodotti Associati') ?></h4>
+    </div>
+    
+    <div id="block_notice_logs_listings_grid" class="block_notices_module" title="<?php echo Mage::helper('rcatalog')->__('Elenco Prodotti Associati'); ?>">
+        <?php echo Mage::helper('rcatalog')->__('Selezionare eventuali prodotti che appariranno come opzioni quando si seleziona il numero associato al ricambio'); ?>
+    </div>
+
+    
+    <?php echo $this->getOptionsGridHtml() ?>
+    
+</div>
+
+
+<script>
+    
+    var BLOCK_NOTICES_SHOW = true;
+    var HIDE_BLOCK = '<?php echo Mage::helper('rcatalog')->__('Hide Block'); ?>';;
+    var HELP = '<?php echo Mage::helper('rcatalog')->__('Help'); ?>';
+    
+    var CONFIRM = '<?php echo Mage::helper('rcatalog')->__('Are you sure?'); ?>';
+    var SHOW_TIPS = '<?php echo Mage::helper('rcatalog')->__('Show Tips'); ?>';
+    var HIDE_TIPS = '<?php echo Mage::helper('rcatalog')->__('Hide Tips'); ?>';
+    
+    //recuperare blocknotice dal puglin sotto js me2pro di paianeta regali
+    
+    var moduleNoticeObj = new BlockNotice('module');
+    
+    Event.observe(window, 'load', function() {
+        
+        $$('.block_notices_module').each(function(blockObj) {
+            moduleNoticeObj.observeModulePrepareStart(blockObj);
+        });       
+        
+    })
+    
+AssociateManager = Class.create();
+AssociateManager.prototype = {
+    initialize: function(params) {    
+        this.SparePartsGrid = params.SpareParts;
+        this.containerId = params.Associated;
+        
+        $(this.SparePartsGrid).on('click', 'a.associated-product', this.handleClick.bind(this));    
+    },
+          
+    handleClick: function(event) {
+        console.log($(event.target).href);
+        
+        if (typeof($(event.target).href) != 'undefined' && $(event.target).href != "") {
+            new Ajax.Request($(event.target).href , {
+                evalScripts: true,
+//                onFailure: this._processFailure.bind(this),
+//                onComplete: this.initGridAjax.bind(this),
+                onSuccess: function(transport) {
+                    try {
+                        var responseText = transport.responseText.replace(/>\s+</g, '><');
+
+                        if (transport.responseText.isJSON()) {
+                            var response = transport.responseText.evalJSON()
+                            if (response.error) {
+                                alert(response.message);
+                            }
+                            if(response.ajaxExpired && response.ajaxRedirect) {
+                                setLocation(response.ajaxRedirect);
+                            }
+                        } else {
+                            /**
+                             * For IE <= 7.
+                             * If there are two elements, and first has name, that equals id of second.
+                             * In this case, IE will choose one that is above
+                             *
+                             * @see https://prototype.lighthouseapp.com/projects/8886/tickets/994-id-selector-finds-elements-by-name-attribute-in-ie7
+                             */
+                            var divId = $(this.containerId);
+                            if (divId.id == this.containerId) {
+                                divId.update(responseText);
+                            } else {
+                                $$('div[id="'+this.containerId+'"]')[0].update(responseText);
+                            }
+                        }
+                    } catch (e) {
+                        var divId = $(this.containerId);
+                        if (divId.id == this.containerId) {
+                            divId.update(responseText);
+                        } else {
+                            $$('div[id="'+this.containerId+'"]')[0].update(responseText);
+                        }
+                    }
+                }.bind(this)
+            });
+        }
+        
+        event.stop();
+    }
+};
+
+    var assProduct = new AssociateManager({SpareParts: 'super_product_grid', Associated: 'super_product_links'});
+</script>
+    

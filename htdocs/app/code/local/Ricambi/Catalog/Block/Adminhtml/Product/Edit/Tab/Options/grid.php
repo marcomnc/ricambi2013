@@ -76,8 +76,11 @@ class Ricambi_Catalog_Block_Adminhtml_Product_Edit_Tab_Options_Grid extends Mage
             ->addAttributeToSelect('type_id')
             ->addAttributeToSelect('price')
             ->addFieldToFilter('type_id', $allowProductTypes)   
-            ->addFieldToFilter('entity_id', array('nin' => $this->getAssociateProduct()->getId()))
             ->joinAttribute('name', 'catalog_product/name', 'entity_id', null, 'inner');
+        
+        if (!is_null($this->getAssociateProduct())) {
+            $collection->addFieldToFilter('entity_id', array('nin' => $this->getAssociateProduct()->getId()));
+        }
 
         if (Mage::helper('catalog')->isModuleEnabled('Mage_CatalogInventory')) {
             Mage::getModel('cataloginventory/stock_item')->addCatalogInventoryToProductCollection($collection);
@@ -133,8 +136,7 @@ class Ricambi_Catalog_Block_Adminhtml_Product_Edit_Tab_Options_Grid extends Mage
         ));
 
 
-        $sets = Mage::getModel('eav/entity_attribute_set')->getCollection()
-            ->setEntityTypeFilter($this->getAssociateProduct()->getResource()->getTypeId())
+        $sets = Mage::getModel('eav/entity_attribute_set')->getCollection()            
             ->load()
             ->toOptionHash();
 
