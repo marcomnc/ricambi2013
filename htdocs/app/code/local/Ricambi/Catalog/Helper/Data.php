@@ -69,10 +69,16 @@ class Ricambi_Catalog_Helper_Data extends Mage_Core_Helper_Abstract {
      * @return type
      */
     public function getImage($product = null, $from = 'admin') {
-        if (is_null($product)) {
-            $product = $this->getCurrentProduct();
+        try {
+            if (is_null($product)) {
+                $product = $this->getCurrentProduct();
+            }
+            return Mage::helper('catalog/image')->init($product, $this->_schemaAttribute);   
+        } catch (Exception $ex) {
+            Mage::logException($ex);
         }
-        return Mage::helper('catalog/image')->init($product, $this->_schemaAttribute);   
+        
+        return null;
     }
     
     

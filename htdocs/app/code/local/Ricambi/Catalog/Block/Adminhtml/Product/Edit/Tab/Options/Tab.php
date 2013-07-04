@@ -42,21 +42,40 @@ class Ricambi_Catalog_Block_Adminhtml_Product_Edit_Tab_Options_Tab
             $this->getLayout()->createBlock('rcatalog/adminhtml_product_edit_tab_options_spareparts_grid',
                 'adminhtml.product.edit.tab.options.spareparts.grid')
         );
-        
-        $this->setChild('options.grid',
-            $this->getLayout()->createBlock('rcatalog/adminhtml_product_edit_tab_options_grid',
-                'adminhtml.product.edit.tab.options.grid')
-        );
-        
+      
         return parent::_prepareLayout();
     }
     
-    protected function getOptionsGridHtml() {
-        return $this->getChildHtml('options.grid');
+    protected function getSparePartsGridHtml() {        
+        return $this->getChildHtml('spareparts.grid');
     }
     
-    protected function getSparePartsGridHtml() {
-        return $this->getChildHtml('spareparts.grid');
+    protected function getSparePartsGridId() {
+        return $this->getChild('spareparts.grid')->getId();
+    }
+    
+    /**
+     * Recupero la struttura parti di ricambio /articoli associati
+     */
+    protected function getJsonSparePartsAssociateStruct() {
+        $struct =  Mage::getModel('rcatalog/options')->getCollection()->setFilterByProduct($this->_getProduct())->toStruct();
+
+        if (!isset($struct['Product'])) {
+            $struct = array('Product' => array($this->_getProduct()->getId() => array('Spare' => array())));
+        }
+
+        return Mage::helper('core')->JsonEncode($struct);
+    }
+    
+    
+      /**
+     * Retrieve currently edited product object
+     *
+     * @return Mage_Catalog_Model_Product
+     */
+    protected function _getProduct()
+    {
+        return Mage::registry('current_product');
     }
 
 

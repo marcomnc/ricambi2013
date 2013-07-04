@@ -23,13 +23,44 @@
  */
 class Ricambi_Catalog_Block_Adminhtml_Product_Edit_Tab_Options_Spareparts_Grid extends Mage_Adminhtml_Block_Catalog_Product_Edit_Tab_Super_Group
 {
+    
     public function __construct() {
         parent::__construct();
         $this->setDefaultLimit(10);
         $this->setDefaultSort('position');
         $this->setGridUrl(Mage::helper("adminhtml")->getUrl('radmincatalog/adminhtml_product/supergroupgrid/', array('_current'=>true)));
+        
     }
     
+    public function getAssociatedProductJsObj() {
+    
+        return $this->getId().'AssociatedProductJsObj';
+    }
+    
+    protected function _prepareLayout() {
+        
+        $this->setChild('reset_selection_button',
+            $this->getLayout()->createBlock('adminhtml/widget_button')
+                ->setData(array(
+                    'label'     => Mage::helper('rcatalog')->__('Reset Selection'),
+                    'onclick'   => $this->getAssociatedProductJsObj().'.Reset("'+_getResetUrl+'")',
+                    'class'   => 'delete'
+                ))
+        );
+        
+        return parent::_prepareLayout();
+    }
+    
+    /**
+     * Override della funzione base per aggiungere il pulsante di reset
+     * @return type
+     */
+    public function getMainButtonsHtml()
+    {
+        return $this->getChildHtml('reset_selection_button') . parent::getMainButtonsHtml();;
+    }
+
+
     /**
      * Override della funzione base per selezionare i prodotti configurabili
      * 
@@ -51,7 +82,6 @@ class Ricambi_Catalog_Block_Adminhtml_Product_Edit_Tab_Options_Spareparts_Grid e
         //->addFilterByRequiredOptions()
         ->addAttributeToFilter('type_id', $allowProductTypes)
         ->addFieldToFilter('entity_id', array('in'=>array_keys($this->getSelectedGroupedProducts())));
-MAge::Log($collection->getSelect()->__toString());
         $this->setCollection($collection);
         return Mage_Adminhtml_Block_Widget_Grid::_prepareCollection();       
         
@@ -106,6 +136,12 @@ MAge::Log($collection->getSelect()->__toString());
         ));
 
         return Mage_Adminhtml_Block_Widget_Grid::_prepareCollection();
+    }
+    
+    private function _getResetUrl() {
+         return Mage::helper("adminhtml")
+                ->getUrl('radmincatalog/adminhtml_product/selectoptiongrid/', 
+                          array('grp_id' => $groupedProduct->getId()));
     }
     
 }
