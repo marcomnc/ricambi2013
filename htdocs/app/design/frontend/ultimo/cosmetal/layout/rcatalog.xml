@@ -20,6 +20,24 @@
         </reference>
     </PRODUCT_TYPE_grouped>
     
+    <rcatalog_print_grouped>
+        <reference name="root">
+            <action method="setTemplate"><template>page/print.auto.phtml</template></action>
+        </reference>
+        <reference name="head">
+            <action method="addItem"><type>skin_js</type><name>js/ricambi.js</name></action>
+        </reference>
+        <reference name="content">
+            <block type="rcatalog/print_grouped" name="rcatalog.print.grouped" template="catalog/product/print/grouped.phtml">
+                <block type="catalog/product_view_type_grouped" name="product.info.grouped" as="product_type_data" template="catalog/product/view/type/grouped.phtml">
+                    <block type="core/text_list" name="product.info.grouped.extra" as="product_type_data_extra" translate="label">
+                        <label>Product Extra Info</label>
+                    </block>
+                </block>
+            </block>
+        </reference>
+    </rcatalog_print_grouped>
+    
     <checkout_cart_index>
         <reference name="head">
             <action method="addItem"><type>skin_css</type><name>css/ricambi/grouped.css</name><params/></action>

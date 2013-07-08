@@ -70,7 +70,7 @@ endif;
             <?php if ($this->getCanShowProductPrice($_product)): ?>
             <th class="a-right"><?php echo $this->__('Price') ?></th>
             <?php endif; ?>
-            <?php if ($_product->isSaleable()): ?>
+            <?php if ($_product->isSaleable() && !$this->getHideQty()): ?>
             <th class="a-center"><?php echo $this->__('Qty') ?></th>
             <?php endif; ?>
         </tr>
@@ -122,7 +122,7 @@ endif;
                 </td>
                 <?php endif; ?>
             <?php endif;?>
-            <?php if ($_product->isSaleable()): ?>            
+            <?php if ($_product->isSaleable() && !$this->getHideQty()): ?>            
                 <td>
                 <?php if ($_item->isSaleable()) : ?>
                     <input type="text" name="super_group[<?php echo $_item->getId() ?>]" 

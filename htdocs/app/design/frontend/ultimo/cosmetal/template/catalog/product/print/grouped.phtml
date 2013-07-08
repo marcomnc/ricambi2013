@@ -1,0 +1,22 @@
+<?php
+
+$_product = $this->getProduct();
+$_helper = Mage::helper('rcatalog');
+
+?>
+
+<?php  if (!$_helper->isNotImage($_product->getData($_helper->getSchemaAttribute()))): ?>
+<div id="grouped-canvas" class="grouped-canvas">
+    <img src="<?php echo $_helper->getImage($_product, "frontend");?>" />
+</div>
+<?php endif ?>
+<div class="break">
+<?php 
+    echo $this->getLayout()
+              ->createBlock('catalog/product_view_type_grouped')
+              ->setProduct($_product)
+              ->setHideQty(true)
+              ->setTemplate('catalog/product/view/type/grouped.phtml')
+              ->toHtml();
+?>
+</div>

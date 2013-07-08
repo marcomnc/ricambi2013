@@ -20,30 +20,29 @@
  * @author      MPS Sistemi S.a.s - Marco Mancinelli <marco.mancinelli@mps-sistemi.it>
  *
  */
-class Ricambi_Catalog_PrintController extends Mage_Core_Controller_Front_Action {
+
+class Ricambi_Catalog_Block_Print_Grouped extends Mage_Core_Block_Template 
+{
+    protected $_curProd = null;
     
-    public function groupedAction() {
-        
-        $productId = $this->getRequest()->getParams('id', "");
-        if ($productId != "") {
-            $product = Mage::getModel('catalog/product')->Load($productId);
-            Mage::register("print_product", $product);
-        }
-        
-        $this->loadLayout();
-        $this->renderLayout();
+    public function _construct() {        
+        parent::_construct();
     }
     
+    public function getProduct() {
+        return Mage::registry("print_product");        
+    }
     
-    public function testAction() 
-    {
-        $collection = Mage::getModel('rcatalog/options')->getCollection();
-        
-        echo "<pre>";
-        foreach ($collection as $c) {
-            print_r($c);
-        }
-        die();
+    public function setProduct4Render() {
+        $this->_curProd = Mage::registry('product');
+        Mage::unregister('product');
+        Mage::register('product', $this->getProduct());                
+    }
+    
+    public function unsProduct4Render() {
+        Mage::unregister('product');
+        Mage::register('product', $this->_curProd);                
     }
 }
+
 ?>
