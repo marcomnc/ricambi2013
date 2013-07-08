@@ -91,16 +91,7 @@ $_schemaType = Mage::getStoreConfig('catalog/ricambi/type_scheme');
                         </a>
                     </li>
                     <?php echo $this->getChildHtml('catalog.product.related');?>
-                    <li>
-                        <a href="#">
-                            Scarica il manuale
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            Scarica la scheda tecnica
-                        </a>
-                    </li>
+                    <?php echo $this->getChildHtml('product.attachments'); ?>
                 </ul>
                 
                 <?php if ($_product->getShortDescription()): ?>

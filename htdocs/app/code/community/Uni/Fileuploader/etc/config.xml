@@ -11,7 +11,7 @@
 <config>
     <modules>
         <Uni_Fileuploader>
-            <version>0.2.0</version>
+            <version>0.2.1</version>
         </Uni_Fileuploader>
     </modules>
     <frontend>
@@ -140,6 +140,9 @@
                     <fileuploader>
                         <table>uni_fileuploader</table>
                     </fileuploader>
+                    <label>
+                        <table>uni_fileuploader_label</table>
+                    </label>
                 </entities>
             </fileuploader_mysql4>
         </models>

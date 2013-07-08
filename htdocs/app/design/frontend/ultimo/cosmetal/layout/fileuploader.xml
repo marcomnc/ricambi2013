@@ -16,7 +16,7 @@
             </action>
         </reference>
         <reference name="content">            
-            <reference name="product.description">
+            <reference name="product.info">
                 <action method="setTemplate"><template>fileuploader/fileuploader.phtml</template></action>
 		<block type="fileuploader/fileuploader" name="product.attachments" template="fileuploader/desc_attachments.phtml"/>
             </reference>
