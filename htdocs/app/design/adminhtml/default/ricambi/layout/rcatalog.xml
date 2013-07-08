@@ -20,27 +20,5 @@
             </action>
         </reference>
     </adminhtml_catalog_product_grouped>
-<!-- non va :(    
-    <rcatalog_adminhtml_product_selectoptiongrid>
-        <block type="core/text_list" name="root" output="toHtml">
-            <block type="rcatalog/adminhtml_product_edit_tab_options_grid" name="rcatalog.adminhtml.product.edit.tab.options.grid" />
-            <block type="adminhtml/widget_grid_serializer" name="options_grid_serializer">
-                <reference name="options_grid_serializer">
-                    <action method="initSerializerBlock">
-                        <grid_block_name>adminhtml.product.edit.tab.options.grid</grid_block_name>
-                        <data_callback>getSelectedOptionsProducts</data_callback>
-                        <hidden_input_name>links[options]</hidden_input_name>
-                        <reload_param_name>products_grouped</reload_param_name>
-                    </action>                    
-                </reference>
-            </block>
-        </block>
-    </rcatalog_adminhtml_product_selectoptiongrid>
     
-    <rcatalog_adminhtml_product_selectoptiongridgrid>
-        <block type="core/text_list" name="root">
-            <block type="rcatalog/adminhtml_product_edit_tab_options_grid" name="rcatalog.adminhtml.product.edit.tab.options.grid" />
-        </block>
-    </rcatalog_adminhtml_product_selectoptiongridgrid>
-    -->   
 </layout>

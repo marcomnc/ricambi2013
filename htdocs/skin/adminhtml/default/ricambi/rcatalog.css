@@ -12,6 +12,3 @@
 .grouped-grid .hor-scroll {overflow: visible!important}
 
 .group-option-grid .pager select {display: none}
-
-tr.selected,
-tr.on-mouse.selected { background-color: #FF4500!important }
