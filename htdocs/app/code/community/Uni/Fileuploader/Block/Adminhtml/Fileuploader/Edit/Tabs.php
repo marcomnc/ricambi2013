@@ -21,12 +21,20 @@ class Uni_Fileuploader_Block_Adminhtml_Fileuploader_Edit_Tabs extends Mage_Admin
             'title' => Mage::helper('fileuploader')->__('File Information'),
             'content' => $this->getLayout()->createBlock('fileuploader/adminhtml_fileuploader_edit_tab_form')->toHtml(),
         ));
-
+        
         $this->addTab('grid_section', array(
             'label' => Mage::helper('fileuploader')->__('Product Information'),
             'alt' => Mage::helper('fileuploader')->__('Product Information'),
             'content' => $this->getLayout()->createBlock('fileuploader/adminhtml_fileuploader_grid_gridproduct')->toHtml(),
         ));
+        
+        $this->addTab('label_section', array(
+            'label' => Mage::helper('fileuploader')->__('Translate Label'),
+            'title' => Mage::helper('fileuploader')->__('Translate Label'),
+            'content' => $this->getLayout()->createBlock('fileuploader/adminhtml_fileuploader_edit_tab_label')->toHtml(),
+        ));
+                
+
         return parent::_beforeToHtml();
     }
 

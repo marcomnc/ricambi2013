@@ -8,6 +8,9 @@
  */
 class Uni_Fileuploader_Model_Fileuploader extends Mage_Core_Model_Abstract {
 
+    
+    protected $_labels;
+    
     public function _construct() {
         parent::_construct();
         $this->_init('fileuploader/fileuploader');
@@ -26,6 +29,45 @@ class Uni_Fileuploader_Model_Fileuploader extends Mage_Core_Model_Abstract {
                 ->addFieldToFilter('file_status', 1);
         $collection->getSelect()->order('sort_order');
         return $collection->toArray();
+    }
+    
+    
+    protected function _afterSave() {
+        if ($this->hasStoreLabels()) {
+            $this->_getResource()->saveStoreLabels($this->getId(), $this->getStoreLabels());
+        }
+        parent::_afterSave();
+    }
+
+
+
+
+    public function getStoreLabels()
+    {
+        if (!$this->hasStoreLabels()) {
+            $labels = $this->_getResource()->getStoreLabels($this->getId());
+            $this->setStoreLabels($labels);
+        }
+        return $this->_getData('store_labels');
+    }
+    
+    public function getStoreLabel($returnDescription=false) {
+        $storeId = Mage::app()->getStore()->getId();
+        if ($this->hasStoreLabels()) {
+            $labels = $this->_getData('store_labels');
+            if (isset($labels[$storeId])) {
+                return $labels[$storeId];
+            } elseif ($labels[0]) {
+                return $labels[0];
+            } elseif ($returnDescription) {
+                return $this->getData('title');
+            } else {
+                return false;
+            }
+        } elseif (!isset($this->_labels[$storeId])) {
+            $this->_labels[$storeId] = $this->_getResource()->getStoreLabel($this->getId(), $storeId);
+        }
+        return $this->_labels[$storeId];        
     }
 
 }
