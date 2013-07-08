@@ -266,7 +266,7 @@
     
     <?php //Display collateral blocks
 		  //--------------------------------------------------------------------------- ?>
-    
+    <?php echo $this->getChildHtml('product.attachments');?>
 	<div class="box-additional box-tabs <?php echo $tabsGridClass; ?>">
     	<?php $info_tabs_html = $this->getChildHtml('info_tabs');
 			if (trim($info_tabs_html)) echo $info_tabs_html; ?>

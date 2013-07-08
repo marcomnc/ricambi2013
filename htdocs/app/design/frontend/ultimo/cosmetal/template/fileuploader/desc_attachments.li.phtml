@@ -1,0 +1,22 @@
+<!--
+/**
+ * Unicode Systems
+ * @category   Uni
+ * @package    Uni_Fileuploader
+ * @copyright  Copyright (c) 2010-2011 Unicode Systems. (http://www.unicodesystems.in)
+ * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+ -->
+<?php
+$_product = Mage::registry('current_product');
+$attachments = $this->getProductAttachments($_product->getId());
+//$_description = $_product->getDescription();
+if (count($attachments) > 0):
+?>
+    <?php foreach ($attachments as $attachment): ?>
+       <li>
+            <?php echo $attachment['file']; ?>
+           &nbsp;<?php echo $attachment['content']; ?>
+        </li>
+    <?php endforeach; ?>
+<?php endif; ?>
