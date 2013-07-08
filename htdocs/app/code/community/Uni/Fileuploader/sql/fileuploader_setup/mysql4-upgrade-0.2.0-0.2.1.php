@@ -49,10 +49,10 @@ $table_label = $installer->getConnection()
         $installer->getIdxName(
             'fileuploader/label',
             array('fileuploader_id', 'store_id'),
-            Varien_Db_Adapter_Interface::INDEX_TYPE_INDEX
+            Varien_Db_Adapter_Interface::INDEX_TYPE_UNIQUE
         ),
         array('fileuploader_id', 'store_id'),
-        array('type' => Varien_Db_Adapter_Interface::INDEX_TYPE_INDEX))
+        array('type' => Varien_Db_Adapter_Interface::INDEX_TYPE_UNIQUE))
     ->addForeignKey($installer->getFkName('fileuploader/label', 'fileuploader_id', 'fileuploader/fileuploader', 'fileuploader_id'),
         'fileuploader_id', $installer->getTable('fileuploader/fileuploader'), 'fileuploader_id',
         Varien_Db_Ddl_Table::ACTION_CASCADE, Varien_Db_Ddl_Table::ACTION_CASCADE)
