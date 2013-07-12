@@ -11,8 +11,10 @@
         <?php echo Mage::helper('rcatalog')->__('Selezionare eventuali prodotti che appariranno come opzioni quando si seleziona il numero associato al ricambio'); ?>
     </div>
 
-    
-    <?php echo $this->getOptionsGridHtml() ?>
+    <input type="hidden" id="links_options" name="options_link" value=""/>
+    <div id="options-container">
+
+    </div>
     
 </div>
 
@@ -46,13 +48,85 @@ AssociateManager.prototype = {
         this.containerId = params.Associated;
         
         $(this.SparePartsGrid).on('click', 'a.associated-product', this.handleClick.bind(this));    
+        
+        $(this.containerId).on('click', '[type="checkbox"]', this.handleClickCheck.bind(this));    
+        
+        this.obj = params.Obj;       
+        this.HiddenInput = params.HiddenInput;
+        
+        this.SpareParts = 0;
+        this.Associated = 0;
+        
+        this.sincroHiddenInput();
     },
-          
+            
+    handleClickCheck: function() {
+        
+        element = $(event.target)
+        console.log($(event.target).value);
+        
+        if (this.SpareParts == 0 || this.Associated == 0) {
+                alert(Translator.translate('Errore associazione codici! Ricaricare la pagina'));            
+                return false;
+            }
+
+            if (typeof(this.obj.Product[this.SpareParts])=='undefined') {
+                alert(Translator.translate('Errore! Macchina non definita! Ricaricare la pagina'));
+                return false;
+            }
+            
+            if (typeof(this.obj.Product[this.SpareParts].Spare[this.Associated])=='undefined') {
+                if (this.obj.Product[this.SpareParts].Spare.length == 0) {
+                    this.obj.Product[this.SpareParts].Spare = {};
+                }
+                this.obj.Product[this.SpareParts].Spare[this.Associated] = [];
+            }
+
+        
+        if (element.value=='on') {
+            elements = Element.select($(this.containerId), 'input[name="'+element.name+'"]');
+            for(var i=0; i<elements.length;i++){
+                this.sliceArray(elements[i].value, element.checked);
+            }
+        } else {            
+            this.sliceArray(element.value, element.checked);
+        }
+        this.sincroHiddenInput();          
+    },       
+    sliceArray: function(productId, checked) {
+        var pos = this.obj.Product[this.SpareParts].Spare[this.Associated].indexOf(productId);
+        if (checked) {
+            if (pos == -1)
+                this.obj.Product[this.SpareParts].Spare[this.Associated].push(productId);
+        } else {
+            if (pos > 0)
+                this.obj.Product[this.SpareParts].Spare[this.Associated].splice(pos);
+        }
+
+    },
+    sincroHiddenInput: function() { 
+        
+        if (typeof(this.HiddenInput)!='undefined'){
+            $(this.HiddenInput).setAttribute('value', Base64.encode(Object.toJSON(this.obj)));
+        }
+    
+    },
     handleClick: function(event) {
         console.log($(event.target).href);
         
         if (typeof($(event.target).href) != 'undefined' && $(event.target).href != "") {
-            new Ajax.Request($(event.target).href , {
+        
+            $$("#" + this.SparePartsGrid + " tr").each (function(elem) {
+                $(elem).removeClassName("selected");
+                if ($(elem).down("a.associated-product") === $(event.target)) {
+                    $(elem).addClassName("selected");
+                }
+            });
+        
+            this.SpareParts = 0;
+            this.Associated = 0;
+            
+            new Ajax.Request($(event.target).href+"struct/"+$(this.HiddenInput).getAttribute('value')+"/" , {                
                 evalScripts: true,
 //                onFailure: this._processFailure.bind(this),
 //                onComplete: this.initGridAjax.bind(this),
@@ -83,6 +157,11 @@ AssociateManager.prototype = {
                                 $$('div[id="'+this.containerId+'"]')[0].update(responseText);
                             }
                         }
+                        if (Base64.decode($(event.target).getAttribute('rel')).isJSON) {
+                            var rel=Base64.decode($(event.target).getAttribute('rel')).evalJSON();
+                            this.SpareParts = rel.SpareParts;
+                            this.Associated = rel.Associated;
+                        }
                     } catch (e) {
                         var divId = $(this.containerId);
                         if (divId.id == this.containerId) {
@@ -96,9 +175,66 @@ AssociateManager.prototype = {
         }
         
         event.stop();
+    },
+    reset: function(resetUrl) {
+    
+        event.stop();
+        
+        if (typeof(resetUrl) == 'undefined' || resetUrl == '' ) {            
+            return false;
+        }
+    
+        if (alert(confirm(Translator.translate('Sicuro')))) {
+            new Ajax.Request(resetUrl, {                
+                evalScripts: true,
+                onSuccess: function(transport) {
+                    try {
+                        
+                        if (transport.responseText.isJSON()) {
+                            var response = transport.responseText.evalJSON()
+                            if (response.error) {
+                                alert(response.message);
+                            }
+                            if(response.ajaxExpired && response.ajaxRedirect) {
+                                setLocation(response.ajaxRedirect);
+                            }
+                        } else {
+                            /**
+                             * For IE <= 7.
+                             * If there are two elements, and first has name, that equals id of second.
+                             * In this case, IE will choose one that is above
+                             *
+                             * @see https://prototype.lighthouseapp.com/projects/8886/tickets/994-id-selector-finds-elements-by-name-attribute-in-ie7
+                             */
+                            var divId = $(this.containerId);
+                            if (divId.id == this.containerId) {
+                                divId.update('');
+                            } else {
+                                $$('div[id="'+this.containerId+'"]')[0].update('');
+                            }
+                        }
+                        if (Base64.decode($(event.target).getAttribute('rel')).isJSON) {
+                            var rel=Base64.decode($(event.target).getAttribute('rel')).evalJSON();
+                            this.SpareParts = rel.SpareParts;
+                            this.Associated = rel.Associated;
+                        }
+                    } catch (e) {
+                        var divId = $(this.containerId);
+                        if (divId.id == this.containerId) {
+                            divId.update('');
+                        } else {
+                            $$('div[id="'+this.containerId+'"]')[0].update('');
+                        }
+                    }
+                }.bind(this)
+            });
+        }
     }
 };
 
-    var assProduct = new AssociateManager({SpareParts: 'super_product_grid', Associated: 'super_product_links'});
+    var <?php echo $this->getChild('spareparts.grid')->getAssociatedProductJsObj()?> = new AssociateManager({SpareParts: '<?php echo $this->getSparePartsGridId();?>', 
+                                           Associated: 'options-container', 
+                                           Obj: <?php echo $this->getJsonSparePartsAssociateStruct();?>,
+                                           HiddenInput: 'links_options'});
 </script>
     

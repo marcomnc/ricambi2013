@@ -27,7 +27,7 @@ class Ricambi_Catalog_Block_Adminhtml_Product_Edit_Tab_Options_Grid extends Mage
     public function __construct() {
         parent::__construct();
         $this->setUseAjax(true);
-        $this->setId('super_product_links');
+        $this->setId('option_product_links');
 
         if (!is_null($this->getAssociateProduct())) {
             $this->setDefaultFilter(array('in_products'=>1));
@@ -89,23 +89,13 @@ class Ricambi_Catalog_Block_Adminhtml_Product_Edit_Tab_Options_Grid extends Mage
 
         $this->setCollection($collection);
 
-        $collection->addFieldToFilter('entity_id', array('in' => $this->_getSelectedProducts()));
-        
-
         parent::_prepareCollection();
         return $this;
     }
     
     protected function _getSelectedProducts()
     {
-        $products = $this->getRequest()->getPost('products', null);
-        if (!is_array($products) && !is_null($this->getLinkId())) {
-            $products = Mage::getModel('rcatalog/options')
-                                ->getCollection()
-                                ->addFieldToFilter('main_table.link_id', $this->getLinkId())
-                                ->toOptionArray('id', 'product_id');
-        }
-        return $products;
+        return (!is_null($this->getActualStructure())) ? $this->getActualStructure() : array();
     }
     
     

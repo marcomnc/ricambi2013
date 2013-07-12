@@ -31,7 +31,9 @@ class Ricambi_Catalog_Block_Adminhtml_Widget_Grid_Column_Renderer_Options_Link e
         
        $groupedProduct = Mage::registry('current_product');
        
-       $html = '<a class="associated-product" href="';
+       $html = '<a ';
+       $html .= 'rel="' . base64_encode(Mage::helper('core')->jsonEncode(array('Associated' => $row->getEntityId(), 'SpareParts' => $groupedProduct->getId()))) . '" ';
+       $html .= 'class="associated-product" href="';
        $html .= Mage::helper("adminhtml")
                         ->getUrl('radmincatalog/adminhtml_product/selectoptiongrid/', 
                                   array('ass_id' => $row->getEntityId(),

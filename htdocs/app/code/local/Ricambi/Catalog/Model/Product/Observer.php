@@ -37,6 +37,11 @@ class Ricambi_Catalog_Model_Product_Observer {
             foreach (Mage::getModel('rcatalog/position')->getCollection()->setFilterByProduct($product) as $link) {
                 $this->_deleteLink($link->getId());
             }
+            
+            foreach (Mage::getModel('rcatalog/options')->getCollection()->setFilterByProduct($product) as $options) {
+                $this->_deleteOptions($options->getId());
+            }
+        
         } else {
             $links = Mage::getModel('catalog/product_link')->getCollection();
             $links->getSelect()
@@ -95,6 +100,49 @@ class Ricambi_Catalog_Model_Product_Observer {
             }
         }
 
+        //Salvo i dati delle opzioni
+        if ($product->hasOptionsLink()) {
+            
+            //Azzero tutti i link del prodotto prima di risalvarli
+            
+            foreach (Mage::getModel('rcatalog/options')->getCollection()->setFilterByProduct($product) as $options) {
+                $this->_deleteOptions($options->getId());
+            }
+            
+            $optionsLink = $product->getOptionsLink();
+            
+            foreach ($optionsLink['Product'] as $optionGouped => $spareProduct) {
+MAge::log($optionGouped);
+Mage::log($product->getId());
+Mage::log($spareProduct);
+                if ($optionGouped == $product->getId()) {
+                    foreach ($spareProduct['Spare'] as $spare => $productIds) {
+                        
+                        $links = Mage::getModel('catalog/product_link')->getCollection();
+                        $links->getSelect()
+                              ->where('product_id = ?', $product->getId())
+                              ->where('linked_product_id = ?', $spare)
+                              ->where('link_type_id = ?', Mage_Catalog_Model_Product_Link::LINK_TYPE_GROUPED);
+Mage::log($links->getSelect()->__toString());
+                        foreach ($links as $l) {
+                        
+                            foreach ($productIds as $productId) {
+                                $optLinks = Mage::getModel('rcatalog/options');
+                                
+                                $optLinks->setData('link_id', $l->getId());
+                                $optLinks->setData('product_id', $productId);
+                                $optLinks->setData('sort_order', null);
+Mage::log($optLinks->getData());  
+                                $optLinks->save();
+                            }
+                            //Ne devo trovare uno solo!!!
+                            break;
+                        }
+                        
+                    }
+                }
+            }
+        }
         
         return $observer;
         
@@ -114,7 +162,13 @@ class Ricambi_Catalog_Model_Product_Observer {
             $link = Mage::Helper('core')->jsonDecode(base64_decode($links));
             $product->setData('scheme_link', $link);
             $observer->setProduct($product);
-        }                
+        }        
+        
+        if (($options=$request->getParam('options_link','')) != '') {
+            $option = Mage::Helper('core')->jsonDecode(base64_decode($options));
+            $product->setData('options_link', $option);
+            $observer->setProduct($product);
+        }
         
         return $observer;
     }
@@ -124,6 +178,10 @@ class Ricambi_Catalog_Model_Product_Observer {
         $link->delete();
     }
             
+    private function _deleteOptions($id){
+        $options = Mage::getModel('rcatalog/options')->Load($id);
+        $options->delete();
+    }
 }
 
 ?>

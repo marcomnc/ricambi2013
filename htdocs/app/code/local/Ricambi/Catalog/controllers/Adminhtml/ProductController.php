@@ -42,16 +42,30 @@ class Ricambi_Catalog_Adminhtml_ProductController extends Mage_Adminhtml_Control
     
     public function selectoptiongridAction() {
       
+
         $associateProduct = Mage::getModel('catalog/product')->Load($this->getRequest()->getParam('ass_id'));
         $groupedProduct = Mage::getModel('catalog/product')->Load($this->getRequest()->getParam('grp_id'));
         
+        $actStruct = Mage::helper('core')->JsonDecode(base64_decode($this->getRequest()->getParam('struct')));
+        
         $link = Mage::getModel('catalog/product')->Load($this->getRequest()->getParam('link_id'));
 
+        if (!isset($actStruct['Product'][$groupedProduct->getId()])) {
+            
+            $ret['error'] = true;
+            $ret['message'] = $this->__("Si Ã¨ verificato un errore nella validazione dell'articolo. Ricarecare la pagina! ");
+            
+            $this->getResponse()->setBody(MAge::helper('core')->JsonEncode($ret));
+            
+            return;
+        }
+        
         $this->loadLayout();
         
         $blockGrid = $this->getLayout()->createBlock("rcatalog/adminhtml_product_edit_tab_options_grid");
         $blockGrid->setAssociateProduct($associateProduct);
         $blockGrid->setGroupedProduct($groupedProduct);
+        $blockGrid->setActualStructure((isset($actStruct['Product'][$groupedProduct->getId()]['Spare'][$associateProduct->getId()]) ? $actStruct['Product'][$groupedProduct->getId()]['Spare'][$associateProduct->getId()] : null));
         $blockGrid->setLinkId($link);
         
         $this->getResponse()->setBody($blockGrid->toHtml());

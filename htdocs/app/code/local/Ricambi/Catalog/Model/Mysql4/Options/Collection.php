@@ -31,20 +31,44 @@ class Ricambi_Catalog_Model_Mysql4_Options_Collection extends Mage_Core_Model_My
      
     }
     
-    public function setFilterByProduct($productGrouped, $productAssociated) {
+    public function setFilterByProduct($productGrouped, $productAssociated = null) {
 
         $productGrouped = $this->_getProduct($productGrouped);
-        $productAssociated = $this->_getProduct($productAssociated);
-            
+        
         $this->getSelect()->join(array('_link' => Mage::getSingleton('core/resource')->getTableName('catalog_product_link')),
                                  '_link.link_id = main_table.link_id',
                                  null)
-                          ->where('_link.product_id = ?', $productGrouped->getId())
-                          ->where('_link.linked_product_id = ?', $productAssociated->getId());
+                          ->where('_link.product_id = ?', $productGrouped->getId());
+        if (!is_null($productAssociated)) {
+            
+            $productAssociated = $this->_getProduct($productAssociated);
+            
+            $this->getSelect()->where('_link.linked_product_id = ?', $productAssociated->getId());
+        }
+                          
         
         $this->_filterByProduct = true;
                 
         return $this;
+    }
+    
+    /**
+     * Genera una strutta del tipo 
+     * [grouperProductId] =>
+     *      [SparePartsProductId] => 
+     *          [OptionsProductId] 
+     */
+    public function toStruct() {
+        
+        $struct = array();
+        
+        foreach ($this as $record) {
+            
+            $struct["Product"][$record->getData('grouped_product_id')]["Spare"][$record->getData('associates_product_id')][] = $record->getData('product_id');
+        }
+                
+        return $struct;
+        
     }
     
     /**
