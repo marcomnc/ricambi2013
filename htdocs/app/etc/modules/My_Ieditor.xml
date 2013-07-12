@@ -27,7 +27,7 @@
 <config>
     <modules>
         <My_Ieditor>
-            <active>true</active>
+            <active>false</active>
             <codePool>community</codePool>
         </My_Ieditor>
     </modules>
