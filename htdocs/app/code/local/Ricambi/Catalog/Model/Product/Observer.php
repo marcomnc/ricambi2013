@@ -33,10 +33,24 @@ class Ricambi_Catalog_Model_Product_Observer {
     
         $product = $observer->getProduct();
         
-        foreach (Mage::getModel('rcatalog/position')->getCollection()->setFilterByProduct($product) as $link) {
-            $this->_deleteLink($link->getId());
+        if ($product->getType() == Mage_Catalog_Model_Product_Type::TYPE_GROUPED) {
+            foreach (Mage::getModel('rcatalog/position')->getCollection()->setFilterByProduct($product) as $link) {
+                $this->_deleteLink($link->getId());
+            }
+        } else {
+            $links = Mage::getModel('catalog/product_link')->getCollection();
+            $links->getSelect()
+                  ->where('linked_product_id = ?', $product->getId());
+
+            foreach ($links as $link) {
+                $positionLinks = Mage::getModel('rcatalog/position')
+                                        ->getCollection()
+                                        ->setFilterByLink($link->getLinkId());
+                foreach ($positionLinks as $positionLink) {
+                    $this->_deleteLink($positionLink->getId());
+                }
+            }
         }
-        
         return $observer;
     }
     
@@ -54,28 +68,29 @@ class Ricambi_Catalog_Model_Product_Observer {
                     if ($link['state'] == 'delete') {
                         $this->_deleteLink($link['id_link']);
                     } else {
-                        $positionLink = Mage::getModel('rcatalog/position');
-                        if ($link["state"] == 'create') {
-                            $positionLink->setData('grouped_product_id', $product->getId());
-                            $positionLink->setData('link_id', $link["linkid"]);
+                            $positionLink = Mage::getModel('rcatalog/position');
+                            if ($link["state"] == 'create') {
+                                $positionLink->setData('grouped_product_id', $product->getId());
+                                $positionLink->setData('link_id', $link["linkid"]);
 
-                            $positionLink->setData('position_x', ($link["x"] + 0));
-                            $positionLink->setData('position_y', ($link["y"] + 0));                        
-                        } else {
-                            $positionLink->Load($link["id_link"]);
-                            $positionLink->setData('position_x', ($link["x"] + 0));
-                            $positionLink->setData('position_y', ($link["y"] + 0));
-                        }
-                        $positionLink->save();
+                                $positionLink->setData('position_x', ($link["x"] + 0));
+                                $positionLink->setData('position_y', ($link["y"] + 0));                        
+                            } else {
+                                $positionLink->Load($link["id_link"]);
+                                $positionLink->setData('position_x', ($link["x"] + 0));
+                                $positionLink->setData('position_y', ($link["y"] + 0));
+                            }
+                            $positionLink->save();
 
                     }
                 }
             }
         } 
         foreach (Mage::getModel('rcatalog/position')->getCollection()->setFilterByProduct($product) as $link) {
-            $groupedLink = Mage::getModel('catalog/product_link')->Load($link->getLinkId());
 
-            if (!$groupedLink->hasLinkId()) {
+
+            $groupedLink = Mage::getModel('catalog/product_link')->Load($link->getLinkId());
+            if (!$groupedLink->hasProductId()) {
                 $this->_deleteLink($link->getId());
             }
         }

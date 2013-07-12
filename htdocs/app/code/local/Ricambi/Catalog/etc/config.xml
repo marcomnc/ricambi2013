@@ -9,7 +9,7 @@
         
         <events>
 <!-- Verifica integrità dei dati -->            
-            <catalog_product_delete_after_done>
+            <catalog_product_delete_before>
                 <observers>
                     <ricambi_catalog_observer>
                         <type>singleton</type>
@@ -17,7 +17,7 @@
                         <method>on_delete</method>
                     </ricambi_catalog_observer>
                 </observers>
-            </catalog_product_delete_after_done>
+            </catalog_product_delete_before>
             <catalog_product_save_after>
                 <observers>
                     <ricambi_catalog_observer>

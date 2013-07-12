@@ -1,0 +1,3 @@
+[12-Jul-2013 11:46:59 UTC] PHP Fatal error:  Call to undefined function is_set() in E:\var\www\cosmetal\htdocs\import\import.php on line 23
+[12-Jul-2013 11:46:59 UTC] PHP Stack trace:
+[12-Jul-2013 11:46:59 UTC] PHP   1. {main}() E:\var\www\cosmetal\htdocs\import\import.php:0
