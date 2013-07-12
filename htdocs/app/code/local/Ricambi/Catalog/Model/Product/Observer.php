@@ -55,6 +55,10 @@ class Ricambi_Catalog_Model_Product_Observer {
                     $this->_deleteLink($positionLink->getId());
                 }
             }
+            
+            /**
+             * @todo Gestire cancellazione opzioni
+             */
         }
         return $observer;
     }
@@ -112,9 +116,7 @@ class Ricambi_Catalog_Model_Product_Observer {
             $optionsLink = $product->getOptionsLink();
             
             foreach ($optionsLink['Product'] as $optionGouped => $spareProduct) {
-MAge::log($optionGouped);
-Mage::log($product->getId());
-Mage::log($spareProduct);
+
                 if ($optionGouped == $product->getId()) {
                     foreach ($spareProduct['Spare'] as $spare => $productIds) {
                         
@@ -123,7 +125,6 @@ Mage::log($spareProduct);
                               ->where('product_id = ?', $product->getId())
                               ->where('linked_product_id = ?', $spare)
                               ->where('link_type_id = ?', Mage_Catalog_Model_Product_Link::LINK_TYPE_GROUPED);
-Mage::log($links->getSelect()->__toString());
                         foreach ($links as $l) {
                         
                             foreach ($productIds as $productId) {
@@ -132,7 +133,7 @@ Mage::log($links->getSelect()->__toString());
                                 $optLinks->setData('link_id', $l->getId());
                                 $optLinks->setData('product_id', $productId);
                                 $optLinks->setData('sort_order', null);
-Mage::log($optLinks->getData());  
+
                                 $optLinks->save();
                             }
                             //Ne devo trovare uno solo!!!
@@ -143,6 +144,10 @@ Mage::log($optLinks->getData());
                 }
             }
         }
+        
+        /**
+         * @todo Gestire eventuali disassociazioni del prodotto
+         */
         
         return $observer;
         
