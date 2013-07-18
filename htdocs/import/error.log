@@ -1,9 +1,0 @@
-[12-Jul-2013 11:46:59 UTC] PHP Fatal error:  Call to undefined function is_set() in E:\var\www\cosmetal\htdocs\import\import.php on line 23
-[12-Jul-2013 11:46:59 UTC] PHP Stack trace:
-[12-Jul-2013 11:46:59 UTC] PHP   1. {main}() E:\var\www\cosmetal\htdocs\import\import.php:0
-[12-Jul-2013 14:49:53 UTC] PHP Fatal error:  Call to undefined function loadRicambi() in E:\var\www\cosmetal\htdocs\import\import.php on line 71
-[12-Jul-2013 14:49:53 UTC] PHP Stack trace:
-[12-Jul-2013 14:49:53 UTC] PHP   1. {main}() E:\var\www\cosmetal\htdocs\import\import.php:0
-[12-Jul-2013 16:11:02 UTC] PHP Fatal error:  Call to a member function setStoreId() on a non-object in E:\var\www\cosmetal\htdocs\import\import.php on line 95
-[12-Jul-2013 16:11:02 UTC] PHP Stack trace:
-[12-Jul-2013 16:11:02 UTC] PHP   1. {main}() E:\var\www\cosmetal\htdocs\import\import.php:0

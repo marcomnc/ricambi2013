@@ -53,7 +53,7 @@ class Ricambi_Catalog_Adminhtml_ProductController extends Mage_Adminhtml_Control
         if (!isset($actStruct['Product'][$groupedProduct->getId()])) {
             
             $ret['error'] = true;
-            $ret['message'] = $this->__("Si Ã¨ verificato un errore nella validazione dell'articolo. Ricarecare la pagina! ");
+            $ret['message'] = $this->__("Si e' verificato un errore nella validazione dell'articolo. Ricaricare la pagina! ");
             
             $this->getResponse()->setBody(MAge::helper('core')->JsonEncode($ret));
             

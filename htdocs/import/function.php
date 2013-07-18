@@ -1,0 +1,223 @@
+<?php
+
+$tipoSchema = array(1 => 'sp', 2 => 'hc');
+
+$conn = null;
+
+function getConn() {
+    
+    global $conn;
+    
+    $conn =  mysqli_connect("localhost","magento_ricambi","GPeAQQU4KS","conversioni_cosmetal");
+    //$conn =  mysqli_connect("localhost","root","","conversioni_cosmetal");
+    if (mysqli_connect_errno())
+    {
+        Mage::log("Failed to connect to MySQL: " . mysqli_connect_error());
+        return null;
+    }
+    return $conn;
+
+}
+
+
+/**
+ * Azzero tutte le associazioni di un articolo
+ * @param type $product
+ */
+function resetLink ($product) {
+    
+    $assColl = Mage::getModel('catalog/product_link')->getCollection();
+    $assColl->getSelect()->Where('product_id = ?', $product->getId())
+                         ->Where('link_type_id = ?', Mage_Catalog_Model_Product_Link::LINK_TYPE_GROUPED);
+    
+    foreach ($assColl as $ass) {
+        $associate = Mage::getModel('catalog/product_link')->load($ass->getId());
+        $associate->delete();
+    }
+    
+    foreach (Mage::getModel('rcatalog/position')->getCollection()->setFilterByProduct($product) as $pos) {
+        $position = Mage::getModel('rcatalog/position')->Load($pos->getId());
+        $position->delete();
+    }
+    
+    foreach (Mage::getModel('rcatalog/options')->getCollection()->setFilterByProduct($product) as $opt) {
+        $options = Mage::getModel('rcatalog/options')->Load($opt->getId());
+        $options->delete();
+    }
+    
+}
+
+function getLinkFoto($idVersione) {
+    
+    global $conn;
+    
+    $sql = "SELECT versioni . * , foto.filefoto FROM versioni";
+    $sql .= " LEFT JOIN versionifoto ON versionifoto.idVersione = versioni.idVersione";
+    $sql .= " LEFT JOIN foto ON foto.IdFoto = versionifoto.idFoto";
+    $sql .= " WHERE versioni.IdVersione = $idVersione";
+    
+    $foto = mysqli_query($conn, $sql);
+    $linkFoto = "";
+    while ($row = mysqli_fetch_array($foto)) {
+
+        $linkFoto .= (($linkFoto == "") ? "" : ",") . $row['filefoto'];
+        
+    }
+    
+    return $linkFoto;
+}
+
+function getLinkSchema($idVersione, $type) {
+    
+    global $conn;
+    
+    $sql = "SELECT * FROM versionidisegno";
+    $sql .= " WHERE IdVersione = $idVersione AND idTipoDisegno = $type";
+    
+    $schema = mysqli_query($conn, $sql);
+
+    $linkSchema = "";
+    while ($row = mysqli_fetch_array($schema)) {
+
+        $linkSchema .= (($linkSchema == "") ? "" : ",") . $row['fileDisegno'];
+        
+    }
+    
+    return $linkSchema;
+}
+
+
+function creaMacchina( $row, $type) {
+    
+    global $tipoSchema;
+    global $conn;
+    
+    $id = Mage::getModel('catalog/product')->getIdBySku(str_replace (" ", "", $row['macchina']).$tipoSchema[$type]);
+    if (is_null($id) || $id <= 0) {
+        
+        $prod = Mage::getModel('catalog/product')->setStoreId(0);
+        $prod->setSku(str_replace (" ", "", $row['macchina']).$tipoSchema[$type]);
+        $prod->setName($row['macchina']);
+        $prod->setDescription("[VUOTO]");
+        $prod->setShortDescription("[VUOTO]");
+        $prod->setVisibility(Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH);
+        $prod->setStatus(Mage_Catalog_Model_Product_Status::STATUS_ENABLED);
+        $prod->setTypeId(Mage_Catalog_Model_Product_Type::TYPE_GROUPED);
+        $prod->setWebsiteIds(Array("1"));
+        $prod->setCategoryIds(array($_POST['refrigeratori']));
+        $prod->setAttributeSetId(4);
+        $prod->setTaxClassId((int)2);
+        $prod->setWeight((real)1);
+        $prod->setStockData(array('is_in_stock' => 1,'manage_stock' => 0));
+        
+    } else {
+        $prod = Mage::getModel('catalog/product')->setStoreId(0)->Load($id);
+    }
+    
+    if($type == 1) {
+        $prod->setTipoDisegno("34");
+    } else {
+        $prod->setTipoDisegno("33");
+    }
+    $prod->setDataLinkFoto(getLinkFoto($row['idVersione']));
+    $prod->setDataLinkSchema(getLinkSchema($row['idVersione'], $type));
+
+    $prod->save();
+    
+    
+    Mage::log('Creato prodotto ' . $row['macchina']);
+    
+    //Associazioni
+    
+    resetLink($prod);
+
+    $sql = "SELECT ricambiversione . * , codiceRicambio FROM ricambiversione ";
+    $sql .= "JOIN ricambi ON ricambi.idRicambio = ricambiversione.idRicambio";
+    $sql .= " WHERE  `idVersione` = " . $row['idVersione'];
+    $sql .= " AND  `idTipoDisegno` = " . $type;
+    $sql .= " AND idRicambioMacchina_child =0 ";
+    $sql .= " ORDER BY  `NUMERO` ";
+    
+    $associati = mysqli_query($conn, $sql);
+
+    //Creo le associazioni
+    $data = array();
+    while($rowAss = mysqli_fetch_array($associati)) {
+        
+        $productLinkId = Mage::getModel('catalog/product')->getIdBySku($rowAss['codiceRicambio']);
+
+        if ($productLinkId > 0) {
+            $data[$productLinkId]['position'] =  $rowAss['NUMERO'];
+            $data[$productLinkId]['x'] = $rowAss['xPos'];
+            $data[$productLinkId]['y'] = $rowAss['yPos'];
+            
+            
+            $sqlChild = "SELECT ricambiversione . * , codiceRicambio FROM ricambiversione ";
+            $sqlChild .= "JOIN ricambi ON ricambi.idRicambio = ricambiversione.idRicambio";
+            $sqlChild .= " WHERE  `idVersione` = " . $row['idVersione'];
+            $sqlChild .= " AND  `idTipoDisegno` = " . $type;
+            $sqlChild .= " AND idRicambioMacchina_child = '".$rowAss['idRicambio'] . "'";
+            
+            $childs  = mysqli_query($conn, $sqlChild);
+
+            
+            while ($rowChild =  mysqli_fetch_array($childs)) {
+                $childId = Mage::getModel('catalog/product')->getIdBySku($rowChild['codiceRicambio']);
+                if ($childId > 0)
+                    $data[$productLinkId]['child'][] = $childId;
+            }
+        }
+
+    }
+
+    
+    if (sizeof($data) > 0) {
+    
+        $prod->setGroupedLinkData($data);
+        
+        Mage::getModel('catalog/product_link')->saveGroupedLinks($prod);
+    }
+
+    foreach ($data as $prodId => $d) {
+        $assColl = Mage::getModel('catalog/product_link')->getCollection();
+        $assColl->getSelect()->Where('product_id = ?', $prod->getId())
+                             ->Where('linked_product_id = ?', $prodId )
+                             ->Where('link_type_id = ?', Mage_Catalog_Model_Product_Link::LINK_TYPE_GROUPED);
+
+        foreach ($assColl as $ass) {
+            
+            $positionLink = Mage::getModel('rcatalog/position');
+            $positionLink->setData('grouped_product_id', $prod->getId());
+            $positionLink->setData('link_id', $ass->getId());
+            $positionLink->setData('position_x', ($d["x"] + 15));
+            $positionLink->setData('position_y', ($d["y"] + 15));                        
+            
+            $positionLink->save();
+            
+            if (isset($d['child'])) {
+                foreach ($d['child'] as $child) {
+
+                    $optLinks = Mage::getModel('rcatalog/options');
+
+                    $optLinks->setData('link_id', $ass->getId());
+                    $optLinks->setData('product_id', $child);
+                    $optLinks->setData('sort_order', null);
+
+                    $optLinks->save();
+
+                }
+            }
+            
+        }
+        
+                             
+    }
+    
+    
+    
+    
+}
+
+
+
+?>

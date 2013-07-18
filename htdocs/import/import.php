@@ -6,7 +6,8 @@
  */
 
 
-include 'require.php'
+require_once 'require.php';
+require_once 'function.php';
 
 ?>
 <html>
@@ -111,7 +112,7 @@ if ($_POST['secure'] != "aquiloni gagliardi"){
                         
                     }
                     
-                    break;
+                    MAge::Log("CReato Ricambio " . $row['codiceRicambio']);
                 }
                 
             } catch (Exception $ex) {
@@ -121,13 +122,40 @@ if ($_POST['secure'] != "aquiloni gagliardi"){
             
             mysqli_close($conn);
         }
-
-        
         
     }
-?>
-        
-<?php
+    if (isset($_POST["macchine"]) && isset($_POST['refrigeratori'])) {
+        Mage::Log("------------------ IMPORTAZIONE MACCHINE -----------------------");
+
+
+        $conn = getConn();
+        if (!is_null($conn)) {
+
+            try {
+                $sql = "SELECT macchine.idMacchina, macchine.macchina, macchine.idFamiglia, macchine.posizioneMacchina, ";
+                $sql .= " versioni.idVersione ";
+                $sql .= " FROM macchine ";
+                $sql .= " JOIN versioni ON  `macchine`.`idMacchina` = versioni.`idMacchina` ";
+                $sql .= " where versioni.visualizzaVersione = 1 ";
+
+                $macchine = mysqli_query($conn, $sql);
+                
+                while($row = mysqli_fetch_array($macchine)) {
+                    creaMacchina( $row, 1);
+                    creaMacchina( $row, 2);
+                    
+                }
+                
+                
+            } catch (Exception $ex) {
+                MAge::log(" Errore in fase di importazione delle macchine");
+                Mage::logException($ex);
+            }
+            
+            mysqli_close($conn);
+        }
+    }
+
 }
 ?>
         
@@ -137,16 +165,6 @@ if ($_POST['secure'] != "aquiloni gagliardi"){
 
 <?php 
 
-function getConn() {
-    $conn =  mysqli_connect("localhost","root","","conversioni_cosmetal");
-    if (mysqli_connect_errno())
-    {
-        Mage::log("Failed to connect to MySQL: " . mysqli_connect_error());
-        return null;
-    }
-    return $conn;
-
-}
 
 
 ?>
