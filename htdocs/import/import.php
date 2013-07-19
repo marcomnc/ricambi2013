@@ -118,11 +118,12 @@ if ($_POST['secure'] != "aquiloni gagliardi"){
             } catch (Exception $ex) {
                 MAge::log(" Errore in fase di importazione dei ricambi");
                 Mage::logException($ex);
+                echo "Importazione ricambi terminata con errore \n";
             }
             
             mysqli_close($conn);
         }
-        
+        echo "Importazione ricambi terminata correttamente \n";
     }
     if (isset($_POST["macchine"]) && isset($_POST['refrigeratori'])) {
         Mage::Log("------------------ IMPORTAZIONE MACCHINE -----------------------");
@@ -150,12 +151,77 @@ if ($_POST['secure'] != "aquiloni gagliardi"){
             } catch (Exception $ex) {
                 MAge::log(" Errore in fase di importazione delle macchine");
                 Mage::logException($ex);
+                echo "Importazione Macchine terminata con errore \n";
             }
             
             mysqli_close($conn);
         }
+        
+        echo "Importazione Macchine terminata con successo\n";
     }
 
+    if (isset($_POST["foto"]) || isset($_POST["disegni"])) {
+        
+        if (isset($_POST["disegni"])) {
+            $dirName = __DIR__ . "/data/schemi";            
+            if ($handle = opendir($dirName)) {
+            
+                 while (false !== ($entry = readdir($handle))) {
+                    if ($entry != '.' && $entry != '..') {
+                        
+                        rename($dirName.'/'.$entry, strtolower($dirName.'/'.$entry));
+                    }
+                }
+                
+            }
+            
+        }
+        
+        $products = Mage::getModel('catalog/product')->getCollection()
+                         ->addFieldToFilter('type_id', Mage_Catalog_Model_Product_Type::TYPE_GROUPED);
+                         //->addFieldToFilter('entity_id', array('in' => array('1970')));
+        
+        Mage::Log('-------------IMPORTAZIONE IMMAGINI -----------------');
+        foreach ($products as $product) {
+       
+            if (isset($_POST["foto"]))
+                importImmagine($product->getId(), "foto");            
+            
+            if (isset($_POST["disegni"]))
+                importImmagine($product->getId(), "disegni");  
+            
+
+        }
+                
+    }
+    
+    if (isset($_POST['riasso'])) {
+        
+        $conn = getConn();
+        if (!is_null($conn)) {
+
+            try {
+                $sql = "SELECT macchine.idMacchina, macchine.macchina, macchine.idFamiglia, macchine.posizioneMacchina, ";
+                $sql .= " versioni.idVersione ";
+                $sql .= " FROM macchine ";
+                $sql .= " JOIN versioni ON  `macchine`.`idMacchina` = versioni.`idMacchina` ";
+                $sql .= " where versioni.visualizzaVersione = 1 ";
+                
+                $macchine = mysqli_query($conn, $sql);
+                
+                while($row = mysqli_fetch_array($macchine)) {
+                    
+                    
+                }
+                
+            } catch (Exception $ex) {
+                Mage::log("Errore in fase di associazione");
+                Mage::logException($ex);
+            }
+        
+            
+        
+    }
 }
 ?>
         

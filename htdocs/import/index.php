@@ -32,9 +32,13 @@ include 'require.php';
                    onclick="$(this).val(!$(this).val());" />
             <label for="disegni">Importazione Disegni</label>
             <br>
-            <input type="checkbox" name="opzioni" id="opzioni" value="0" 
+            <input type="checkbox" name="foto" id="foto" value="0" 
                    onclick="$(this).val(!$(this).val());" />
-            <label for="opzioni">Importazione Opzioni</label>
+            <label for="foto">Importazione Foto</label>
+            <br>
+            <input type="checkbox" name="riasso" id="riasso" value="0" 
+                   onclick="$(this).val(!$(this).val());" />
+            <label for="riasso">Riassocia Schemi</label>
             <br>
             <br>
             <input type="input" name="refrigeratori" id="refrigeratori" value="54" />

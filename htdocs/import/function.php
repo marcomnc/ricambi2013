@@ -67,6 +67,19 @@ function getLinkFoto($idVersione) {
     return $linkFoto;
 }
 
+function _getGalleryAttribute($product) {
+    $attributes = $product->getTypeInstance(true)
+        ->getSetAttributes($product);
+
+    if (!isset($attributes[Mage_Catalog_Model_Product_Attribute_Media_Api::ATTRIBUTE_CODE])) {
+        throw new Exception;
+    }
+
+    return $attributes[Mage_Catalog_Model_Product_Attribute_Media_Api::ATTRIBUTE_CODE];
+}
+
+
+
 function getLinkSchema($idVersione, $type) {
     
     global $conn;
@@ -119,11 +132,12 @@ function creaMacchina( $row, $type) {
     } else {
         $prod->setTipoDisegno("33");
     }
-    $prod->setDataLinkFoto(getLinkFoto($row['idVersione']));
+    
+    $prod->setData('data_link_foto', getLinkFoto($row['idVersione']));
     $prod->setDataLinkSchema(getLinkSchema($row['idVersione'], $type));
 
     $prod->save();
-    
+
     
     Mage::log('Creato prodotto ' . $row['macchina']);
     
@@ -217,6 +231,54 @@ function creaMacchina( $row, $type) {
     
     
 }
+
+function importImmagine($productId, $type) {
+        
+    $product = Mage::getModel('catalog/product')->Load($productId);
+    $gallery = _getGalleryAttribute($product);
+
+    if ($type == 'foto') {
+        $arrayImg = preg_split('/,/', $product->getDataLinkFoto());
+    } else {
+        $arrayImg =  preg_split('/,/', $product->getDataLinkSchema());
+    }
+
+    foreach ($arrayImg as $img) {
+
+        if (($img . '') == '')
+            continue;
+        
+        $imgname = __DIR__ . "/data/" . (($type == 'foto') ? 'fotoProdotti' : 'schemi') .  "/" . (($type == 'foto') ? $img : strtolower(str_replace('.swf', '.png', $img)));
+        
+        Mage::log("importo immagine $imgname per " . $product->getSku());
+
+        if (file_exists($imgname)) {
+
+            $file = $gallery->getBackend()->addImage(
+                        $product,
+                        $imgname,
+                        null,
+                        true, 
+                        ($type=='foto') ? false : true
+                    );
+
+            $gallery->getBackEnd()->updateImage($product, $file, ($type=='foto') ? 1 : 10);
+            if ($type == 'foto') {
+                $product->setData('thumbnail', $file);
+                $product->setData('image', $file);
+                $product->setData('small_image', $file);
+            }else {
+                $product->setData('schema_1', $file);            
+            }
+        } else {
+            Mage::Log('Non trovo l\'immagine!!!');
+        }
+    }
+
+    $product->save();
+
+
+}            
 
 
 
