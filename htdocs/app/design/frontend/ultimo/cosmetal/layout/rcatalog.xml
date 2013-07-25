@@ -6,9 +6,9 @@
             <action method="addItem"><type>js</type><name>ricambi/jquery.scrollto.js</name></action>
             <action method="addItem"><type>js</type><name>ricambi/kinetic.js</name></action>
             <action method="addItem"><type>skin_css</type><name>css/ricambi/grouped.css</name><params/></action>
-            <action method="addItem"><type>css</type><name>ricambi/css/opentip.css</name></action>
+            <action method="addItem"><type>js_css</type><name>ricambi/css/opentip.css</name></action>
             <action method="addItem"><type>js</type><name>ricambi/opentip.js</name></action>
-            <action method="addItem"><type>js</type><name>ricambi/adapter-jquery.js</name></action>
+            <action method="addItem"><type>js</type><name>ricambi/adapter-jquery.js</name></action>            
             <action method="addItem"><type>js</type><name>ricambi/jSchema.js</name></action>
             <action method="addItem"><type>skin_js</type><name>js/ricambi.js</name></action>
         </reference>

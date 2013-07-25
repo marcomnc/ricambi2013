@@ -7,7 +7,12 @@
 */
 .product-view.grouped ,
 .product-view.grouped .grouped-canvas,
-.product-view.grouped .grouped-data {height: 800px}
+.product-view.grouped .grouped-data {height: 800px; position: relative;
+	transition:             all 300ms ease-in-out;
+	-moz-transition:	all 300ms ease-in-out;
+	-webkit-transition:	all 300ms ease-in-out;
+	-o-transition:		all 300ms ease-in-out;
+}
 .product-view.grouped .product-shop.grid-full {overflow-y: auto}
 .product-view.grouped .product-shop.grid-full .product-type-data { width: 99% }
 
@@ -48,3 +53,14 @@
     .product-view.grouped .grouped-data {width: 98%}
 }
   
+
+/* da spostare */
+.positioner {background: url(/js/ricambi/css/images/pointer.png); height: 26px; width: 26px; 
+             text-align: center; font-weight: bold; color: #000; cursor: pointer;
+            transition:             all 300ms ease-in-out;
+            -moz-transition:	all 300ms ease-in-out;
+            -webkit-transition:	all 300ms ease-in-out;
+            -o-transition:		all 300ms ease-in-out; 
+}
+.positioner.selected{background: url(/js/ricambi/css/images/pointer-select.png); }
+.positioner div {padding-top: 2px}

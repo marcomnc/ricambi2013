@@ -190,6 +190,7 @@ if ($_POST['secure'] != "aquiloni gagliardi"){
             if (isset($_POST["disegni"]))
                 importImmagine($product->getId(), "disegni");  
             
+            break;
 
         }
                 
@@ -197,30 +198,22 @@ if ($_POST['secure'] != "aquiloni gagliardi"){
     
     if (isset($_POST['riasso'])) {
         
-        $conn = getConn();
-        if (!is_null($conn)) {
-
-            try {
-                $sql = "SELECT macchine.idMacchina, macchine.macchina, macchine.idFamiglia, macchine.posizioneMacchina, ";
-                $sql .= " versioni.idVersione ";
-                $sql .= " FROM macchine ";
-                $sql .= " JOIN versioni ON  `macchine`.`idMacchina` = versioni.`idMacchina` ";
-                $sql .= " where versioni.visualizzaVersione = 1 ";
-                
-                $macchine = mysqli_query($conn, $sql);
-                
-                while($row = mysqli_fetch_array($macchine)) {
-                    
-                    
-                }
-                
-            } catch (Exception $ex) {
-                Mage::log("Errore in fase di associazione");
-                Mage::logException($ex);
-            }
-        
-        }
-        
+?>
+<h1>Riassociazione prodotti<h1>    
+        <h2>Farla a mano con queste query</h2>
+<p>insert into catalog_product_link</p></p>
+<p>SELECT null, a.entity_id, b.entity_id, 1  FROM `catalog_product_entity` a</p>
+<p>join `catalog_product_entity` b on a.sku = replace(b.sku, 'hc','sp' )</p>
+<p>and a.entity_id <> b.entity_id</p>
+<p>WHERE a.`sku` LIKE '%sp'</p>
+<br>
+<br>
+<p>insert into catalog_product_link</p></p>
+<p>SELECT null, b.entity_id, a.entity_id, 1  FROM `catalog_product_entity` a</p>
+<p>join `catalog_product_entity` b on a.sku = replace(b.sku, 'hc','sp' )</p>
+<p>and a.entity_id <> b.entity_id</p>
+<p>WHERE a.`sku` LIKE '%sp'</p>
+<?php         
     }
 }
 ?>

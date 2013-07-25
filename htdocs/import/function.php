@@ -254,11 +254,34 @@ function importImmagine($productId, $type) {
 
         if (file_exists($imgname)) {
 
+            if (($type != 'foto' && $product->getData('schema_1').'no_selection' != 'no_selection') ||
+                ($type == 'foto' && $product->getData('image').'no_selection' != 'no_selection')) {
+             
+                $productGallery = $product->getMediaGallery();
+
+                if (isset($productGallery["images"])) { //Esiste una galleria
+                    foreach ($productGallery["images"] as $item) {
+
+                        if (($type != 'foto' && $item['file'] == $product->getData('schema_1')) ||
+                            ($type == 'foto' && $item['file'] == $product->getData('image'))) {
+                            Mage::log("Cancello immagine già presente");
+                            try {
+                                $gallery->getBackEnd()->removeImage($product, $item["file"]);
+                                //$product->save();   
+                            } catch (Exception $e) {
+                                Mage::Log("Errore remove", Zend_Log::ERR);
+                                Mage::LogEception($e);
+                                
+                            }
+                        }
+                    }
+                }
+            }
             $file = $gallery->getBackend()->addImage(
                         $product,
                         $imgname,
                         null,
-                        true, 
+                        false, 
                         ($type=='foto') ? false : true
                     );
 
