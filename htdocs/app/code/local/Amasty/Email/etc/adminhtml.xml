@@ -1,0 +1,34 @@
+<?xml version="1.0"?> 
+<config>
+		<acl>
+			<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <amemail translate="title" module="amemail">
+                                            <title>Email to Customers</title>
+                                        </amemail>
+                                    </children>
+                                </config>
+                            </children>
+                        </system> 
+                     </children>
+                </admin> 
+			</resources>
+		</acl>
+        <translate>
+            <modules>
+                <Amasty_Email>
+                    <files>
+                        <default>Amasty_Email.csv</default>
+                    </files>
+                </Amasty_Email>
+            </modules>
+        </translate>
+</config> 

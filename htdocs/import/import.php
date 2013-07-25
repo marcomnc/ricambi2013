@@ -219,7 +219,7 @@ if ($_POST['secure'] != "aquiloni gagliardi"){
                 Mage::logException($ex);
             }
         
-            
+        }
         
     }
 }
