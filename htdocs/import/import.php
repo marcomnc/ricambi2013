@@ -176,7 +176,20 @@ if ($_POST['secure'] != "aquiloni gagliardi"){
             }
             
         }
-        
+        if (isset($_POST["foto"])) {
+            $dirName = __DIR__ . "/data/fotoProdotti";            
+            if ($handle = opendir($dirName)) {
+            
+                 while (false !== ($entry = readdir($handle))) {
+                    if ($entry != '.' && $entry != '..') {
+                        
+                        rename($dirName.'/'.$entry, strtolower($dirName.'/'.$entry));
+                    }
+                }
+                
+            }
+            
+        }
         $products = Mage::getModel('catalog/product')->getCollection()
                          ->addFieldToFilter('type_id', Mage_Catalog_Model_Product_Type::TYPE_GROUPED);
                          //->addFieldToFilter('entity_id', array('in' => array('1970')));
@@ -190,7 +203,7 @@ if ($_POST['secure'] != "aquiloni gagliardi"){
             if (isset($_POST["disegni"]))
                 importImmagine($product->getId(), "disegni");  
             
-            break;
+            //break;
 
         }
                 

@@ -248,7 +248,7 @@ function importImmagine($productId, $type) {
         if (($img . '') == '')
             continue;
         
-        $imgname = __DIR__ . "/data/" . (($type == 'foto') ? 'fotoProdotti' : 'schemi') .  "/" . (($type == 'foto') ? $img : strtolower(str_replace('.swf', '.png', $img)));
+        $imgname = __DIR__ . "/data/" . (($type == 'foto') ? 'fotoProdotti' : 'schemi') .  "/" . (($type == 'foto') ? strtolower($img) : strtolower(str_replace('.swf', '.png', $img)));
         
         Mage::log("importo immagine $imgname per " . $product->getSku());
 
