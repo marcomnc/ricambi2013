@@ -44,19 +44,22 @@
             }
             
             function PlacePosition(index, objPosition) {
-                var pos = $('<div>' , {'id': 'position' + index, 'class' : 'positioner', 'rel': index, 'unselectable': 'on',
+                var pos = $('<div>' , {'id': 'position' + index, 'class' : 'positioner', 'rel': objPosition.id, 'unselectable': 'on',
                                        'data-ot': 'The content'});
                 pos.css({'position': 'absolute', 'top': (objPosition.y-12)+'px','left': (objPosition.x-12)+'px' });                 
 
                 inputOpentip[index] = new Opentip(pos, objPosition.name, objPosition.sku, {'style': 'glass'});
 
                 pos.on('click', function(e) {
-                    AddQty($(this).attr('rel')) 
+                    AddQty($(this).attr('id').toString().replace('position','')); 
                 });
 
                 pos.on('mouseover', function(e) {
                     $('.positioner[rel="' + $(this).attr('rel')  + '"]').addClass('selected');
-                    $('.option_group_'+objPosition.sku).ScrollTo({'noFinal': true}).addClass('selected');
+                    try {
+                        $('.option_group_'+objPosition.sku).addClass('selected')
+                        $('.option_group_'+objPosition.sku).ScrollTo({'noFinal': true});                    
+                    } catch( e) {}
                     inputOpentip[index].show();
                 });
 
