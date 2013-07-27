@@ -35,6 +35,7 @@ $_item = $this->getItem();
 $isVisibleProduct = $_item->getProduct()->isVisibleInSiteVisibility();
 $canApplyMsrp = Mage::helper('catalog')->canApplyMsrp($_item->getProduct(), Mage_Catalog_Model_Product_Attribute_Source_Msrp_Type::TYPE_BEFORE_ORDER_CONFIRM);
 $gOptions = unserialize($_item->getProduct()->getCustomOption('info_buyRequest')->getValue());
+$rOptions = unserialize($_item->getProduct()->getCustomOption('r_info')->getValue());
 ?>
 <tr>
     <td class="col-img"><?php if ($this->hasProductUrl()):?><a href="<?php echo $this->getProductUrl() ?>" title="<?php echo $this->htmlEscape($this->getProductName()) ?>" class="product-image"><?php endif;?><img src="<?php echo $this->getProductThumbnail()->constrainOnly(true)->keepAspectRatio(true)->keepFrame(false)->resize(113); ?>" alt="<?php echo $this->htmlEscape($this->getProductName()) ?>" /><?php if ($this->hasProductUrl()):?></a><?php endif;?></td>
@@ -55,13 +56,8 @@ $gOptions = unserialize($_item->getProduct()->getCustomOption('info_buyRequest')
     <td class="product-position"> <!-- Numero -->
         <?php 
             $position = "-";
-            if(!is_null($pGrouped)) :
-                $linkedCollection = Mage::getModel('rcatalog/link')->setProduct($pGrouped)->getProductCollection();
-                $linkedCollection->getSelect()->Where('e.entity_id = ?',$_item->getProductId());
-                foreach ($linkedCollection as $linked):
-                    $position = $linked->getPos();
-                    break;
-                endforeach;
+            if(isset($rOptions['position'])) :
+                $position = $rOptions['position'];
             endif;
             
             echo $position;

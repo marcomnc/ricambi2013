@@ -56,14 +56,14 @@
 
                 pos.on('mouseover', function(e) {
                     $('.positioner[rel="' + $(this).attr('rel')  + '"]').addClass('selected');
-                    $('#'+objPosition.sku).ScrollTo({'noFinal': true}).addClass('selected');
+                    $('.option_group_'+objPosition.sku).ScrollTo({'noFinal': true}).addClass('selected');
                     inputOpentip[index].show();
                 });
 
                 pos.on('mouseleave', function(e) {
                     $('.positioner[rel="' + $(this).attr('rel')  + '"]').removeClass('selected');
                     inputOpentip[index].hide();
-                    $('#'+objPosition.sku).removeClass('selected');
+                    $('.option_group_'+objPosition.sku).removeClass('selected');
                 });
 
                 canvas.append(pos.append('<div>'+objPosition.pos+'</div>'));

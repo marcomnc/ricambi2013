@@ -80,7 +80,8 @@ endif;
 
     <?php foreach ($_associatedProducts as $_item): ?>
         <?php $_finalPriceInclTax = $this->helper('tax')->getPrice($_item, $_item->getFinalPrice(), true) ?>
-        <?php if ($_item->getTypeId() == Mage_Catalog_Model_Product_Type_Configurable::TYPE_CODE): 
+        <?php //Se è configurabile preparo gli attributi che mi serviranno
+              if ($_item->getTypeId() == Mage_Catalog_Model_Product_Type_Configurable::TYPE_CODE): 
                 $blockAttribute = new Mage_Catalog_Block_Product_View_Type_Configurable();
                 $blockAttribute->setProduct($_item);
                 $_attributes = Mage::helper('core')->decorateArray($blockAttribute->getAllowAttributes());
@@ -93,6 +94,7 @@ endif;
              
              $qty = 0;
              $gOptions = null;
+             // Recupero eventuali quantità presenti sul carello
              foreach ($_cartItems as $_cartItem):
                  $gOptions = unserialize($_cartItem->getProduct()->getCustomOption('info_buyRequest')->getValue());
                 if (isset($gOptions['super_product_config']) && $gOptions['super_product_config']['product_type'] == Mage_Catalog_Model_Product_Type_Grouped::TYPE_CODE &&
@@ -104,9 +106,11 @@ endif;
              endforeach;
              
              ?>
-        <tr id="<?php echo $_item->getSku() ?>" class="lista<?php if($qty>0):?> has-qty<?php endif;?>">
+        <tr id="<?php echo $_item->getSku() ?>" class="option_group_<?php echo $_item->getLinkedCode() ?> lista<?php if($qty>0):?> has-qty<?php endif;?>">
             <td<?php if ($_item->getTypeId() == Mage_Catalog_Model_Product_Type_Configurable::TYPE_CODE): ?> rowspan="<?php echo $rowSpan; ?>"<?php endif;?>>
-                <?php echo $_item->getPosition()?>
+                <?php if (!$_item->getIsOptions()): ?>
+                    <?php echo $_item->getPosition()?>
+                <?php endif; ?>
             </td>
             <td<?php if ($_item->getTypeId() == Mage_Catalog_Model_Product_Type_Configurable::TYPE_CODE): ?> rowspan="<?php echo $rowSpan ?>"<?php endif;?>>
                 <?php echo $_item->getSku() ?>
@@ -133,7 +137,12 @@ endif;
                            rel="<?php echo $qty ?>"/>
                 <?php else: ?>
                     <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
-                <?php endif; ?>
+                <?php endif; 
+                    // Mi porto dietro il link_id e la position                
+                ?>
+                    <input type="hidden" name="position[<?php echo $_item->getId() ?>]" value="<?php echo $_item->getPosition() ?>"/>
+                    <input type="hidden" name="link_id[<?php echo $_item->getId() ?>]" value="<?php echo $_item->getLinkId() ?>"/>
+                    <input type="hidden" name="is_options[<?php echo $_item->getId() ?>]" value="<?php echo (int)$_item->getIsOptions() ?>"/>
                 </td>            
             <?php endif; ?>
             <?php if ($_item->getTypeId() == 'configurable'): ?>

@@ -95,8 +95,14 @@ $_schemaType = Mage::getStoreConfig('catalog/ricambi/type_scheme');
                 </ul>
                 
                 <?php if ($_product->getShortDescription()): ?>
-                    <div class="short-description">
-                        <div class="std"><?php echo $_helper->productAttribute($_product, nl2br($_product->getShortDescription()), 'short_description') ?></div>
+                    <div class="short-description">                        
+                        <div class="std">
+                            <?php if ($_product->getShortDescription() != '[VUOTO]'):
+                                    echo $_helper->productAttribute($_product, nl2br($_product->getShortDescription()), 'short_description');
+                                else:
+                                    echo "&nbsp;";
+                                endif;?>
+                        </div> 
                     </div>
                 <?php endif;?>
                 

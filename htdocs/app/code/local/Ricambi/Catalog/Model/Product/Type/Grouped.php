@@ -51,7 +51,19 @@ class Ricambi_Catalog_Model_Product_Type_Grouped extends Mage_Catalog_Model_Prod
                 ->addAttributeToFilter('status', array('in' => $this->getStatusFilters($product)));
 
             foreach ($collection as $item) {
+                $item->setData('linked_code', $item->getSku());                
                 $associatedProducts[] = $item;
+                // Verifico se ci sono dei prodotti collegati
+                $options = Mage::getModel('rcatalog/options')->getCollection()
+                            ->setFilterByProduct($this->getProduct($product), $item);
+                foreach ($options as $option) {
+                    $optionProd = Mage::getModel('catalog/product')->Load($option->getProductId());
+                    $optionProd->setData('linked_code', $item->getSku());
+                    $optionProd->setData('link_id', $item->getData('link_id'));
+                    $optionProd->setData('position', $item->getData('position'));
+                    $optionProd->setData('is_options', true);
+                    $associatedProducts[] = $optionProd;
+                }
             }
 
             $this->getProduct($product)->setData($this->_keyAssociatedProducts, $associatedProducts);
@@ -76,6 +88,9 @@ class Ricambi_Catalog_Model_Product_Type_Grouped extends Mage_Catalog_Model_Prod
     {
         $product = $this->getProduct($product);
         $productsInfo = $buyRequest->getSuperGroup();
+        $positionInfo = $buyRequest->getPosition();
+        $linkIdInfo = $buyRequest->getLinkId();
+        $optionsInfo = $buyRequest->getIsOptions();
         $isStrictProcessMode = $this->_isStrictProcessMode($processMode);
 
         if (!$isStrictProcessMode || (!empty($productsInfo) && is_array($productsInfo))) {
@@ -120,6 +135,15 @@ class Ricambi_Catalog_Model_Product_Type_Grouped extends Mage_Catalog_Model_Prod
                                                     'product_id'    => $product->getId()
                                                 )
                                             ))
+                                        );
+                                        
+                                        //Aggiungo i miei dati custom
+                                        $res->addCustomOption('r_info',
+                                            serialize(array('position'   => ((isset($positionInfo[$subProductId]))) ? $positionInfo[$subProductId] : '',
+                                                            'link_id'    => ((isset($linkIdInfo[$subProductId]))) ? $linkIdInfo[$subProductId] : '',
+                                                            'is_options' => ((isset($optionsInfo[$subProductId]))) ? $optionsInfo[$subProductId] : 0,
+                                                            )
+                                                     )
                                         );
 
                                     }
