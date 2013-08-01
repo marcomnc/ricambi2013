@@ -18,9 +18,12 @@ provare a fare un layer che si sovrappone all'immagine e che al mouse up se drag
 <script>
     
     
-    var objJsGrid = new AdminCanvasManagerGrid('<?php echo $this->getJsonPosition();?>', '<?php echo $this->getImage();?>', 'grouped-canvas','<?php echo $this->getSkinUrl('images/delete.png'); ?>');
-    Event.observe(window, 'load', function () {
-        objJsGrid.DecorateGrid("<?php echo $this->getChild('grouped.grid')->getId() . '_table';?>");
-    });
+    //var objJsGrid = new AdminCanvasManagerGrid('<?php echo $this->getJsonPosition();?>', '<?php echo $this->getImage();?>', 'grouped-canvas','<?php echo $this->getSkinUrl('images/delete.png'); ?>');
+    //Event.observe(window, 'load', function () {
+    //    objJsGrid.DecorateGrid("<?php echo $this->getChild('grouped.grid')->getId() . '_table';?>");
+    //});
     
+    jQuery(window).load(function() {
+        jQuery('grouped-canvas').AdminCanvasManagerGrid('<?php echo $this->getJsonPosition();?>', '<?php echo $this->getImage();?>', '<?php echo $this->getSkinUrl('images/delete.png'); ?>');
+    })
 </script>

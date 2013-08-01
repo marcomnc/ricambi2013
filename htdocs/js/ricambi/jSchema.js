@@ -1,4 +1,83 @@
 (function($) {
+
+    $.fn.AdminCanvasManagerGrid = function(objFlat, imgUrl, imgDelete, Grid) {
+        
+        var canvas = $(this);
+        var imgSrc = imgUrl;
+        var delSrc = imgDelete;
+        var idGrid = Grid;
+        if (objFlat!="") {
+            objLink = objFlat.evalJSON();
+        }
+
+        
+        if (imgSrc != "") {
+            $(window).load(function() {
+                InitializeCanvas();
+            });
+        }
+        
+        function DecorateGrid(idGrid) {
+            if ($('#'+idGrid+' span.counter').length > 0) {
+                
+                $('#'+idGrid+' span.counter').each(function() {
+                    $(this).setAttribute('rel',0);
+                });
+                
+                for(var id in objLink) {
+                    if (typeof(objLink[id].state) == 'undefined' || objLink[id].state != 'delete') {
+                        var idLink = objLink[id].linkid;
+                        $('#'+idGrid+' tr:not(.headings)').each(function() {
+                            if ($(this).hasClass('link_id_'+idLink)) {
+                                $(this).addClassName('assigned');
+                                $('#count_'+idLink).attr('rel' ,parseInt($('#count_'+idLink).attr('rel'))+1);
+                            }
+                        });
+                    }
+                }            
+                RefrehCounter();
+            }
+        };
+            
+            
+        function RefrehCounter() {
+            $('span.counter').each(function() {
+                $(this).text($(el).attr('rel'));
+            });
+        };
+        
+        
+        function InitializeCanvas() {
+            canvas.append($('<img>', {'id' : 'loading-canvas', 'src':"/js/ricambi/css/images/loading.gif"})
+                                                               .css({'position': 'absolute',
+                                                                     'top': '20%',
+                                                                     'left' : '50%'}));
+
+            var bkgImage = new Image();
+            bkgImage.src = imgSrc;
+            bkgImage.onload = function () {
+                canvas.append($('<img>', {'id' : 'machine', 'src':bkgImage.src})
+                                                               .css({'position': 'absolute',
+                                                                     'display': 'none',
+                                                                     'top': '0px',
+                                                                     'left' : '0px',
+                                                                     'display': 'none'}));
+                $('#machine').show();
+                $('#loading-canvas').hide().remove();
+                                
+                for (var i=0; i < link.length; i++) {
+                    //PlacePosition(i, obj[i]);
+                }
+                
+                DecorateGrid(idGrid);
+            }
+        }
+
+    }
+
+}) (jQuery);
+
+(function($) {
         
         $.fn.LinkManager = function(params) {
           var canvas = $(this);

@@ -2,11 +2,14 @@
     
     <adminhtml_catalog_product_grouped>
         <reference name="head">
+            <action method="addJs"><script>infortis/jquery/jquery-1.7.2.min.js</script></action>
+            <action method="addJs"><script>infortis/jquery/jquery-noconflict.js</script></action>
             <action method="addCss"><name>rcatalog.css</name></action>
             <action method="addCss"><name>BlockNotice.css</name></action>
             <action method="addJs"><name>ricambi/kinetic.js</name></action>
             <action method="addJs"><name>ricambi/webtoolkit.base64.js</name></action>
             <action method="addJs"><name>ricambi/scheme.js</name></action>
+            <action method="addJs"><name>ricambi/jScheme.js</name></action>
             <action method="addJs"><name>ricambi/plugin/BlockNotice.js</name></action>
         </reference>
         <reference name="product_tabs">

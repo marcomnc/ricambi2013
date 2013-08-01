@@ -1,4 +1,9 @@
-.grouped-grid {width: 380px; float: left;}
+.grouped-grid {width: 380px; float: left;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+}
 .grouped-canvas {float: right}
 
 .position_list_table .position-add-to {position:absolute; width: 20px; height: 20px; 
