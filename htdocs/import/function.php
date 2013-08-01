@@ -29,21 +29,24 @@ function resetLink ($product) {
     $assColl = Mage::getModel('catalog/product_link')->getCollection();
     $assColl->getSelect()->Where('product_id = ?', $product->getId())
                          ->Where('link_type_id = ?', Mage_Catalog_Model_Product_Link::LINK_TYPE_GROUPED);
+
+    $assOptions = Mage::getModel('rcatalog/options')->getCollection()->setFilterByProduct($product);
+    foreach ($assOptions as $opt) {
+        $options = Mage::getModel('rcatalog/options')->Load($opt->getId());
+        $options->delete();
+    }
     
+
     foreach ($assColl as $ass) {
         $associate = Mage::getModel('catalog/product_link')->load($ass->getId());
         $associate->delete();
     }
     
-    foreach (Mage::getModel('rcatalog/position')->getCollection()->setFilterByProduct($product) as $pos) {
+    $assPosition = Mage::getModel('rcatalog/position')->getCollection()->setFilterByProduct($product);
+    foreach ($assPosition as $pos) {
         $position = Mage::getModel('rcatalog/position')->Load($pos->getId());
         $position->delete();
-    }
-    
-    foreach (Mage::getModel('rcatalog/options')->getCollection()->setFilterByProduct($product) as $opt) {
-        $options = Mage::getModel('rcatalog/options')->Load($opt->getId());
-        $options->delete();
-    }
+    }    
     
 }
 
@@ -151,7 +154,7 @@ function creaMacchina( $row, $type) {
     $sql .= " AND  `idTipoDisegno` = " . $type;
     $sql .= " AND idRicambioMacchina_child =0 ";
     $sql .= " ORDER BY  `NUMERO` ";
-    
+
     $associati = mysqli_query($conn, $sql);
 
     //Creo le associazioni
@@ -162,8 +165,10 @@ function creaMacchina( $row, $type) {
 
         if ($productLinkId > 0) {
             $data[$productLinkId]['position'] =  $rowAss['NUMERO'];
-            $data[$productLinkId]['x'] = $rowAss['xPos'];
-            $data[$productLinkId]['y'] = $rowAss['yPos'];
+            $data[$productLinkId]['pos'][] = array ( 'pos' => $rowAss['NUMERO'],
+                                                     'x' => $rowAss['xPos'],
+                                                     'y' => $rowAss['yPos']
+                                                    );
             
             
             $sqlChild = "SELECT ricambiversione . * , codiceRicambio FROM ricambiversione ";
@@ -184,7 +189,6 @@ function creaMacchina( $row, $type) {
 
     }
 
-    
     if (sizeof($data) > 0) {
     
         $prod->setGroupedLinkData($data);
@@ -197,16 +201,18 @@ function creaMacchina( $row, $type) {
         $assColl->getSelect()->Where('product_id = ?', $prod->getId())
                              ->Where('linked_product_id = ?', $prodId )
                              ->Where('link_type_id = ?', Mage_Catalog_Model_Product_Link::LINK_TYPE_GROUPED);
-
+        
         foreach ($assColl as $ass) {
             
-            $positionLink = Mage::getModel('rcatalog/position');
-            $positionLink->setData('grouped_product_id', $prod->getId());
-            $positionLink->setData('link_id', $ass->getId());
-            $positionLink->setData('position_x', ($d["x"] + 15));
-            $positionLink->setData('position_y', ($d["y"] + 15));                        
-            
-            $positionLink->save();
+            foreach ($d[pos] as $posData) {
+                $positionLink = Mage::getModel('rcatalog/position');
+                $positionLink->setData('grouped_product_id', $prod->getId());
+                $positionLink->setData('link_id', $ass->getId());
+                $positionLink->setData('position_x', ($posData["x"] + 15));
+                $positionLink->setData('position_y', ($posData["y"] + 15));                        
+                $positionLink->save();
+            }
+                        
             
             if (isset($d['child'])) {
                 foreach ($d['child'] as $child) {
@@ -226,8 +232,6 @@ function creaMacchina( $row, $type) {
         
                              
     }
-    
-    
     
     
 }

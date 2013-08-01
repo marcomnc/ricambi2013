@@ -138,6 +138,8 @@ if ($_POST['secure'] != "aquiloni gagliardi"){
                 $sql .= " FROM macchine ";
                 $sql .= " JOIN versioni ON  `macchine`.`idMacchina` = versioni.`idMacchina` ";
                 $sql .= " where versioni.visualizzaVersione = 1 ";
+                
+                //$sql .= " and macchine.macchina = 'UV NIAGARA 180 SL WG'";
 
                 $macchine = mysqli_query($conn, $sql);
                 
