@@ -45,7 +45,7 @@ class CommerceLab_News_Model_Mysql4_News_Collection extends Mage_Core_Model_Mysq
             'category_table.category_id = category_store_table.category_id',
             array()
         )
-        ->where('category_table.url_key = "'.$categoryId.'"')
+        ->where('category_table.category_id = "'.$categoryId.'"')
         ->where('category_store_table.store_id in (?)', array(0, Mage::app()->getStore()->getId()))
         ;
         return $this;
@@ -53,6 +53,8 @@ class CommerceLab_News_Model_Mysql4_News_Collection extends Mage_Core_Model_Mysq
 
     public function addStoreFilter($store)
     {
+        //Disabiliato per da un pò di coerenza a tutto ....
+        return $this;
         $this->getSelect()->join(
             array('news_store_table' => $this->getTable('news_store')),
             'main_table.news_id = news_store_table.news_id',

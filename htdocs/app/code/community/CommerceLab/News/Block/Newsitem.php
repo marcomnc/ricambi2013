@@ -15,7 +15,7 @@
  * @license    http://commerce-lab.com/LICENSE.txt
  */
 
-class CommerceLab_News_Block_Newsitem extends Mage_Core_Block_Template
+class CommerceLab_News_Block_Newsitem extends CommerceLab_News_Block_Abstract
 {
     protected $_pagesCount = null;
     protected $_currentPage = null;
@@ -295,9 +295,9 @@ class CommerceLab_News_Block_Newsitem extends Mage_Core_Block_Template
         return array('width' => $width, 'height' => $height);
     }
 
-    protected function _toHtml()
-    {
-        $html = parent::_toHtml();
-        return $html.'<div align="right" class="clcopyright">&copy Developed by <a href="http://commerce-lab.com/">CommerceLab</a></div>';
-    }
+//    protected function _toHtml()
+//    {
+//        $html = parent::_toHtml();
+//        return $html//.'<div align="right" class="clcopyright">&copy Developed by <a href="http://commerce-lab.com/">CommerceLab</a></div>';
+//    }
 }

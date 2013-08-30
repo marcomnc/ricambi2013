@@ -29,10 +29,10 @@ class CommerceLab_News_Block_Adminhtml_News_Grid extends Mage_Adminhtml_Block_Wi
     protected function _prepareCollection()
     {
         $collection = Mage::getModel('clnews/news')->getCollection();
-        foreach($collection as $item) {
-            $stores = $this->lookupStoreIds($item->getId());
-            $item->setData('store_id', $stores);
-        }
+        //foreach($collection as $item) {
+        //    $stores = $this->lookupStoreIds($item->getId());
+        //    $item->setData('store_id', $stores);
+        //}
         $this->setCollection($collection);
         return parent::_prepareCollection();
     }
@@ -63,18 +63,18 @@ class CommerceLab_News_Block_Adminhtml_News_Grid extends Mage_Adminhtml_Block_Wi
             'index'     => 'author',
         ));
 
-        if (!Mage::app()->isSingleStoreMode()) {
-            $this->addColumn('store_id', array(
-                'header'        => Mage::helper('cms')->__('Store View'),
-                'index'         => 'store_id',
-                'type'          => 'store',
-                'store_all'     => true,
-                'store_view'    => true,
-                'sortable'      => false,
-                'filter_condition_callback'
-                                => array($this, '_filterStoreCondition'),
-            ));
-        }
+//        if (!Mage::app()->isSingleStoreMode()) {
+//            $this->addColumn('store_id', array(
+//                'header'        => Mage::helper('cms')->__('Store View'),
+//                'index'         => 'store_id',
+//                'type'          => 'store',
+//                'store_all'     => true,
+//                'store_view'    => true,
+//                'sortable'      => false,
+//                'filter_condition_callback'
+//                                => array($this, '_filterStoreCondition'),
+//            ));
+//        }
 
         $this->addColumn('created_time', array(
             'header'    => Mage::helper('clnews')->__('Created'),

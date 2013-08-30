@@ -261,21 +261,22 @@ class CommerceLab_News_Block_Abstract extends Mage_Core_Block_Template
             $categories = Mage::getModel('clnews/category')
                 ->getCollection()
                 ->addFieldToFilter('url_key', $this->getCategoryKey())
-                ->setPageSize(1);
+                ->addStoreFilter(Mage::app()->getStore()->getId())
+                ->setPageSize(1);           
             $category = $categories->getFirstItem();
             return $category;
         }
         return null;
     }
 
-    protected function _toHtml()
-    {
-        $html = parent::_toHtml();
-        if ($this->_showFlag==1) {
-            $html = $html.'<div align="right" class="clcopyright">&copy Developed by <a href="http://commerce-lab.com/">CommerceLab</a></div>';
-        }
-        return $html;
-    }
+//    protected function _toHtml()
+//    {
+//        $html = parent::_toHtml();
+//        if ($this->_showFlag==1) {
+//            $html = $html;//.'<div align="right" class="clcopyright">&copy Developed by <a href="http://commerce-lab.com/">CommerceLab</a></div>';
+//        }
+//        return $html;
+//    }
 
     public function getCategoryByNews($id)
     {

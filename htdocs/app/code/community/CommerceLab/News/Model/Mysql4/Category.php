@@ -51,10 +51,13 @@ class CommerceLab_News_Model_Mysql4_Category extends Mage_Core_Model_Mysql4_Abst
 
         if ($data = $this->_getReadAdapter()->fetchAll($select)) {
             $storesArray = array();
-            foreach ($data as $row) {
-                $storesArray[] = $row['store_id'];
+            foreach ($data as $row) {                
+                $storesArray[] = $row['store_id'];                
+                $store = Mage::getModel('core/store')->Load($row['store_id']);
+                $stores[] = $store;
             }
             $object->setData('store_id', $storesArray);
+            $object->setData('store', $stores);
         }
 
         return parent::_afterLoad($object);

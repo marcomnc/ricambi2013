@@ -1,4 +1,30 @@
 <?php $item = $this->getNewsitem(); ?>
+<?php 
+if (is_null($item)): 
+    $items = Mage::getModel('clnews/news')->getCollection()
+                ->addEnableFilter(1)
+                ->addStoreFilter(Mage::app()->getStore()->getId())
+                ->setOrder('news_time', "desc");
+    if ($this->getCurrentCategory()):
+                $items->addCategoryFilter($this->getCurrentCategory()->getId());
+    endif;
+    $item = $items->Load()->getFirstItem();
+    if ($this->getCurrentCategory() && !is_null($item)):
+        $item->setCategory($this->getCurrentCategory());
+    endif;
+    Mage::register('newsitem', $item);
+endif;
+if (is_null($item)): 
+$msg = $this->__("Spiacenti al momento non ci sono novità");
+    if ($this->getCurrentCategory()):
+
+        $msg = $this->__("Spiacenti al momento non ci sono ") . $this->getCurrentCategory()->getTitle();
+    endif;           
+?>
+    <h4><?php echo $msg;  ?></h4>
+<?php
+else:
+?>
 <h4><?php echo $item->getTitle() ?></h4>
 <?php if (Mage::helper('clnews')->showDate()): ?>
     <span class="date"><?php echo Mage::helper('clnews')->formatDate($item->getNewsTime()) ?></span>
@@ -169,7 +195,7 @@
     <?php endif; ?>
 <?php endif; ?>
 </div>
-<a href="<?php echo $this->getBackUrl() ?>" class="back">&laquo; <?php echo $this->__('Back') ?></a>
+
 <script type="text/javascript">
     function AjaxSend(page, id, showLoader)
     {
@@ -203,3 +229,4 @@
         jQuery("#" + cl).addClass("current");
     }
 </script>
+<?php endif;?>

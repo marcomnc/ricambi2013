@@ -61,10 +61,13 @@
             <action method="setTemplate"><template>page/2columns-left.phtml</template></action>
         </reference>
         <reference name="head">
-            <action method="addJs"><script>commercelab/clnews/news.js</script></action>
+            <!--<action method="addJs"><script>commercelab/clnews/news.js</script></action>-->
         </reference>
-        <reference name="content">
+        <!--<reference name="content">
             <block type="clnews/news" name="news" template="clnews/list.phtml"/>
+        </reference>-->
+        <reference name="content">            
+            <block type="clnews/newsitem" name="newsitem" template="clnews/newsitem.phtml"/>                
         </reference>
         <reference name="left">
             <block type="clnews/news" name="news" template="clnews/list.phtml" before="+"/>
@@ -76,7 +79,7 @@
             <action method="setTemplate"><template>page/2columns-left.phtml</template></action>
         </reference>
         <reference name="head">
-            <action method="addJs"><script>commercelab/clnews/news.js</script></action>
+            <!--<action method="addJs"><script>commercelab/clnews/news.js</script></action>-->
         </reference>
         <reference name="content">
             <!-- <block type="core/template" name="contactForm" template="contacts/form.phtml"/> -->

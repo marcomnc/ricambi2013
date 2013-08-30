@@ -58,8 +58,9 @@ class CommerceLab_News_Block_Adminhtml_News_Edit_Tab_Info extends Mage_Adminhtml
 
         /**
          * Check is single store mode
+         * Non considero mai lo store a livello di news
          */
-        if (!Mage::app()->isSingleStoreMode()) {
+        if (!Mage::app()->isSingleStoreMode() && false) { 
                 $fieldset->addField('store_id', 'multiselect', array(
                     'name'      => 'stores[]',
                     'label'     => Mage::helper('clnews')->__('Store View'),
@@ -73,8 +74,14 @@ class CommerceLab_News_Block_Adminhtml_News_Edit_Tab_Info extends Mage_Adminhtml
         $collection = Mage::getModel('clnews/category')->getCollection()->setOrder('sort_id', 'asc');
         $nonEscapableNbspChar = html_entity_decode('&#160;', ENT_NOQUOTES, 'UTF-8');
         foreach ($collection as $cat) {
+            
+            Mage::getResourceModel('clnews/category')->Load($cat);
+            $storeName = array();
+            foreach ($cat->getStore() as $store) {
+                $storeName[] = $store->getName();
+            }
             $categories[] = ( array(
-                'label' => str_repeat($nonEscapableNbspChar, $cat->getLevel() * 4).(string)$cat->getTitle(),
+                'label' => str_repeat($nonEscapableNbspChar, $cat->getLevel() * 4).(string)$cat->getTitle() . "-" .implode(',', $storeName),
                 'value' => $cat->getCategoryId()
                 ));
         }

@@ -1,13 +1,25 @@
-<h2><?php echo $this->__(Mage::getStoreConfig('clnews/news/title')) ?>
+<div class="block block-list block-news">
+    <div class="block-title">
+        <strong><span><?php 
+$currentCategory = $this->getCurrentCategory();
+if (is_null($this->getCurrentCategory())) :
+    echo $this->__(Mage::getStoreConfig('clnews/news/title')) ;
+else: 
+    echo $currentCategory->getTitle();
+endif;
+?>
+            </span>
+        </strong>
+    </div>
 <?php if (Mage::getStoreConfig('clnews/rss/enable')): ?>
-    <?php if ($this->getCurrentCategory()): ?>
-    <?php $categoryId = $this->getCurrentCategory()->getId() ?>
+    <?php if ($currentCategory): ?>
+    <?php $categoryId = $currentCategory->getId() ?>
     <?php endif ?>
     <a href="<?php echo Mage::Helper('clnews')->getRssLink(isset($categoryId)?$categoryId:null) ?>">
         <img src="<?php echo $this->getSkinUrl('css/clnews/images/rss.gif') ?>">
     </a>
 <?php endif ?>
-</h2>
+
 <?php $items = $this->getNewsItems() ?>
 <?php foreach ($items as $item): ?>
 <div class="news-item">
@@ -67,3 +79,4 @@
     </p>
 </div>
 <?php endif;?>
+</div>
