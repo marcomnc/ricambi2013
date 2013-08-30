@@ -2203,15 +2203,17 @@ a.email2friend:hover { background-position: -54px -27px; }
 }
 .product-view .product-img-box .product-image.product-image-zoom { z-index:9; }
 
+.product-view .product-img-box .more-views li {float: left; border:1px solid #eee;}
+
 /* Thumbnails */
 .product-view .product-img-box .more-views .thumbnails li { float:left; /*margin: 10px -1px 0 0;*/ }
 .product-view .product-img-box .more-views .thumbnails li.last { margin-right:0; }
+.product-view .product-img-box .more-views li
 .product-view .product-img-box .more-views .thumbnails li a {
 	display:block;
 	overflow:hidden;
 	text-decoration:none;
-	padding:4px;
-	border:1px solid #eee;
+	padding:4px;	
 }
 .product-view .product-img-box .more-views .thumbnails li a:hover { border-color:#999; position:relative; }
 
@@ -2464,7 +2466,8 @@ a.email2friend:hover { background-position: -54px -27px; }
 /* Block: Upsell
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 */
-.product-view .box-up-sell {}
+.product-view .box-up-sell .product-image {display: none}
+.product-view .box-up-sell .itemslider-horizontal .slides > li {padding: 0px}
 
 
 /* Block: Tags 
@@ -3682,3 +3685,6 @@ a:hover .caption.light3 p { background-color:rgba(255,255,255, 1); color:#000; }
   .scrollcol{overflow:visible;height:auto;}
   #spazio{ height:20px;}
 }
+
+
+.categorypath-accessori-cartucce-filtranti-html .category-products .product-image {display: none}
