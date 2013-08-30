@@ -67,6 +67,7 @@ htdocs/LICENSE.txt
 htdocs/LICENSE_EE*
 htdocs/mage
 htdocs/media/catalog/
+htdocs/media/clnews
 htdocs/media/customer/
 htdocs/media/downloadable/
 htdocs/media/.htaccess
