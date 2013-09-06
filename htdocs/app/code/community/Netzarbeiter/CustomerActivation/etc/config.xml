@@ -140,6 +140,7 @@
                 <always_send_admin_email>0</always_send_admin_email>
                 <require_activation_for_specific_groups>0</require_activation_for_specific_groups>
                 <require_activation_groups></require_activation_groups>
+                <enable_custom_page_after>0</enable_custom_page_after>
             </customeractivation>
         </customer>
     </default>

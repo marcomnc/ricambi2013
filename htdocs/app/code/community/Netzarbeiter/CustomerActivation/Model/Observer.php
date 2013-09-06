@@ -22,6 +22,8 @@ class Netzarbeiter_CustomerActivation_Model_Observer extends Mage_Core_Model_Abs
     const XML_PATH_MODULE_DISABLED = 'customer/customeractivation/disable_ext';
 
     const XML_PATH_ALWAYS_NOTIFY_ADMIN = 'customer/customeractivation/always_send_admin_email';
+    const XML_PATH_ENABLE_CUSTOM_PAGE_AFTER = 'customer/customeractivation/enable_custom_page_after';
+    const XML_PATH_CUSTOM_PAGE_AFTER = 'customer/customeractivation/custom_page_after';
 
     /**
      * Fired on customer_login event
@@ -379,4 +381,5 @@ class Netzarbeiter_CustomerActivation_Model_Observer extends Mage_Core_Model_Abs
             }
         }
     }
+         
 }

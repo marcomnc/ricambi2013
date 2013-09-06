@@ -40,7 +40,13 @@
     <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
     <form action="<?php echo $this->getPostActionUrl() ?>" method="post" id="form-validate">
         <div class="fieldset">
-            <input type="hidden" name="success_url" value="<?php echo $this->getSuccessUrl() ?>" />
+            <?php $successUrl = "";
+            if (!Mage::getStoreConfig(Netzarbeiter_CustomerActivation_Model_Observer::XML_PATH_MODULE_DISABLED) && Mage::getStoreConfig(Netzarbeiter_CustomerActivation_Model_Observer::XML_PATH_ENABLE_CUSTOM_PAGE_AFTER)) :
+              $successUrl = Mage::helper('cms/page')->getPageUrl(Mage::getStoreConfig(Netzarbeiter_CustomerActivation_Model_Observer::XML_PATH_CUSTOM_PAGE_AFTER));  
+            endif;
+
+            ?>
+            <input type="hidden" name="success_url" value="<?php echo ($successUrl == "") ? $this->getSuccessUrl() : $successUrl; ?>" />
             <input type="hidden" name="error_url" value="<?php echo $this->getErrorUrl() ?>" />
             <ul class="form-list">
                 <li class="fields">
