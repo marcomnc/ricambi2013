@@ -3688,3 +3688,5 @@ a:hover .caption.light3 p { background-color:rgba(255,255,255, 1); color:#000; }
 
 
 .categorypath-accessori-cartucce-filtranti-html .category-products .product-image {display: none}
+
+.form-list li.wide textarea#ordercomment-comment {width: 100%!important}

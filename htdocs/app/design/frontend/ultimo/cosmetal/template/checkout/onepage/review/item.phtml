@@ -32,7 +32,11 @@
 <?php 
 $_item = $this->getItem();
 $gOptions = unserialize($_item->getProduct()->getCustomOption('info_buyRequest')->getValue());
-$rOptions = unserialize($_item->getProduct()->getCustomOption('r_info')->getValue());
+$rInfo = $_item->getProduct()->getCustomOption('r_info');
+$rOptions = array();
+if (!is_null($rInfo)):
+    $rOptions = unserialize($_item->getProduct()->getCustomOption('r_info')->getValue());
+endif;
 ?>
 <tr>
     <td><!-- Nome Raggruppato -->
