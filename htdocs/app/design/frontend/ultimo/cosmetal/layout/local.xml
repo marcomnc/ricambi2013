@@ -449,7 +449,7 @@
 			
 		</reference>
                 
-                <reference name="checkout.cart">
+<reference name="checkout.cart">
                     <remove name="checkout.cart.shipping"/>
                 </reference>
 		

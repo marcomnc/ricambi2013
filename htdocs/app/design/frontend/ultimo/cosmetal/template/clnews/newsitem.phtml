@@ -1,6 +1,8 @@
 <?php $item = $this->getNewsitem(); ?>
 <?php 
 if (is_null($item)): 
+
+
     $items = Mage::getModel('clnews/news')->getCollection()
                 ->addEnableFilter(1)
                 ->addStoreFilter(Mage::app()->getStore()->getId())
@@ -8,13 +10,14 @@ if (is_null($item)):
     if ($this->getCurrentCategory()):
                 $items->addCategoryFilter($this->getCurrentCategory()->getId());
     endif;
+
     $item = $items->Load()->getFirstItem();
     if ($this->getCurrentCategory() && !is_null($item)):
         $item->setCategory($this->getCurrentCategory());
     endif;
     Mage::register('newsitem', $item);
 endif;
-if (is_null($item)): 
+if (is_null($item) || $item->getId() == 0): 
 $msg = $this->__("Spiacenti al momento non ci sono novità");
     if ($this->getCurrentCategory()):
 

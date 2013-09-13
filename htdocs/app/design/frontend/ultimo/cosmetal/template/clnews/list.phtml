@@ -2,6 +2,7 @@
     <div class="block-title">
         <strong><span><?php 
 $currentCategory = $this->getCurrentCategory();
+
 if (is_null($this->getCurrentCategory())) :
     echo $this->__(Mage::getStoreConfig('clnews/news/title')) ;
 else: 

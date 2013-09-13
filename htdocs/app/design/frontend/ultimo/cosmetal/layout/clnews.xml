@@ -24,9 +24,9 @@
         <reference name="head">
             <action method="addItem"><type>skin_css</type><name>css/clnews/style.css</name></action>
             <!--<action method="addJs"><script>jquery/jquery-1.4.4.js</script></action>-->
-            <action method="addJs"><script>commercelab/noconflict.js</script></action>
-            <action method="addJs"><script>commercelab/treeview/jquery.treeview.pack.js</script></action>
-            <action method="addJs"><script>commercelab/category_tree.js</script></action>
+<!--            <action method="addJs"><script>commercelab/noconflict.js</script></action>-->
+<!--            <action method="addJs"><script>commercelab/treeview/jquery.treeview.pack.js</script></action>-->
+<!--            <action method="addJs"><script>commercelab/category_tree.js</script></action>-->
 
             <action method="addCss"><stylesheet>css/commercelab/treeview/jquery.treeview.css</stylesheet></action>
         </reference>
