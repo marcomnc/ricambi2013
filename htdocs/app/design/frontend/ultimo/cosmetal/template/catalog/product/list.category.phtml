@@ -1,0 +1,152 @@
+<?php 
+$_schemaType = Mage::getStoreConfig('catalog/ricambi/type_scheme');
+$parent = Mage::getModel('catalog/category')->getCollection()->addIsActiveFilter();
+                
+$parent->getSelect()
+       ->Where('e.parent_id = ?', Mage::registry('current_category')->getId());
+$_collectionSize = $parent->count();
+
+if(!$_collectionSize): ?>
+    <?php if ($tmpHtml = $this->getChildHtml('block_category_above_empty_collection')): ?>
+        <div class="block_category_above_empty_collection std"><?php echo $tmpHtml; ?></div>
+    <?php else: ?>
+		<p class="note-msg empty-catalog"><?php echo $this->__('There are no products matching the selection.') ?></p>
+    <?php endif; ?>
+<?php else: 
+
+$theme = $this->helper('ultimo');
+$labelsHelper = $this->helper('ultimo/labels');
+$templateHelper = $this->helper('ultimo/template');
+
+//Default image size
+$imgWidth = 295;
+$imgHeight = 295;
+
+//Aspect ratio settings
+if ($theme->getCfg('category/aspect_ratio'))
+    $imgHeight = 0; //Height will be computed automatically (based on width) to keep the aspect ratio
+?>
+
+<div class="category-products">
+    <?php //Grid mode specific settings
+
+            //Get grid configuration array
+            $gc = $theme->getCfgGroup('category_grid');
+
+            //General grid classes
+            $gridClasses = $gc['hover_effect'] ? ' hover-effect' : '';
+            if ($gc['equal_height'])
+                    $gridClasses .= ' equal-height'; 
+    ?>
+        
+    <ul class="products-grid category-products-grid category-list itemgrid itemgrid-<?php echo $gc['column_count']; ?>cols<?php if($gridClasses) echo $gridClasses; ?>">
+        <?php foreach ($parent as $children): 
+            $child = Mage::getModel('catalog/category')->Load($children->getId());        
+         ?>
+        
+        <li class="item">
+            
+            <h2 class="product-name">
+                    <?php if ($child->getData('children_count') > 0) :?>    	
+                    <a href="<?php echo $this->getUrl($child->getUrlPath()) ?>" title="<?php echo $child->getName() ?>" style="float: left">                        
+                    <?php else: ?>
+                        <div style="float: left">
+                    <?php endif; ?>
+                        <?php echo $child->getName() ?>
+                    <?php if ($child->getData('children_count') > 0) :?>    	
+                    <?php else: ?>
+                        </div>
+                    </a>
+                    <?php endif; ?>
+                <?php $products = Mage::getResourceModel('catalog/product_collection')
+                                    ->addCategoryFilter($child);                
+                      if ($products->count() > 0): ?>
+                <div class="show-product-links show" rel="<?php echo $child->getId();?>">
+                    
+                </a>
+                <?php endif; ?>                
+            </h2>
+            <?php if ($products->count() > 0): ?>
+            <div class="clear"></div>
+            <div class="product-list hide-products" rel="<?php echo $child->getId();?>">
+                <ul>
+                    <?php foreach ($products as $prod): 
+
+                        $_product = Mage::getModel('catalog/product')->Load($prod->getId()); ?>
+                    <li>
+                        <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" 
+                           class="product-image ">
+                            <?php //Product labels
+                            echo $_product->getName(); ?>
+                        </a>
+                    </li>                    
+                    <?php 
+                            if ($_product->getData($_schemaType)): ?>
+                            <li>
+                                <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" 
+                                   class="product-image schema-type">
+                                        <?php echo $_product->getResource()->getAttribute($_schemaType)->getSource()->getOptionText($_product->getData($_schemaType)); ?>
+                                </a>
+                            </li>
+                            <?php endif;                
+                          endforeach; ?>
+                </ul>
+            </div>
+            <?php endif; ?>
+            <div class="clear"></div>
+            <?php if ($child->getData('children_count') > 0) :?>
+            <a href="<?php echo Mage::getBaseUrl() . $child->getUrlPath() ?>"             
+                   title="<?php echo $child->getName() ?>" 
+                   class="product-image">
+            <?php endif;?>
+            <?php if ($child->hasThumbnail() && $child->getThumbnail() != ""): ?>
+                    <img src="<?php echo Mage::getBaseUrl('media') . "catalog/category/" . $child->getThumbnail()?>" 
+                         alt="<?php echo $child->getName(); ?>" width="<?php echo $imgWidth?>" height="<?php echo $imgHeight;?>"/>
+            <?php else : ?>    
+                    <img src="<?php echo $this->getSkinUrl('images/no_category.png'); ?>" 
+                         alt="<?php echo $child->getName(); ?>" width="<?php echo $imgWidth?>" height="<?php echo $imgHeight;?>"/>
+            <?php endif; ?>
+            <?php if ($child->getData('children_count') > 0) :?>    	
+            </a>
+            <?php endif;?>    
+                                
+                
+                
+                <div class="actions clearer">
+                	
+                    
+                </div> <!-- end: actions -->
+        </li>
+        <?php endforeach; ?>
+    </ul>
+
+    
+</div>
+                
+<script>
+    
+    jQuery(document).ready(function() {
+        var hideAll = function() {
+            //Hide All
+            jQuery('.show-product-links').removeClass('hide').addClass('show'); 
+            jQuery('.product-list').removeClass('show-products').addClass('hide-products');
+            
+        };
+        jQuery('.show-product-links').click(function() {
+            var show = jQuery(this).hasClass('show');
+            hideAll();
+            
+            if (show) {
+                jQuery(this).removeClass('show').addClass('hide');                
+                jQuery('.product-list[rel="' + jQuery(this).attr('rel') + '"]').width(jQuery("li.item .product-name").width()).removeClass('hide-products').addClass('show-products');
+            }
+        });        
+        jQuery('.product-list').mouseleave(function() {
+            hideAll();
+        });         
+    });
+    
+</script>
+    
+
+<?php endif;?>

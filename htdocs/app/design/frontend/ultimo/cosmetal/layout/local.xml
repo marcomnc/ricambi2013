@@ -81,16 +81,18 @@
 			<block type="cms/block" name="block_right_bottom" after="-">
 				<action method="setBlockId"><block_id>block_right_bottom</block_id></action>
 			</block>
+                        
+                        <remove name="catalog.compare.sidebar"/>
 			
 		</reference>
 		
 		
 		<reference name="left">
 			
+                        <remove name="catalog.compare.sidebar"/> 
 			<remove name="left.newsletter"/> <!-- Move newsletter to the footer -->
 			<action method="unsetChild"><name>tags_popular</name></action>
-
-			<block type="catalog/product_compare_sidebar" name="catalog.compare.sidebar" template="catalog/product/compare/sidebar.phtml"/>
+			
 			<block type="reports/product_viewed" name="left.reports.product.viewed" template="reports/product_viewed.phtml" />
 			<block type="reports/product_compared" name="right.reports.product.compared" template="reports/product_compared.phtml" />
 			<block type="wishlist/customer_sidebar" name="wishlist_sidebar" as="wishlist" template="wishlist/sidebar.phtml"/>
@@ -480,7 +482,10 @@
 		<reference name="root">
 			<action method="setTemplate"><template>page/2columns-left.phtml</template></action>
 		</reference>
-		
+		<reference name="product_list_toolbar">
+                    <action method="disableViewSwitcher" ></action>
+                    <action method="setData"><key>_current_grid_mode</key><value>list</value></action>
+                </reference>
 		<reference name="left">
 			<!-- Keep layered navigation always on top. Replace: after="currency" with: before="-" -->
 			<!--<action method="unsetChild"><name>catalogsearch.leftnav</name></action>
@@ -558,8 +563,6 @@
 			<!-- Remove cart from the left column -->
 			<action method="unsetChild"><name>cart_sidebar</name></action>
 			
-			<!-- Remove Compare block, it is already inserted in DEFAULT section -->
-			<action method="unsetChild"><name>catalog.compare.sidebar</name></action>
 		</reference>
 
 	</customer_account>

@@ -3690,3 +3690,20 @@ a:hover .caption.light3 p { background-color:rgba(255,255,255, 1); color:#000; }
 .categorypath-accessori-cartucce-filtranti-html .category-products .product-image {display: none}
 
 .form-list li.wide textarea#ordercomment-comment {width: 100%!important}
+
+.show-product-links { height: 30px; width: 25px;  cursor: pointer; float: right}
+.show-product-links.show {background: transparent url('../images/arrow_down.png');}
+.show-product-links.hide {background: transparent url('../images/close_up.png');}
+.product-list {float: left; position: absolute;}
+
+.category-list .product-list ul li a {text-align: left!important;}
+
+.product-list ul li a {transition: height 300ms linear;
+                       -moz-transition:	height 300ms linear;
+                       -webkit-transition: height 300ms linear;
+                       -o-transition: height 300ms linear;
+                       }
+.product-list.show-products {background: #FFFFFF }
+.product-list.hide-products ul li a {height: 0px; overflow: hidden}
+.product-list.show-products ul li a {height: 20px; overflow: visible;}
+.product-list.show-products ul li a.schema-type {height: 20px; font-size: 10px; text-align: right!important}

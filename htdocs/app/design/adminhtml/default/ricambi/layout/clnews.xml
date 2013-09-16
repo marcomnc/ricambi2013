@@ -31,7 +31,7 @@
             <action method="addJs"><script>mage/adminhtml/browser.js</script></action>
             <action method="addJs"><script>prototype/window.js</script></action>
             <action method="addItem"><type>js_css</type><name>prototype/windows/themes/default.css</name></action>
-            <action method="addItem"><type>js_css</type><name>prototype/windows/themes/commercelab/magento.css</name></action>
+            <action method="addCss"><name>lib/prototype/windows/themes/magento.css</name></action>
             <action method="addJs"><script>commercelab/jquery-1.4.2.min.js</script></action>
             <action method="addJs"><script>commercelab/noconflict.js</script></action>
         </reference>
