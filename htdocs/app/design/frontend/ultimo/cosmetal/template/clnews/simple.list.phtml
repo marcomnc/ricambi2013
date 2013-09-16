@@ -1,0 +1,19 @@
+
+<h6 class="heading"><?php    
+
+$this->setData('category', $this->getData('newstype'));
+$currentCategory = $this->getCurrentCategory();
+if (is_null($this->getCurrentCategory())) :
+    echo $this->__(Mage::getStoreConfig('clnews/news/title')) ;
+else: 
+    echo $currentCategory->getTitle();
+endif;
+?></h6>
+<ul class="bullet">
+<?php 
+    $items = $this->getNewsItems();
+    foreach ($items as $item): ?>
+     <li><a href="<?php echo $item->getUrl($this->getCategory()) ?>" ><?php echo $item->getTitle();?></a></li>  
+<?php endforeach;?>
+</ul>
+
