@@ -43,11 +43,11 @@
             <ordercomment>
                 <class>Magemaven_OrderComment_Block</class>
             </ordercomment>
-            <checkout>
+            <!--<checkout>
                 <rewrite>
                     <agreements>Magemaven_OrderComment_Block_Checkout_Agreements</agreements>
                 </rewrite>
-            </checkout>
+            </checkout>-->
             <adminhtml>
                 <rewrite>
                     <sales_order_grid>Magemaven_OrderComment_Block_Adminhtml_Sales_Order_Grid</sales_order_grid>

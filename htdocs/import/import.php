@@ -137,7 +137,7 @@ if ($_POST['secure'] != "aquiloni gagliardi"){
                 $sql .= " versioni.idVersione ";
                 $sql .= " FROM macchine ";
                 $sql .= " JOIN versioni ON  `macchine`.`idMacchina` = versioni.`idMacchina` ";
-                $sql .= " where versioni.visualizzaVersione = 1 ";
+                $sql .= " where versioni.visualizzaVersione = 1 "; //and macchine.idMacchina = '12983'";
                 
                 //$sql .= " and macchine.macchina = 'UV NIAGARA 180 SL WG'";
 

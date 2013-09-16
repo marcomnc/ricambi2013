@@ -138,7 +138,13 @@ Deprecato in quanto il layout tanto è custom
                 <block type="page/html_wrapper" name="customer.form.register.fields.before" as="form_fields_before" translate="label">
                     <label>Form Fields Before</label>
                 </block>
-		<block type="checkout/agreements" name="customer.agreements" as="customer.agreements" template="customer/form/agreements.phtml"/>
+		<block type="checkout/agreements" name="customer.agreements" as="customer.agreements" 
+                       template="customer/form/agreements.phtml">
+                    <action method="setData">
+                        <key>custom_template</key>
+                        <value>1</value>
+                    </action>
+                </block>
             </block>
         </reference>
     </customer_account_create>

@@ -126,28 +126,26 @@ function creaMacchina( $row, $type) {
         $prod->setWeight((real)1);
         $prod->setStockData(array('is_in_stock' => 1,'manage_stock' => 0));
         
+        if($type == 1) {
+            $prod->setTipoDisegno("34");
+        } else {
+            $prod->setTipoDisegno("33");
+        }
+
+        $prod->setData('data_link_foto', getLinkFoto($row['idVersione']));
+        $prod->setDataLinkSchema(getLinkSchema($row['idVersione'], $type));
+
+        $prod->save();
     } else {
         $prod = Mage::getModel('catalog/product')->setStoreId(0)->Load($id);
     }
-    
-    if($type == 1) {
-        $prod->setTipoDisegno("34");
-    } else {
-        $prod->setTipoDisegno("33");
-    }
-    
-    $prod->setData('data_link_foto', getLinkFoto($row['idVersione']));
-    $prod->setDataLinkSchema(getLinkSchema($row['idVersione'], $type));
-
-    $prod->save();
-
     
     Mage::log('Creato prodotto ' . $row['macchina']);
     
     //Associazioni
     
     resetLink($prod);
-
+    
     $sql = "SELECT ricambiversione . * , codiceRicambio FROM ricambiversione ";
     $sql .= "JOIN ricambi ON ricambi.idRicambio = ricambiversione.idRicambio";
     $sql .= " WHERE  `idVersione` = " . $row['idVersione'];
@@ -201,15 +199,17 @@ function creaMacchina( $row, $type) {
         $assColl->getSelect()->Where('product_id = ?', $prod->getId())
                              ->Where('linked_product_id = ?', $prodId )
                              ->Where('link_type_id = ?', Mage_Catalog_Model_Product_Link::LINK_TYPE_GROUPED);
-        
+
         foreach ($assColl as $ass) {
             
-            foreach ($d[pos] as $posData) {
+            foreach ($d['pos'] as $posData) {
                 $positionLink = Mage::getModel('rcatalog/position');
                 $positionLink->setData('grouped_product_id', $prod->getId());
                 $positionLink->setData('link_id', $ass->getId());
                 $positionLink->setData('position_x', ($posData["x"] + 15));
                 $positionLink->setData('position_y', ($posData["y"] + 15));                        
+
+                
                 $positionLink->save();
             }
                         

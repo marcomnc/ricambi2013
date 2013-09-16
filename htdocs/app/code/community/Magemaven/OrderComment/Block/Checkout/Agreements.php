@@ -19,7 +19,8 @@ class Magemaven_OrderComment_Block_Checkout_Agreements extends Mage_Checkout_Blo
      */
     protected function _toHtml()
     {
-        $this->setTemplate('ordercomment/checkout/agreements.phtml');
+        //if (!$this->hasCustomTemplate())
+        //    $this->setTemplate('ordercomment/checkout/agreements.phtml');
         return parent::_toHtml();
     }
 }
