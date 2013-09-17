@@ -138,7 +138,7 @@ if ($theme->getCfg('category/aspect_ratio'))
             
             if (show) {
                 jQuery(this).removeClass('show').addClass('hide');                
-                jQuery('.product-list[rel="' + jQuery(this).attr('rel') + '"]').width(jQuery("li.item .product-name").width()).removeClass('hide-products').addClass('show-products');
+                jQuery('.product-list[rel="' + jQuery(this).attr('rel') + '"]').removeClass('hide-products').addClass('show-products');
             }
         });        
         jQuery('.product-list').mouseleave(function() {
