@@ -1,6 +1,12 @@
 <?php 
 $_schemaType = Mage::getStoreConfig('catalog/ricambi/type_scheme');
 $parent = Mage::getModel('catalog/category')->getCollection()->addIsActiveFilter();
+$hc = 33;
+//$attr = Mage::getModel('catalog/product')->setStoreId(0)->getResource()->getAttribute("tipo_disegno");
+//if ($attr->usesSource()) :
+//    $hc = $attr->getSource()->getOptionId("hc");
+//endif;
+
                 
 $parent->getSelect()
        ->Where('e.parent_id = ?', Mage::registry('current_category')->getId());
@@ -72,7 +78,11 @@ if ($theme->getCfg('category/aspect_ratio'))
                 <ul>
                     <?php foreach ($products as $prod): 
 
-                        $_product = Mage::getModel('catalog/product')->Load($prod->getId()); ?>
+                        $_product = Mage::getModel('catalog/product')->Load($prod->getId()); 
+
+			if ($_product->getData('tipo_disegno') == $hc):
+				continue;
+			endif; ?>
                     <li>
                         <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" 
                            class="product-image ">
@@ -80,16 +90,7 @@ if ($theme->getCfg('category/aspect_ratio'))
                             echo $_product->getName(); ?>
                         </a>
                     </li>                    
-                    <?php 
-                            if ($_product->getData($_schemaType)): ?>
-                            <li>
-                                <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" 
-                                   class="product-image schema-type">
-                                        <?php echo $_product->getResource()->getAttribute($_schemaType)->getSource()->getOptionText($_product->getData($_schemaType)); ?>
-                                </a>
-                            </li>
-                            <?php endif;                
-                          endforeach; ?>
+                    <?php endforeach;?>
                 </ul>
             </div>
             <?php endif; ?>

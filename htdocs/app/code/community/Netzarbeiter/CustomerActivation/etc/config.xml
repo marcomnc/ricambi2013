@@ -21,7 +21,7 @@
 <config>
     <modules>
         <Netzarbeiter_CustomerActivation>
-            <version>0.4.4</version>
+            <version>0.5.0</version>
         </Netzarbeiter_CustomerActivation>
     </modules>
     <global>
@@ -60,6 +60,11 @@
                     <file>netzarbeiter/customeractivation/customer_activation.html</file>
                     <type>html</type>
                 </customer_customeractivation_activation_template>
+                <customer_customeractivation_alert_customer_reject_template translate="label" module="customeractivation">
+                    <label>Customer Reject Notification</label>
+                    <file>netzarbeiter/customeractivation/alert_customer_reject_template.html</file>
+                    <type>html</type>
+                </customer_customeractivation_alert_customer_reject_template>
             </email>
         </template>
         <events>
@@ -136,6 +141,10 @@
                 </registration_admin_template>
                 <alert_customer>0</alert_customer>
                 <activation_template>customer_customeractivation_activation_template</activation_template>
+                
+                <alert_customer_reject>0</alert_customer_reject>
+                <alert_customer_reject_template>customer_customeractivation_alert_customer_reject_template</alert_customer_reject_template>
+                
                 <activation_status_default>0</activation_status_default>
                 <always_send_admin_email>0</always_send_admin_email>
                 <require_activation_for_specific_groups>0</require_activation_for_specific_groups>

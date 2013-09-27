@@ -59,12 +59,12 @@
   
 
 /* da spostare */
-.positioner {background: url(/js/ricambi/css/images/pointer.png); height: 26px; width: 26px; 
+.positioner {background: url(/js/ricambi/css/images/pointer.png); height: 17px; width: 17px;
              text-align: center; font-weight: bold; color: #000; cursor: pointer;
             transition:             all 300ms ease-in-out;
-            -moz-transition:	all 300ms ease-in-out;
-            -webkit-transition:	all 300ms ease-in-out;
-            -o-transition:		all 300ms ease-in-out; 
+            -moz-transition:    all 300ms ease-in-out;
+            -webkit-transition: all 300ms ease-in-out;
+            -o-transition:              all 300ms ease-in-out;
 }
 .positioner.selected{background: url(/js/ricambi/css/images/pointer-select.png); }
-.positioner div {padding-top: 2px}
+.positioner div {font-size:10px; line-height: 14px}

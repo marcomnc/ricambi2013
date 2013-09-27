@@ -33,7 +33,11 @@ class Netzarbeiter_CustomerActivation_AdminController extends Mage_Adminhtml_Con
                 foreach ($customerIds as $customerId) {
                     /** @var $model Mage_Customer_Model_Customer */
                     $model = Mage::getModel('customer/customer')->load($customerId);
-                    $model->setCustomerActivated($activationStatus)->save();
+                    $model->setCustomerActivated($activationStatus);
+                    if ($activationStatus = 0) {
+                        $model->setDateRejected(null);
+                    }
+                    $model->save();
                 }
 
                 Mage::getSingleton('adminhtml/session')->addSuccess(
@@ -52,5 +56,35 @@ class Netzarbeiter_CustomerActivation_AdminController extends Mage_Adminhtml_Con
     protected function _isAllowed()
     {
         return Mage::getSingleton('admin/session')->isAllowed('customer/manage');
+    }  
+    
+    public function rejectAction() {
+        
+        $id = $this->getRequest()->getParam('customer_id',0);
+        
+        if ($id == 0) {
+            Mage::getSingleton('adminhtml/session')->addError(
+                Mage::helper('customeractivation')->__('Nessun utente selezionato')
+            );
+            $this->_redirect('adminhtml/customer');
+        } else {
+            $customer = Mage::getModel('customer/customer')->Load($id);
+            if ($customer->getEntityId() == 0) {
+                Mage::getSingleton('adminhtml/session')->addError(
+                Mage::helper('customeractivation')->__('Utente Inesistente!')
+            );
+            $this->_redirect('adminhtml/customer');
+            }
+            
+            $customer->setCustomerActivated(0)
+                     ->setDateRejected(date("Y-m-d",Mage::getModel('core/date')->timestamp(time())))
+                     ->save();
+            
+            Mage::helper('customeractivation')->sendCustomerNotificationRejectedMail($customer);
+        } 
+        return $this->_redirect('adminhtml/customer/edit', array('id'=>$id));    
+            
     }
+    
+    
 }

@@ -125,7 +125,7 @@
             function PlacePosition(index, objPosition) {
                 var pos = $('<div>' , {'id': 'position' + index, 'class' : 'positioner', 'rel': objPosition.id, 'unselectable': 'on',
                                        'data-ot': 'The content'});
-                pos.css({'position': 'absolute', 'top': (objPosition.y-12)+'px','left': (objPosition.x-12)+'px' });                 
+                pos.css({'position': 'absolute', 'top': (objPosition.y-8)+'px','left': (objPosition.x-8)+'px' });                 
 
                 inputOpentip[index] = new Opentip(pos, objPosition.name, objPosition.sku, {'style': 'glass'});
 

@@ -87,6 +87,10 @@ class Netzarbeiter_CustomerActivation_Model_Observer extends Mage_Core_Model_Abs
             $defaultStatus = Mage::helper('customeractivation')->getDefaultActivationStatus($groupId, $storeId);
             $customer->setCustomerActivated($defaultStatus);
             $customer->setCustomerActivationNewAccount(true);
+        } else {
+            if (Mage::getStoreConfig(Netzarbeiter_CustomerActivation_Helper_Data::XML_PATH_ALERT_CUSTOMER_REJECT, $storeId) && $customer->getCustomerActivated() == 1) { 
+                $customer->setDateRejected(null);
+            }
         }
     }
 
@@ -326,6 +330,18 @@ class Netzarbeiter_CustomerActivation_Model_Observer extends Mage_Core_Model_Abs
                     )
                 )
             );
+            
+            //Todo Da implementare....
+//            if (Mage::getStoreConfig(Netzarbeiter_CustomerActivation_Helper_Data::XML_PATH_ALERT_CUSTOMER_REJECT)) {
+//                $massBlock->addItem(
+//                    'customer_reject',
+//                    array(
+//                        'label' => $helper->__('Customer Reject'),
+//                        'url' => Mage::getUrl('customeractivation/admin/massReject')                        
+//                    )
+//                );
+//
+//            }
         }
     }
 
@@ -378,6 +394,17 @@ class Netzarbeiter_CustomerActivation_Model_Observer extends Mage_Core_Model_Abs
             $action = Mage::app()->getRequest()->getActionName();
             if (in_array($action, array('exportCsv', 'exportXml'))) {
                 $this->_addActivationStatusColumn($block);
+            }
+        }
+        
+        if ($block->getType() === 'adminhtml/customer_edit') {
+            $data = Mage::registry('current_customer');
+
+            if ($data->getId() && !$data->getCustomerActivated() && $data->getDateRejected() == null && Mage::getStoreConfig(Netzarbeiter_CustomerActivation_Helper_Data::XML_PATH_ALERT_CUSTOMER_REJECT, $this->getCustomerStoreId($customer))) {
+                $block->addButton('send_reject_email', array(
+                    'label'     => Mage::helper('customeractivation')->__('Rifiuta'),
+                    'onclick'   => "setLocation('".  Mage::helper("adminhtml")->getUrl('customeractivation/admin/reject', array('customer_id' => $data->getEntityId())) . "')",
+                ), 15);
             }
         }
     }

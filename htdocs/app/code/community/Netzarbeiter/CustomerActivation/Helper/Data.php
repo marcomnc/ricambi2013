@@ -22,7 +22,9 @@ class Netzarbeiter_CustomerActivation_Helper_Data extends Mage_Core_Helper_Abstr
     const XML_PATH_EMAIL_ADMIN_NOTIFICATION = 'customer/customeractivation/admin_email';
     const XML_PATH_EMAIL_ADMIN_NOTIFICATION_TEMPLATE = 'customer/customeractivation/registration_admin_template';
     const XML_PATH_EMAIL_CUSTOMER_NOTIFICATION_TEMPLATE = 'customer/customeractivation/activation_template';
+    const XML_PATH_EMAIL_CUSTOMER_REJECT_TEMPLATE = 'customer/customeractivation/alert_customer_reject_template';
     const XML_PATH_ALERT_CUSTOMER = 'customer/customeractivation/alert_customer';
+    const XML_PATH_ALERT_CUSTOMER_REJECT = 'customer/customeractivation/alert_customer_reject';
     const XML_PATH_ALERT_ADMIN = 'customer/customeractivation/alert_admin';
     const XML_PATH_DEFAULT_STATUS = 'customer/customeractivation/activation_status_default';
     const XML_PATH_DEFAULT_STATUS_BY_GROUP = 'customer/customeractivation/require_activation_for_specific_groups';
@@ -58,6 +60,18 @@ class Netzarbeiter_CustomerActivation_Helper_Data extends Mage_Core_Helper_Abstr
                 'email' => $customer->getEmail(),
             ));
             $this->_sendNotificationEmail($to, $customer, self::XML_PATH_EMAIL_CUSTOMER_NOTIFICATION_TEMPLATE);
+        }
+        return $this;
+    }
+    
+    public function sendCustomerNotificationRejectedMail(Mage_Customer_Model_Customer $customer) {
+    
+        if (Mage::getStoreConfig(self::XML_PATH_ALERT_CUSTOMER_REJECT, $this->getCustomerStoreId($customer))) {
+            $to = array(array(
+                'name' => $customer->getName(),
+                'email' => $customer->getEmail(),
+            ));
+            $this->_sendNotificationEmail($to, $customer, self::XML_PATH_EMAIL_CUSTOMER_REJECT_TEMPLATE);
         }
         return $this;
     }
