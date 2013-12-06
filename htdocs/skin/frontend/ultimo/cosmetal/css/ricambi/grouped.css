@@ -8,15 +8,20 @@
 .product-view.grouped ,
 .product-view.grouped .grouped-canvas,
 .product-view.grouped .grouped-data {height: 800px; position: relative;
-	transition:             all 300ms ease-in-out;
-	-moz-transition:	all 300ms ease-in-out;
-	-webkit-transition:	all 300ms ease-in-out;
-	-o-transition:		all 300ms ease-in-out;
+        transition:             all 300ms ease-in-out;
+        -moz-transition:        all 300ms ease-in-out;
+        -webkit-transition:     all 300ms ease-in-out;
+        -o-transition:          all 300ms ease-in-out;
+}
+
+.product-view.grouped .grouped-canvas img { max-width:800px!important; width:550px!important; height:800px!important; }
+
+.product-view.grouped .grouped-canvas {
+        user-select: none;
         -moz-user-select: none;
         -khtml-user-select: none;
-        -webkit-user-select: none;
-        user-select: none;
-}
+        -webkit-user-select: none;}
+
 .product-view.grouped .product-shop.grid-full {overflow-y: auto}
 .product-view.grouped .product-shop.grid-full .product-type-data { width: 99% }
 

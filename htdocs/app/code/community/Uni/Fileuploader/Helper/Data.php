@@ -45,7 +45,7 @@ class Uni_Fileuploader_Helper_Data extends Mage_Core_Helper_Abstract {
             $mediaDir = Mage::getBaseDir('media');
             $filePath = $mediaDir . DS . $file;
             if (file_exists($filePath))
-                $fileSize = '&nbsp; &nbsp;Size: (' . $this->getFileSize($filePath) . ')';
+                $fileSize = '<span> Size: (' . $this->getFileSize($filePath) . ') <span>';
         }
         if ($disposition) {
             if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'gif' || $ext == 'png' || $ext == 'bmp') {

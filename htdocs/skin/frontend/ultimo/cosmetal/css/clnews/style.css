@@ -1,5 +1,5 @@
 .news-item {
-    margin:0 0 15px 0;
+    margin:0 0 0px 0;
 }
 
 .news-item span.date {
@@ -80,7 +80,7 @@ h4 {
     }
 .news-item {
     clear:both;
-    padding-bottom:20px;
+    padding-bottom:0px;
     }
 .news_image {
     float:left;

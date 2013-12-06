@@ -2203,7 +2203,7 @@ a.email2friend:hover { background-position: -54px -27px; }
 }
 .product-view .product-img-box .product-image.product-image-zoom { z-index:9; }
 
-.product-view .product-img-box .more-views li {float: left; border:1px solid #eee;}
+.product-view .product-img-box .more-views li {float: left; border:1px solid #eee; width: 56px}
 
 /* Thumbnails */
 .product-view .product-img-box .more-views .thumbnails li { float:left; /*margin: 10px -1px 0 0;*/ }
@@ -3691,12 +3691,16 @@ a:hover .caption.light3 p { background-color:rgba(255,255,255, 1); color:#000; }
 
 .form-list li.wide textarea#ordercomment-comment {width: 100%!important}
 
+.show-category-links,
 .show-product-links { height: 30px; width: 25px;  cursor: pointer; float: right}
 .show-product-links.show {background: transparent url('../images/arrow_down.png');}
 .show-product-links.hide {background: transparent url('../images/close_up.png');}
-.product-list {float: left; position: absolute; width: 100%}
+.product-list {float: left; position: absolute; width:90%; min-height: 300px;}
+
+.show-category-links.show {background: transparent url('../images/arrow_left.png');}
 
 .category-list .product-list ul li a {text-align: left!important;}
+.category-list li h2 a { width: 100%}
 
 .product-list ul li a {transition: height 300ms linear;
                        -moz-transition:	height 300ms linear;
@@ -3707,3 +3711,12 @@ a:hover .caption.light3 p { background-color:rgba(255,255,255, 1); color:#000; }
 .product-list.hide-products ul li a {height: 0px; overflow: hidden}
 .product-list.show-products ul li a {height: 20px; overflow: visible;}
 .product-list.show-products ul li a.schema-type {height: 20px; font-size: 10px; text-align: right!important}
+#nav li.level2{font-size:12px;line-height: 14px;}
+#nav li.level1 {width:14%}
+#nav ul.level0 > li,{padding-bottom:0}
+#nav ul.level0 > li > a{font-size:1.1em!important;}
+
+
+label[for="s_method_freeshipping_freeshipping"] {display: none}
+
+.opc-block-progress .block-content .price {display: none}

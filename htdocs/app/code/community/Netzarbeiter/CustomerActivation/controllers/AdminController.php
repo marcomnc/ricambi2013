@@ -81,6 +81,12 @@ class Netzarbeiter_CustomerActivation_AdminController extends Mage_Adminhtml_Con
                      ->save();
             
             Mage::helper('customeractivation')->sendCustomerNotificationRejectedMail($customer);
+
+                Mage::getSingleton('adminhtml/session')->addSuccess(
+                    Mage::helper('customeractivation')->__(
+                        'Notifica di rifiuto attivazione inviata al cliente'
+                    )
+                );
         } 
         return $this->_redirect('adminhtml/customer/edit', array('id'=>$id));    
             

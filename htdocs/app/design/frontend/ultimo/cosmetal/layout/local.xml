@@ -119,6 +119,7 @@
 		
 			<!-- Add mini cart to the header -->
 			<!-- IMPORTANT: new template file -->			
+
 			<block type="checkout/cart_sidebar" name="cart_sidebar" template="checkout/cart/mini.phtml" before="-">
                 <action method="addItemRender"><type>simple</type><block>checkout/cart_item_renderer</block><template>checkout/cart/sidebar/default.phtml</template></action>
                 <action method="addItemRender"><type>grouped</type><block>checkout/cart_item_renderer_grouped</block><template>checkout/cart/sidebar/default.phtml</template></action>
@@ -435,12 +436,12 @@
 		</reference>
 	</catalog_category_layered_nochildren>
 
-
         <checkout_onepage_review>
             <reference name="root">
                 <block type="checkout/agreements" name="checkout.onepage.agreements" as="agreements" template="ordercomment/checkout/agreements.phtml"/>
             </reference>
         </checkout_onepage_review>
+	
 	
 	<!-- CART %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
 	<checkout_cart_index>

@@ -1,13 +1,39 @@
 <?php
 /**
- * Catalog navigation
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    Mage
+ * @package     Mage_Catalog
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-class Infortis_Ultimo_Block_Navigation extends Mage_Core_Block_Template
+
+/**
+ * Catalog navigation
+ *
+ * @category   Mage
+ * @package    Mage_Catalog
+ * @author      Magento Core Team <core@magentocommerce.com>
+ */
+class Mage_Catalog_Block_Navigation extends Mage_Core_Block_Template
 {
-	//NEW:
-	protected $_isAccordion = FALSE;
-	
     protected $_categoryInstance = null;
 
     /**
@@ -238,12 +264,7 @@ class Infortis_Ultimo_Block_Navigation extends Mage_Core_Block_Template
         if ($hasActiveChildren) {
             $classes[] = 'parent';
         }
-		
-		//NEW: add special class if level == 1 and menu is not an accordion.
-		if ($this->_isAccordion == FALSE && $level == 1) {
-			$classes[] = 'item';
-		}
-		
+
         // prepare list item attributes
         $attributes = array();
         if (count($classes) > 0) {
@@ -261,13 +282,14 @@ class Infortis_Ultimo_Block_Navigation extends Mage_Core_Block_Template
         }
         $htmlLi .= '>';
         $html[] = $htmlLi;
-
-        if (preg_match("/\/54$|\/54\//", $category->getPathId())) {
+die("Passaggio");        
+        if (preg_match("/\/54$|\/54\//", $category->getPath())) {
             $child = Mage::getModel('catalog/category')->getCollection()->addIsActiveFilter();
             $child->getSelect()
                     ->Where('e.parent_id = ?', $category->getId())
-                    ->Where("e.children_count > 0 or exists (select * from ".  Mage::getSingleton('core/resource')->getTableName('catalog_category_product_index') . " as idx where idx.category_id = e.parent_id)");
-
+                    ->Where("e.children_count > 0 or exists (select * from ".  Mage::getSingleton('core/resource')->getTableName('catalog_category_product_index') . " as idx where idx.category_id = e.entity_id)");
+Mage::log($child->getSelect()->__toString());
+Mage::log($child->count());
             if ($child->count() == 0) {
                 // è da visualizzare ....
                 $html[] = '<a href="'.$this->getCategoryUrl($category).'"'.$linkClass.'>';
@@ -281,15 +303,10 @@ class Infortis_Ultimo_Block_Navigation extends Mage_Core_Block_Template
             }
         } else {
             //Giro normale
-        $html[] = '<a href="'.$this->getCategoryUrl($category).'"'.$linkClass.'>';
-        $html[] = '<span>' . $this->escapeHtml($category->getName()) . '</span>';
-        $html[] = '</a>';
+            $html[] = '<a href="'.$this->getCategoryUrl($category).'"'.$linkClass.'>';
+            $html[] = '<span>' . $this->escapeHtml($category->getName()) . '</span>';
+            $html[] = '</a>';
         }
-
-
-//        $html[] = '<a href="'.$this->getCategoryUrl($category).'"'.$linkClass.'>';
-//        $html[] = '<span>' . $this->escapeHtml($category->getName()) . '</span>';
-//        $html[] = '</a>';
 
         // render children
         $htmlChildren = '';
@@ -308,11 +325,6 @@ class Infortis_Ultimo_Block_Navigation extends Mage_Core_Block_Template
             $j++;
         }
         if (!empty($htmlChildren)) {
-			
-			//NEW: add opener if menu is used as accordion.
-			if ($this->_isAccordion == TRUE)
-				$html[] = '<span class="opener">&nbsp;</span>';
-			
             if ($childrenWrapClass) {
                 $html[] = '<div class="' . $childrenWrapClass . '">';
             }
@@ -415,17 +427,13 @@ class Infortis_Ultimo_Block_Navigation extends Mage_Core_Block_Template
     /**
      * Render categories menu in HTML
      *
-	 * @param bool Add opener if menu is used as accordion.
      * @param int Level number for list item class to start from
      * @param string Extra class of outermost list items
      * @param string If specified wraps children list in div with this class
      * @return string
      */
-    public function renderCategoriesMenuHtml($isAccordion = FALSE, $level = 0, $outermostItemClass = '', $childrenWrapClass = '')
+    public function renderCategoriesMenuHtml($level = 0, $outermostItemClass = '', $childrenWrapClass = '')
     {
-		//NEW: save additional attribute
-		$this->_isAccordion = $isAccordion;
-		
         $activeCategories = array();
         foreach ($this->getStoreCategories() as $child) {
             if ($child->getIsActive()) {

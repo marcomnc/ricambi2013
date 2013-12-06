@@ -1,16 +1,22 @@
 <?php 
 $_schemaType = Mage::getStoreConfig('catalog/ricambi/type_scheme');
-$parent = Mage::getModel('catalog/category')->getCollection()->addIsActiveFilter();
+$parent = Mage::getModel('catalog/category')->getCollection()->addIsActiveFilter()->setOrder('position', Varien_Db_Select::SQL_ASC);
 $hc = 33;
 //$attr = Mage::getModel('catalog/product')->setStoreId(0)->getResource()->getAttribute("tipo_disegno");
 //if ($attr->usesSource()) :
 //    $hc = $attr->getSource()->getOptionId("hc");
 //endif;
 
-                
+$idxTable = Mage::getSingleton('core/resource')->getTableName('catalog_category_product_index');
+//die($idxTable);
+
 $parent->getSelect()
-       ->Where('e.parent_id = ?', Mage::registry('current_category')->getId());
+       ->Where('e.parent_id = ?', Mage::registry('current_category')->getId())
+       ->Where("e.children_count > 0 or exists (select * from $idxTable as idx where idx.category_id = e.entity_id)");
 $_collectionSize = $parent->count();
+
+//echo $parent->getSelect()->__toString();
+//die();
 
 if(!$_collectionSize): ?>
     <?php if ($tmpHtml = $this->getChildHtml('block_category_above_empty_collection')): ?>
@@ -25,12 +31,12 @@ $labelsHelper = $this->helper('ultimo/labels');
 $templateHelper = $this->helper('ultimo/template');
 
 //Default image size
-$imgWidth = 295;
-$imgHeight = 295;
+$imgWidth = "295px";
+$imgHeight = "auto";
 
 //Aspect ratio settings
 if ($theme->getCfg('category/aspect_ratio'))
-    $imgHeight = 0; //Height will be computed automatically (based on width) to keep the aspect ratio
+//    $imgHeight = 0; //Height will be computed automatically (based on width) to keep the aspect ratio
 ?>
 
 <div class="category-products">
@@ -54,7 +60,8 @@ if ($theme->getCfg('category/aspect_ratio'))
             
             <h2 class="product-name">
                     <?php if ($child->getData('children_count') > 0) :?>    	
-                    <a href="<?php echo $this->getUrl($child->getUrlPath()) ?>" title="<?php echo $child->getName() ?>" style="float: left">                        
+                    <a href="<?php echo $this->getUrl($child->getUrlPath()) ?>" title="<?php echo $child->getName() ?>" style="float: left" 
+			rel="c-<?php echo $child->getId();?>">
                     <?php else: ?>
                         <div style="float: left">
                     <?php endif; ?>
@@ -69,7 +76,13 @@ if ($theme->getCfg('category/aspect_ratio'))
                       if ($products->count() > 0): ?>
                 <div class="show-product-links show" rel="<?php echo $child->getId();?>">
                     
-                </a>
+                </div>
+		<?php else: ?>
+			<?php if ($child->getData('children_count') > 0) :?>
+	                <div class="show-category-links show" rel="c-<?php echo $child->getId();?>">
+	
+        	        </div>
+			<?php endif; ?>
                 <?php endif; ?>                
             </h2>
             <?php if ($products->count() > 0): ?>
@@ -102,10 +115,10 @@ if ($theme->getCfg('category/aspect_ratio'))
             <?php endif;?>
             <?php if ($child->hasThumbnail() && $child->getThumbnail() != ""): ?>
                     <img src="<?php echo Mage::getBaseUrl('media') . "catalog/category/" . $child->getThumbnail()?>" 
-                         alt="<?php echo $child->getName(); ?>" width="<?php echo $imgWidth?>" height="<?php echo $imgHeight;?>"/>
+                         alt="<?php echo $child->getName(); ?>" style="width:<?php echo $imgWidth?>; height:<?php echo $imgHeight;?>"/>
             <?php else : ?>    
                     <img src="<?php echo $this->getSkinUrl('images/no_category.png'); ?>" 
-                         alt="<?php echo $child->getName(); ?>" width="<?php echo $imgWidth?>" height="<?php echo $imgHeight;?>"/>
+                         alt="<?php echo $child->getName(); ?>" style="width:<?php echo $imgWidth?>; height:<?php echo $imgHeight;?>"/>
             <?php endif; ?>
             <?php if ($child->getData('children_count') > 0) :?>    	
             </a>
@@ -145,6 +158,12 @@ if ($theme->getCfg('category/aspect_ratio'))
         jQuery('.product-list').mouseleave(function() {
             hideAll();
         });         
+	jQuery('.class="show-category-links').click(function() {
+		var rel = jQuery(this).attr(rel);
+		if (rel != null && rel != '') {
+			 jQuery('.product-name a[rel="' + rel + '"]').trigger('click');
+		} 
+	});
     });
     
 </script>

@@ -24,11 +24,11 @@ $msg = $this->__("Spiacenti al momento non ci sono novità");
         $msg = $this->__("Spiacenti al momento non ci sono ") . $this->getCurrentCategory()->getTitle();
     endif;           
 ?>
-    <h4><?php echo $msg;  ?></h4>
+    <h1><?php echo $msg;  ?></h1>
 <?php
 else:
 ?>
-<h4><?php echo $item->getTitle() ?></h4>
+<h1><?php echo $item->getTitle() ?></h1>
 <?php if (Mage::helper('clnews')->showDate()): ?>
     <span class="date"><?php echo Mage::helper('clnews')->formatDate($item->getNewsTime()) ?></span>
 <?php endif; ?>
@@ -71,7 +71,7 @@ else:
         <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
         <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
     <?php endif; ?>
-    <a href="<?php echo $item->getUrl() ?>?mode=print" class="print-btn"><?php echo $this->__('Print Version'); ?></a>
+    <a href="<?php echo $item->getUrl() ?>?mode=print" target="_blank" class="print-btn"><?php echo $this->__('Print Version'); ?></a>
 </div>
 
 <?php if ($item->getImageFullContentShow() && $item->getImageFullContent()): ?>

@@ -1,4 +1,17 @@
-<?php 
+
+<style>
+        .manuals-lists ul {float: left }
+        .manuals-lists ul li { clear: both; margin-bottom: 20px  }
+        .manuals-lists ul li a { width: 100%; float:left; }
+        .manuals-lists ul li>span {float: left; margin-bottom: 10px }
+</style>
+
+<?php
+
+$maxNr = $this->getRowNum() + 0;
+if ($maxNr == 0):
+        $maxNr = 8;
+endif;
 
 $collection = Mage::getResourceModel('fileuploader/fileuploader_collection');
 $collection->addFieldToFilter('file_status', 1);
@@ -23,11 +36,25 @@ $collection->getSelect()
 ?>
 
 <div class="manuals-lists">
-<?php if ($collection->count() > 0): ?>   
-    <ul>
+<?php
+     $i = 0;
+     $ii = 0;
+     if ($collection->count() > 0): ?>
         <?php foreach ($collection as $file): ?>
+<?php        if ( $ii == 0):?>
+    <ul>
+<?php        endif; ?>
+        <li>
         <?php echo MAge::helper('fileuploader')->getFilesHtml($file->getData('uploaded_file'), $file->getData('title'), $i++,true,$file->getData('content_disp'),true); ?>
-        <?php endforeach;  ?>
+        </li>
+<?php   if ($ii == $maxNr): ?>
     </ul>
-<?php endif;?>        
+<?php           $ii = 0;
+        else:
+                $ii++;
+        endif;
+        ?>
+        <?php endforeach;  ?>
+
+<?php endif;?>
 </div>
