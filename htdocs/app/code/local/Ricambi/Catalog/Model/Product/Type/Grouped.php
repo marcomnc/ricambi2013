@@ -64,8 +64,13 @@ class Ricambi_Catalog_Model_Product_Type_Grouped extends Mage_Catalog_Model_Prod
                     $optionProd->setData('is_options', true);
                     $associatedProducts[] = $optionProd;
                 }
-            }
-
+            }            
+            
+//foreach ($associatedProducts as $a):
+//    echo $a->getSku() . "\t\t\t\t" . $a->getPosition() . "\n"; 
+//endforeach;           
+//die();
+            
             $this->getProduct($product)->setData($this->_keyAssociatedProducts, $associatedProducts);
         }
         return $this->getProduct($product)->getData($this->_keyAssociatedProducts);

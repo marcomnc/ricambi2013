@@ -61,8 +61,10 @@ class Ricambi_Catalog_Block_Adminhtml_Product_Edit_Tab_Super_Group extends Mage_
             'type'      => 'checkbox',
             'name'      => 'in_products',
             'values'    => $this->_getSelectedProducts(),
+            'is_options'=> $this->getSelectedGroupedProducts(),
             'align'     => 'center',
-            'index'     => 'entity_id'
+            'index'     => 'entity_id',
+            'renderer'  => $this->getLayout()->createBlock('rcatalog/adminhtml_widget_grid_column_renderer_groupedcheck'),
         ));
 
         $this->addColumn('entity_id', array(
@@ -117,6 +119,26 @@ class Ricambi_Catalog_Block_Adminhtml_Product_Edit_Tab_Super_Group extends Mage_
 
         return Mage_Adminhtml_Block_Widget_Grid::_prepareCollection();
     }
+    
+    /**
+     * Retrieve grouped products
+     * Only if not options......
+     * @return array
+     */
+    public function getSelectedGroupedProducts()
+    {
+        $associatedProducts = Mage::registry('current_product')->getTypeInstance(true)
+            ->getAssociatedProducts(Mage::registry('current_product'));
+        $products = array();
+        foreach ($associatedProducts as $product) {            
+            if (!$product->getIsOptions())
+                $products[$product->getId()] = array(
+                    'qty'       => $product->getQty(),
+                    'position'  => $product->getPosition(),
+                    'is_options'=> $product->getIsOptions(),
+                );
+        }
+        return $products;
+    }
+    
 }
-
-?>
