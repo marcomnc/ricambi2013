@@ -79,7 +79,7 @@ ul,ol         { list-style:none; }
 .main { padding:0; padding:40px 0; min-height:370px; }
 /* Decrease padding on home page */
 body.cms-index-index .main,
-body.cms-index-defaultindex .main { padding-top:20px; padding-bottom:20px; }
+body.cms-index-defaultindex .main { padding-top:10px; padding-bottom:10px; }
 
 /* Base Columns */
 .col-left { float:left; }
@@ -122,7 +122,7 @@ body.cms-index-defaultindex .main { padding-top:20px; padding-bottom:20px; }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 */
 input, select, textarea, button { font:12px/15px Arial, Helvetica, sans-serif; vertical-align:middle; }
-input.input-text, select, textarea { background:#fff; border:1px solid #ccc; }
+input.input-text, select, textarea { background:#fff; border:1px solid #000; }
 input.input-text, textarea { padding:7px 2px; }
 select { padding:6px 6px 6px 2px; }
 select option { padding-right:10px; }
@@ -133,9 +133,9 @@ input.radio { margin-right:3px; }
 input.checkbox { margin-right:3px; }
 input.qty { width:2.5em !important; }
 
-input.input-text:hover, select:hover, textarea:hover { border-color:#999; }
+input.input-text:hover, select:hover, textarea:hover { border-color:#000; }
 input.input-text:focus, select:focus, textarea:focus {
-	border-color:#999;
+	border-color:#000;
 	outline:none;
 	-moz-box-shadow:inset 0 0 4px rgba(0, 0, 0, 0.2);
 	-webkit-box-shadow:inset 0 0 4px rgba(0, 0, 0, 0.2);
@@ -893,7 +893,7 @@ ul.disc ul li { background:url(../images/infortis/_shared/cck/list/bullet-small.
 .header .logo-wrapper { margin:10px 0; }
 .header .logo { display:inline-block; max-width:230px; margin:0; text-decoration:none !important; }
 .header .logo strong { position:absolute; top:-999em; left:-999em; width:0; height:0; font-size:0; line-height:0; text-indent:-999em; overflow:hidden; }
-
+.logo img{height:80px; }
 
 /* User menu, top links
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -3677,29 +3677,21 @@ a:hover .caption.light3 p { background-color:rgba(255,255,255, 1); color:#000; }
 .account-create .form-list .wide {width: 810px}
 .account-create .agreement-content { max-height:250px; overflow:auto; padding-right:30px; }
 
-
-@media (max-width: 950px) {
-  .product-img-box {
-    display: none!important;
-  }
-  .scrollcol{overflow:visible;height:auto;}
-  #spazio{ height:20px;}
-}
-
-
 .categorypath-accessori-cartucce-filtranti-html .category-products .product-image {display: none}
 
 .form-list li.wide textarea#ordercomment-comment {width: 100%!important}
 
 .show-category-links,
-.show-product-links { height: 30px; width: 25px;  cursor: pointer; float: right}
+.show-product-links { height: 30px; width: 25px;  cursor: pointer; right:0px; position: absolute}
 .show-product-links.show {background: transparent url('../images/arrow_down.png');}
 .show-product-links.hide {background: transparent url('../images/close_up.png');}
 .product-list {float: left; position: absolute; width:90%; min-height: 300px;}
 
+.products-grid.category-products-grid .product-name {position: relative}
+
 .show-category-links.show {background: transparent url('../images/arrow_left.png');}
 
-.category-list .product-list ul li a {text-align: left!important;}
+.category-list .product-list ul li a {text-align: left!important; }
 .category-list li h2 a { width: 100%}
 
 .product-list ul li a {transition: height 300ms linear;
@@ -3707,7 +3699,8 @@ a:hover .caption.light3 p { background-color:rgba(255,255,255, 1); color:#000; }
                        -webkit-transition: height 300ms linear;
                        -o-transition: height 300ms linear;
                        }
-.product-list.show-products {background: #FFFFFF }
+.product-list.show-products {background: #FFFFFF ;width:90%}
+.product-list.hide-products {width: 0%}
 .product-list.hide-products ul li a {height: 0px; overflow: hidden}
 .product-list.show-products ul li a {height: 20px; overflow: visible;}
 .product-list.show-products ul li a.schema-type {height: 20px; font-size: 10px; text-align: right!important}
@@ -3720,3 +3713,45 @@ a:hover .caption.light3 p { background-color:rgba(255,255,255, 1); color:#000; }
 label[for="s_method_freeshipping_freeshipping"] {display: none}
 
 .opc-block-progress .block-content .price {display: none}
+
+
+
+@media (max-width: 950px) {
+  .product-img-box {
+    display: none!important;
+  }
+  .scrollcol{overflow:visible;height:auto;}
+  #spazio{ height:20px;}
+}
+
+
+
+@media (max-width: 320px) {
+    /*ottimizzazione smartphone prima del login*/
+    .header-top-links-wrapper{display:none!important}
+    .customer-account-login .logo-wrapper{margin:0!important}
+    .customer-account-login .header-top-search-wrapper{display:none!important}
+    .customer-account-login .main{margin:0!important;padding:0}
+    .customer-account-login .user-menu{display:none!important}
+    .customer-account-login .new-users{display:none!important}
+    .customer-account-login .page-title{display:none!important}
+    .customer-account-login .footer-primary-container{display:none!important}
+    .customer-account-login .block_footer_payment{display:none!important}
+    .prodcut-action{min-height:0!important}
+    /*ottimizzazione smartphone dopo il login*/
+    .the-slideshow{display:none!important}
+    .main{padding:0;min-height: 300px;}
+    .block_footer_column2,.block_footer_column3,.block_footer_payment{display:none}
+    .category-description{display:none}
+    .block-layered-nav{display:none}
+    .add-to-box-advice{display:none!important}
+    .col-name-nr, .col-value-nr{width:font-size:0.4em!important;display:none!important}
+    .col-name-codice, .col-value-codice{width:font-size:0.4em!important;display:none!important}
+    .col-name-productname, .col-value-productname{width:font-size:0.4em!important;width:30px!important}
+    .col-name-productprice, .col-value-productprice{width:font-size:0.4em!important;width:30px!important}
+    .add-to-box-bottom{display:inline!important}
+    .add-to-box{margin-top:10px;margin-bottom:10px}
+}
+
+.the-slideshow { margin:0 auto 5px!important}
+.checkout-onepage-success .page-title { display:none }

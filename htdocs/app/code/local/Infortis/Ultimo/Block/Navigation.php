@@ -281,7 +281,7 @@ class Infortis_Ultimo_Block_Navigation extends Mage_Core_Block_Template
             }
         } else {
             //Giro normale
-        $html[] = '<a href="'.$this->getCategoryUrl($category).'"'.$linkClass.'>';
+            $html[] = '<a href="'.$this->getCategoryUrl($category).'"'.$linkClass . (($category->getId() == 49) ? ' style="cursor:default" onClick="return false;"' : '') . '>';
         $html[] = '<span>' . $this->escapeHtml($category->getName()) . '</span>';
         $html[] = '</a>';
         }

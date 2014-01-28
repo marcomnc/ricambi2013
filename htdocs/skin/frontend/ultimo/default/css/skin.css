@@ -29,7 +29,7 @@
 */
 /* Add top margin for nav element, the same value as left and right margin of the grid unit,
    and remove margin if stretched */
-.nav > .grid-full { float:left; margin-top:1%; }
+.nav > .grid-full { float:left; margin-top:0%; }
 .nav.stretched > .grid-full { margin-top:0; }
 
 

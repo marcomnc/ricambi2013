@@ -64,11 +64,11 @@ endif;
     <?php endif; ?>
     <thead>
         <tr>
-            <th><?php echo $this->__('Nr.');?></td>
-            <th><?php echo $this->__('Codice');?></td>
-            <th><?php echo $this->__('Product Name') ?></th>
+            <th class="col-name-nr"><?php echo $this->__('Nr.');?></td>
+            <th class="col-name-codice"><?php echo $this->__('Codice');?></td>
+            <th class="col-name-productname"><?php echo $this->__('Product Name') ?></th>
             <?php if ($this->getCanShowProductPrice($_product)): ?>
-            <th class="a-right"><?php echo $this->__('Price') ?></th>
+            <th class="col-name-productprice a-right"><?php echo $this->__('Unit Price') ?></th>
             <?php endif; ?>
             <?php if ($_product->isSaleable() && !$this->getHideQty()): ?>
             <th class="a-center"><?php echo $this->__('Qty') ?></th>
@@ -107,20 +107,20 @@ endif;
              
              ?>
         <tr id="<?php echo $_item->getSku() ?>" class="option_group_<?php echo $_item->getLinkedCode() ?> lista<?php if($qty>0):?> has-qty<?php endif;?>">
-            <td<?php if ($_item->getTypeId() == Mage_Catalog_Model_Product_Type_Configurable::TYPE_CODE): ?> rowspan="<?php echo $rowSpan; ?>"<?php endif;?>>
+            <td class="col-value-nr" <?php if ($_item->getTypeId() == Mage_Catalog_Model_Product_Type_Configurable::TYPE_CODE): ?> rowspan="<?php echo $rowSpan; ?>"<?php endif;?>>
                 <?php if (!$_item->getIsOptions()): ?>
                     <?php echo $_item->getPosition()?>
                 <?php endif; ?>
             </td>
-            <td<?php if ($_item->getTypeId() == Mage_Catalog_Model_Product_Type_Configurable::TYPE_CODE): ?> rowspan="<?php echo $rowSpan ?>"<?php endif;?>>
+            <td class="col-value-codice" <?php if ($_item->getTypeId() == Mage_Catalog_Model_Product_Type_Configurable::TYPE_CODE): ?> rowspan="<?php echo $rowSpan ?>"<?php endif;?>>
                 <?php echo $_item->getSku() ?>
             </td>
-            <td <?php if ($_item->getTypeId() == Mage_Catalog_Model_Product_Type_Configurable::TYPE_CODE): ?>colspan="2"<?php endif?>>
+            <td class="col-value-productname" <?php if ($_item->getTypeId() == Mage_Catalog_Model_Product_Type_Configurable::TYPE_CODE): ?>colspan="2"<?php endif?>>
                 <?php echo $this->htmlEscape($_item->getName()) ?>
             </td>
             <?php if ($_item->getTypeId() != Mage_Catalog_Model_Product_Type_Configurable::TYPE_CODE): ?>
                 <?php if ($this->getCanShowProductPrice($_product)): ?>
-                <td class="a-right">
+                <td class="col-value-productprice a-right">
                     <?php echo $this->getPriceHtml($_item, true) ?>
                     <?php echo $this->getTierPriceHtml($_item) ?>
                 </td>

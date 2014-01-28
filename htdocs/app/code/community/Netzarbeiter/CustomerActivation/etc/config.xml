@@ -176,7 +176,7 @@
                 </observers>
             </core_block_abstract_to_html_before>
 
-            <!-- The massaction block can't be added in the block abstract event, this needs to be used -->
+            <!-- The massaction block can't be added in the block abstract event, this needs to be used 
             <adminhtml_block_html_before>
                 <observers>
                     <customeractivation>
@@ -185,7 +185,7 @@
                         <method>adminhtmlBlockHtmlBefore</method>
                     </customeractivation>
                 </observers>
-            </adminhtml_block_html_before>
+            </adminhtml_block_html_before>-->
 
             <!-- Add attribute to grid collection -->
             <eav_collection_abstract_load_before>

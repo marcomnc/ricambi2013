@@ -8,17 +8,17 @@
 .product-view.grouped ,
 .product-view.grouped .grouped-canvas,
 .product-view.grouped .grouped-data {height: 800px; position: relative;
-        transition:             all 300ms ease-in-out;
-        -moz-transition:        all 300ms ease-in-out;
-        -webkit-transition:     all 300ms ease-in-out;
-        -o-transition:          all 300ms ease-in-out;
+	transition:             all 300ms ease-in-out;
+	-moz-transition:	all 300ms ease-in-out;
+	-webkit-transition:	all 300ms ease-in-out;
+	-o-transition:		all 300ms ease-in-out;
 }
 
 .product-view.grouped .grouped-canvas img { max-width:800px!important; width:550px!important; height:800px!important; }
 
 .product-view.grouped .grouped-canvas {
-        user-select: none;
-        -moz-user-select: none;
+	user-select: none;        
+	-moz-user-select: none;
         -khtml-user-select: none;
         -webkit-user-select: none;}
 
@@ -54,22 +54,31 @@
   .product-view.grouped .add-to-box {
       float: none!important
   }
-}
-@media (max-width: 1140px) {
+
     .product-view .grouped-canvas {
           display: none!important
       }
-    .product-view.grouped .grouped-data {width: 98%}
+    .product-view.grouped .grouped-data {width: 98%!important;float:left;}
+}
+
+@media (min-width: 951px) and (max-width: 1080px) {
+    .product-view .grouped-canvas {
+          margin-left:0px!important;
+	  margin-right:0px!important;
+	 width:56.33!important
+      }
+     .product-view.grouped .grouped-data {width: 39.67%!important;float:right}
+     .product-view.grouped .add-to-box-advice { width:100%!important}
 }
   
 
 /* da spostare */
-.positioner {background: url(/js/ricambi/css/images/pointer.png); height: 17px; width: 17px;
+.positioner {background: url(/js/ricambi/css/images/pointer.png); height: 17px; width: 17px; 
              text-align: center; font-weight: bold; color: #000; cursor: pointer;
             transition:             all 300ms ease-in-out;
-            -moz-transition:    all 300ms ease-in-out;
-            -webkit-transition: all 300ms ease-in-out;
-            -o-transition:              all 300ms ease-in-out;
+            -moz-transition:	all 300ms ease-in-out;
+            -webkit-transition:	all 300ms ease-in-out;
+            -o-transition:		all 300ms ease-in-out; 
 }
 .positioner.selected{background: url(/js/ricambi/css/images/pointer-select.png); }
 .positioner div {font-size:10px; line-height: 14px}

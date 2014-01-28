@@ -60,10 +60,10 @@ if ($theme->getCfg('category/aspect_ratio'))
             
             <h2 class="product-name">
                     <?php if ($child->getData('children_count') > 0) :?>    	
-                    <a href="<?php echo $this->getUrl($child->getUrlPath()) ?>" title="<?php echo $child->getName() ?>" style="float: left" 
+                    <a href="<?php echo $this->getUrl($child->getUrlPath()) ?>" title="<?php echo $child->getName() ?>" style="float: left;" 
 			rel="c-<?php echo $child->getId();?>">
                     <?php else: ?>
-                        <div style="float: left">
+                        <div style="float: left; margin-right:25px">
                     <?php endif; ?>
                         <?php echo $child->getName() ?>
                     <?php if ($child->getData('children_count') > 0) :?>    	
@@ -114,7 +114,7 @@ if ($theme->getCfg('category/aspect_ratio'))
                    class="product-image">
             <?php endif;?>
             <?php if ($child->hasThumbnail() && $child->getThumbnail() != ""): ?>
-                    <img src="<?php echo Mage::getBaseUrl('media') . "catalog/category/" . $child->getThumbnail()?>" 
+                    <img rel="<?php echo $child->getId();?>" src="<?php echo Mage::getBaseUrl('media') . "catalog/category/" . $child->getThumbnail()?>" 
                          alt="<?php echo $child->getName(); ?>" style="width:<?php echo $imgWidth?>; height:<?php echo $imgHeight;?>"/>
             <?php else : ?>    
                     <img src="<?php echo $this->getSkinUrl('images/no_category.png'); ?>" 
@@ -155,6 +155,9 @@ if ($theme->getCfg('category/aspect_ratio'))
                 jQuery('.product-list[rel="' + jQuery(this).attr('rel') + '"]').removeClass('hide-products').addClass('show-products');
             }
         });        
+	jQuery('.item img').click(function() {
+	    jQuery('.show-product-links[rel="' + jQuery(this).attr('rel') + '"]').trigger('click');
+	});
         jQuery('.product-list').mouseleave(function() {
             hideAll();
         });         

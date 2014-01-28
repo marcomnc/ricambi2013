@@ -8,7 +8,7 @@ function getConn() {
     
     global $conn;
     
-    $conn =  mysqli_connect("localhost","magento_ricambi","GPeAQQU4KS","conversioni_cosmetal");
+    $conn =  mysqli_connect("localhost","cosmetal","6vsJj$33","conversioni_cosmetal");
     //$conn =  mysqli_connect("localhost","root","","conversioni_cosmetal");
     if (mysqli_connect_errno())
     {
@@ -307,6 +307,13 @@ function importImmagine($productId, $type) {
 
 }            
 
+function detectUTF8($string)
+{
+    
+    return 'UTF-8' === mb_detect_encoding($string, "auto");
+    //$val =  preg_match('%(?:[\xC2-\xDF][\x80-\xBF]|\xE0[\xA0-\xBF][\x80-\xBF]|[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}|\xED[\x80-\x9F][\x80-\xBF]|\xF0[\x90-\xBF][\x80-\xBF]{2}|[\xF1-\xF3][\x80-\xBF]{3}|\xF4[\x80-\x8F][\x80-\xBF]{2})+%xs', $string);
+    
+     
+}
 
 
-?>

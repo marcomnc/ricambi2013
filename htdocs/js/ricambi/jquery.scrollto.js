@@ -145,7 +145,7 @@
 				// Add the final collection
                                 if (!config.noFinal) {
 				collections.push({
-					'$container': $($.browser.msie ? 'html' : 'body'),
+					'$container': $((/firefox/.test(navigator.userAgent.toLowerCase()) || /msie/.test(navigator.userAgent.toLowerCase())) ? 'html' : 'body'),
 					'$target': $target
 				});
                                 }

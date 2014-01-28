@@ -198,6 +198,23 @@ $_schemaType = Mage::getStoreConfig('catalog/ricambi/type_scheme');
                                     </div>
                     <?php endif; ?>
             <?php endif; ?>
+                
+                
+            <?php if (!$this->hasOptions()): //add to cart when no options ?>
+                <?php if($_product->isSaleable()): ?>
+                    <div class="add-to-box add-to-box-bottom" style="display:none">
+                        <?php echo $this->getChildHtml('addtocart') ?>
+                        <?php echo $this->getChildHtml('extra_buttons') ?>
+                        <?php if ($addtoBoxHtml = $this->getChildHtml('addto')): //compare, wishlist ?>
+                            <div class="action-box addto-textlink clearer">
+                               <?php echo $addtoBoxHtml; ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>               
+            <?php endif; ?>   
+           <?php endif; ?>   
+                
+                
 
         </form>
     </div>
@@ -356,6 +373,8 @@ $_schemaType = Mage::getStoreConfig('catalog/ricambi/type_scheme');
 </div> <!-- end: product-view -->
 
 <?php if ($hasCanvas): ?>
+
+<?php //print_r(Mage::getModel("rcatalog/link")->setProduct($_product)->getCollection());?>
 <script>
     var myLink = '<?php echo Mage::getModel("rcatalog/link")->setProduct($_product)->getCollectionJson();?>';
     var src = '<?php echo Mage::Helper("rcatalog")->getImage($this->_product, "frontend");?>';

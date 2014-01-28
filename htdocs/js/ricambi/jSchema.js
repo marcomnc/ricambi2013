@@ -127,7 +127,12 @@
                                        'data-ot': 'The content'});
                 pos.css({'position': 'absolute', 'top': (objPosition.y-8)+'px','left': (objPosition.x-8)+'px' });                 
 
-                inputOpentip[index] = new Opentip(pos, objPosition.name, objPosition.sku, {'style': 'glass'});
+                //inputOpentip[index] = new Opentip(pos, objPosition.name, objPosition.sku, {'style': 'glass'});
+                var html = (typeof(objPosition.popup) === 'undefined' || objPosition.popup === null) ? "" : decodeURIComponent(escape(window.atob( objPosition.popup )));
+                if (html)
+                    inputOpentip[index] = new Opentip(pos, html, "", {'style': 'glass'});
+                else
+                    inputOpentip[index] = new Opentip(pos, objPosition.name, objPosition.sku, {'style': 'glass'});
 
                 pos.on('click', function(e) {
                     AddQty($(this).attr('id').toString().replace('position','')); 

@@ -81,6 +81,7 @@ class Ricambi_Catalog_Model_Link extends Mage_Core_Model_Abstract {
      *      [linkid]=> "Link Id"
      *      [x]     => "x position",
      *      [y]     => "y position",
+     *      [popup] => "l'html per il popup in base64"
      *      )
      * )
      * @param int $linkId eventuale linkid per cui fare il filtro
@@ -97,6 +98,22 @@ class Ricambi_Catalog_Model_Link extends Mage_Core_Model_Abstract {
         foreach ($links as $link) {
             $l = Mage::getModel('rcatalog/position')->Load($link->getId());
 
+            $htmlPopUp = '<div class="title"><h1>' .   str_replace("'", "", str_replace('"', "", $l->getLinkedProduct()->getSku())) . '<h1></div>';
+            $htmlPopUp.= '<div class="name">' .  str_replace("'", "", str_replace('"', "", $l->getLinkedProduct()->getName())) . '</div>';
+
+            $opts = Mage::getModel('rcatalog/options')->getCollection()
+                        ->setFilterByProduct($this->_getProduct(), $l->getLinkedProduct());
+//if ($link->getData("link_id") == 39092)
+//die($opts->getSelect()->__toString());
+            if ($opts->count() > 0) {
+                foreach ($opts as $opt) {
+                    $o = Mage::getModel('catalog/product')->Load($opt->getData('product_id'));
+
+                    $htmlPopUp .= '<div class="title"><h1>' .  $o->getSku() . '<h1></div>';
+                    $htmlPopUp .= '<div class="name">' .  $o->getName() . '</div>';
+                }
+            }
+
             $productLink = array(
                 'id_link'=> $link->getId(),
                 'id'    => $l->getLinkedProduct()->getId(),
@@ -106,7 +123,9 @@ class Ricambi_Catalog_Model_Link extends Mage_Core_Model_Abstract {
                 'linkid'=> $l->getLinkId(),
                 'x'     => $l->getPositionX(),
                 'y'     => $l->getPositionY(),
+                'popup' => base64_encode($htmlPopUp),
             );
+
             $collection[] = $productLink;
         }
         

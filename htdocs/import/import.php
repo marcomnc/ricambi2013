@@ -26,28 +26,28 @@ if ($_POST['secure'] != "aquiloni gagliardi"){
         
         $products = Mage::getModel('catalog/product')->getCollection();
     
-        foreach ($products as $prod){
-            
-            $product = Mage::getModel('catalog/product')->Load($prod->getId());
-            
-            foreach ($product->getCategoryIds() as $catId) {
-                if ($catId == $_POST['cat_ric']) {
-                    $sku = $product->getSku();
-                    try
-                    {
-                        $product->delete();
-                        Mage::log("Cancellato Prodotto $sku");
-                        break;
-                    } 
-                    catch (Exception $e) 
-                    {
-                        Mage::log("Errore in fase di cancellazione di $sku");
-                        Mage::logException($e);
-                        break;
-                    }
-                }
-            }            
-        }
+//        foreach ($products as $prod){
+//            
+//            $product = Mage::getModel('catalog/product')->Load($prod->getId());
+//            
+//            foreach ($product->getCategoryIds() as $catId) {
+//                if ($catId == $_POST['cat_ric']) {
+//                    $sku = $product->getSku();
+//                    try
+//                    {
+//                        $product->delete();
+//                        Mage::log("Cancellato Prodotto $sku");
+//                        break;
+//                    } 
+//                    catch (Exception $e) 
+//                    {
+//                        Mage::log("Errore in fase di cancellazione di $sku");
+//                        Mage::logException($e);
+//                        break;
+//                    }
+//                }
+//            }            
+//        }
         
         $conn = getConn();
         if (!is_null($conn)) {
@@ -56,14 +56,71 @@ if ($_POST['secure'] != "aquiloni gagliardi"){
                 
         
                 $ricambi = mysqli_query($conn,"SELECT * FROM ricambi");
-                
+                echo '<form method="POST" action="http://cosmetal2013.mcgroup.it/import/setName.php">';
                 while($row = mysqli_fetch_array($ricambi)) {
                     
                     $id = Mage::getModel('catalog/product')->getIdBySku($row['codiceRicambio']);
                     
                     if (($id+0) > 0) {
-                        Mage::log("prodotto " . $row['codiceRicambio'] . " già eistente! VERIFICARE!!!!!");
+                        
+                        $prod = Mage::getModel('catalog/product')->Load($id);
+                        if (utf8_decode($prod->getName()) != ($row['descrizioneRicambioITA'])) {
+                            echo '<input type="checkbox" name="' .$row['codiceRicambio']. '-IT[cod]" ' . (detectUTF8($row['descrizioneRicambioITA']) ? 'checked' : '' ). ' />';
+                            echo '<input type="hidden" name="' .$row['codiceRicambio']. '-IT[value]" value="' .$row['descrizioneRicambioITA']. '"/>';
+                            echo '<input type="hidden" name="' .$row['codiceRicambio']. '-IT[store]" value="0"/>';
+                            echo "Site ITA " . $row['codiceRicambio'] . " ";
+                            echo $prod->getName() . " <> " . $row['descrizioneRicambioITA'];
+                            echo "<br>";
+                        }
+                        
+                        //Eng 
+                        $prod = Mage::getModel('catalog/product')->setStoreId(EN_STORE)->Load($id);
+                        if (utf8_decode($prod->getName()) != ($row['descrizioneRicambioENG'])) {
+                            echo '<input type="checkbox" name="' .$row['codiceRicambio']. '-EN[cod]" ' . (detectUTF8($row['descrizioneRicambioENG']) ? 'checked' : '') . ' />';
+                            echo '<input type="hidden" name="' .$row['codiceRicambio']. '-EN[value]" value="' .$row['descrizioneRicambioENG']. '"/>';
+                            echo '<input type="hidden" name="' .$row['codiceRicambio']. '-EN[store]" value="'. EN_STORE. '"/>';
+                            echo "Site ENG " . $row['codiceRicambio'] . " ";
+                            echo $prod->getName() . " <> " . $row['descrizioneRicambioENG'];
+                            echo "<br>";
+                        }
+
+                        //Fra
+                        $prod = Mage::getModel('catalog/product')->setStoreId(FR_STORE)->Load($id);
+                        if (utf8_decode($prod->getName()) != ($row['descrizioneRicambioFRA'])) {
+                            echo '<input type="checkbox" name="' .$row['codiceRicambio']. '-FR[cod]" ' . (detectUTF8($row['descrizioneRicambioFRA']) ? 'checked' : '' ). ' />';
+                            echo '<input type="hidden" name="' .$row['codiceRicambio']. '-FR[value]" value="' .$row['descrizioneRicambioFRA']. '"/>';
+                            echo '<input type="hidden" name="' .$row['codiceRicambio']. '-FR[store]" value="'. FR_STORE. '"/>';
+                            echo "Site FRA " . $row['codiceRicambio'] . " ";
+                            echo $prod->getName() . " <> " . $row['descrizioneRicambioFRA'];
+                            echo "<br>";
+                        }
+                        
+                        //Dh
+                        $prod = Mage::getModel('catalog/product')->setStoreId(DH_STORE)->Load($id);
+                        if (utf8_decode($prod->getName()) != ($row['descrizioneRicambioDEU'])) {
+                            echo '<input type="checkbox" name="' .$row['codiceRicambio']. '-DH[cod]" ' . (detectUTF8($row['descrizioneRicambioDEU']) ? 'checked' : '') . ' />';
+                            echo '<input type="hidden" name="' .$row['codiceRicambio']. '-DH[value]" value="' .$row['descrizioneRicambioDEU']. '"/>';
+                            echo '<input type="hidden" name="' .$row['codiceRicambio']. '-DH[store]" value="'. DH_STORE. '"/>';
+                            echo "Site DH  " . $row['codiceRicambio'] . " ";
+                            echo $prod->getName() . " <> " . $row['descrizioneRicambioDEU'];
+                            echo "<br>";
+                        }
+                        
+                        //ES
+                        $prod = Mage::getModel('catalog/product')->setStoreId(ES_STORE)->Load($id);
+                        if (utf8_decode($prod->getName()) != ($row['descrizioneRicambioESP'])) {
+                            echo '<input type="checkbox" name="' .$row['codiceRicambio']. '-ES[cod]" ' . (detectUTF8($row['descrizioneRicambioESP']) ? 'checked' : '') . ' />';
+                            echo '<input type="hidden" name="' .$row['codiceRicambio']. '-ES[value]" value="' .$row['descrizioneRicambioESP']. '"/>';
+                            echo '<input type="hidden" name="' .$row['codiceRicambio']. '-ES[store]" value="'. ES_STORE. '"/>';
+                            echo "Site ESP " . $row['codiceRicambio'] . " ";
+                            echo $prod->getName() . " <> " . $row['descrizioneRicambioESP'];
+                            echo "<br>";                            
+                        }
+                        
                     } else {
+                        
+                        continue;
+                        
                         $prod = Mage::getModel('catalog/product')->setStoreId(0);
                         $prod->setSku($row['codiceRicambio']);
                         $prod->setPrice((real)$row["prezzoRicambio"]);
@@ -114,7 +171,8 @@ if ($_POST['secure'] != "aquiloni gagliardi"){
                     
                     MAge::Log("CReato Ricambio " . $row['codiceRicambio']);
                 }
-                
+                echo "<br><input type=\"submit\" value=\"Aggiorna\"/>";
+                echo "</form>";
             } catch (Exception $ex) {
                 MAge::log(" Errore in fase di importazione dei ricambi");
                 Mage::logException($ex);

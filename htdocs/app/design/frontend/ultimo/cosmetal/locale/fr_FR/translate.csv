@@ -5,8 +5,7 @@
 "Unit price","Prix brut unitaire"
 "Total","Montantbrut"
 "View shopping cart","Voir le panier"
-"Riepilogo Ordine","R&egrave;sum&egrave; de la commande"
-"Minimum order amount is %s","Minimum pour la commande: %s euro, prix au net."
+"Riepilogo Ordine","Résumé de la commande"
 "Login or Create an Account","S'identifier ou cr&egrave;er un nouveau compte"
 "New Customers","Inscription"
 "By creating an account with our store, you will be able to move through the checkout process faster, store multiple shipping addresses, view and track your orders in your account and more.","En créant un compte avec notre service, vous pourrez visualiser toutes les vues eclatées et les schémas hydrauliques de toutes les familles de produit, effectuer les commandes des pièces de rechange et accessoires, et accéder à l'espace téléchargement de Cosmetal."
@@ -32,3 +31,8 @@
 "Sign Up for Our Newsletter:","Inscrivez vous à la newsletter:"
 "Sign Up for Newsletter","Inscrivez vous à la newsletter"
 "Sign up for our newsletter","Inscrivez vous à la newsletter"
+"Address Book","Carnet d'adresse"
+"You have not set a default billing address.","Vous n'avez pas d'adresse de facturation par défaut."
+"You have not set a default shipping address.","Vous n'avez pas d'adresse de livraison par défau."
+"Default Shipping Address","Adresse de livraison par défaut
+"Minimum order amount is %s","Minimum pour la commande: %s euro au net de votre remise habituelle.""

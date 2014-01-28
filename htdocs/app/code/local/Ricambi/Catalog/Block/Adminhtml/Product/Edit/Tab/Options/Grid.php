@@ -88,7 +88,6 @@ class Ricambi_Catalog_Block_Adminhtml_Product_Edit_Tab_Options_Grid extends Mage
 
 
         $this->setCollection($collection);
-
         parent::_prepareCollection();
         return $this;
     }
