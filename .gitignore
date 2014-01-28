@@ -98,3 +98,4 @@ htdocs/skin/frontend/enterprise
 htdocs/skin/install/
 htdocs/var/
 htdocs/wp/
+/htdocs/import/error.log
