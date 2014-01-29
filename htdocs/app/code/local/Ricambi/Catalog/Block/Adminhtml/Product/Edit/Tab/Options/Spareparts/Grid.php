@@ -21,7 +21,7 @@
  * @author      MPS Sistemi S.a.s - Marco Mancinelli <marco.mancinelli@mps-sistemi.it>
  *
  */
-class Ricambi_Catalog_Block_Adminhtml_Product_Edit_Tab_Options_Spareparts_Grid extends Mage_Adminhtml_Block_Catalog_Product_Edit_Tab_Super_Group
+class Ricambi_Catalog_Block_Adminhtml_Product_Edit_Tab_Options_Spareparts_Grid extends Ricambi_Catalog_Block_Adminhtml_Product_Edit_Tab_Super_Group
 {
     
     public function __construct() {

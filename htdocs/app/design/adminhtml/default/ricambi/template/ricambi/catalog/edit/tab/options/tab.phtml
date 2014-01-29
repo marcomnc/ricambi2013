@@ -60,10 +60,10 @@ AssociateManager.prototype = {
         this.sincroHiddenInput();
     },
             
-    handleClickCheck: function() {
+    handleClickCheck: function(event) {
         
-        element = $(event.target)
-        console.log($(event.target).value);
+        element = $(event.target);
+        //console.log($(event.target).value);
         
         if (this.SpareParts == 0 || this.Associated == 0) {
                 alert(Translator.translate('Errore associazione codici! Ricaricare la pagina'));            
@@ -112,7 +112,7 @@ AssociateManager.prototype = {
     
     },
     handleClick: function(event) {
-        console.log($(event.target).href);
+        //console.log($(event.target).href);
         
         if (typeof($(event.target).href) != 'undefined' && $(event.target).href != "") {
         
