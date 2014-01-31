@@ -106,7 +106,7 @@ class Netzarbeiter_CustomerActivation_Model_Observer extends Mage_Core_Model_Abs
 
         $storeId = Mage::helper('customeractivation')->getCustomerStoreId($customer);
 
-        if (Mage::getStoreConfig(self::XML_PATH_MODULE_DISABLED, $storeId)) {
+        if (Mage::getStoreConfig(self::XML_PATH_MODULE_DISABLED, $storeId) || $customer->getNoActivationEmail() === true ) {
             return;
         }
 

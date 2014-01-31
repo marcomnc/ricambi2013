@@ -317,3 +317,24 @@ function detectUTF8($string)
 }
 
 
+function _getData($date) {
+    $dtArr = explode(" ", $date);
+    $ret = null;
+    if (isset($dtArr[0])) {
+        $dt = explode("/", $dtArr[0]);
+        $g = $dt[0];
+        $m = $dt[1];
+        $y = $dt[2];
+        
+        if (isset($dtArr[1])) {
+            $h = explode(":", $dtArr[1]);
+            $hh = $h[0];
+            $mm = $h[1];
+            $ss = $h[2];
+        }
+
+        $ret = date ("Y-m-d H:i:s",strtotime("$y/$m/$g $hh:$mm:$ss.00"));
+    }
+    
+    return $ret;
+}
