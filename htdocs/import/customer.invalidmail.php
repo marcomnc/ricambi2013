@@ -10,7 +10,7 @@ require_once 'require.php';
 require_once 'function.php';
 
 $customer = Mage::getModel('customer/customer')->getCollection();
-$file = Mage::getBaseDir('var') . 'invalidmail.csv';
+$file = Mage::getBaseDir('var') . '/invalidmail.csv';
 
 $f = fopen($file, "w");
 fwrite($f, '"E-Mail";"Nome";"Ragione Sociale";"Attivo"'."\n") ;

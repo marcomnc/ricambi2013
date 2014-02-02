@@ -3009,6 +3009,8 @@ a.email2friend:hover { background-position: -54px -27px; }
 .account-login .buttons-set a,
 #opc-login .buttons-set a { float:right !important; margin:4px 0 0; }
 
+.customer-account-create .links, 
+.customer-account-login .links {display:none}
 
 /* My Account
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
