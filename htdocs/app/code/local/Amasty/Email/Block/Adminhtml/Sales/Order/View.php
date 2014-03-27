@@ -17,13 +17,28 @@ class Amasty_Email_Block_Adminhtml_Sales_Order_View extends Mage_Adminhtml_Block
                 'onclick'   => "setLocation('{$this->_getSendEmailUrl()}')",
             ), 0);
         }
+        
+/*        if ($this->getOrderId()){
+            $this->_addButton('print_order', array(
+                'label'     => Mage::helper('amemail')->__('Print Order'),
+                'onclick'   => "setLocation('{$this->_getPrintOrderUrl()}')",
+            ), 0);
+        }
 
+*/
         return parent::_prepareLayout();
     }
 
     protected function _getSendEmailUrl()
     {
         return $this->getUrl('amemail/adminhtml_index/index', array(
+            'order_id' => $this->getOrderId(),
+        ));
+    }
+    
+    protected function _getPrintOrderUrl()
+    {
+        return $this->getUrl('sales/order/print', array(
             'order_id' => $this->getOrderId(),
         ));
     }

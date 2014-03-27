@@ -3757,3 +3757,13 @@ label[for="s_method_freeshipping_freeshipping"] {display: none}
 
 .the-slideshow { margin:0 auto 5px!important}
 .checkout-onepage-success .page-title { display:none }
+
+.cms-guida-utilizzo .control-nav.control-paging {
+	display:none;
+	position: absolute;
+	bottom: -30px;
+	left: 38%;
+}
+.cms-guida-utilizzo .control-nav.control-paging li a {
+	color: #fff!important
+}
