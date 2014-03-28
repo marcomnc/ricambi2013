@@ -88,6 +88,25 @@ class Netzarbeiter_CustomerActivation_Helper_Data extends Mage_Core_Helper_Abstr
     {
         if (!$to) return;
 
+        $customer = Mage::getModel('customer/customer')->Load($customer->getId());
+        $shipping = $customer->getPrimaryShippingAddress();
+        $billing = $customer->getPrimaryBillingAddress();
+        
+        if ($shipping) {
+            $street = $shipping->getStreet();
+            if (is_array($street)) 
+                $shipping->setStreetLine(implode (',', $street));
+            else 
+                $shipping->setStreetLine($street);
+        }
+        if ($billing) {
+            $street = $billing->getStreet();
+            if (is_array($street)) 
+                $billing->setStreetLine(implode(',', $street));
+            else 
+                $billing->setStreetLine($street);
+        }
+                
         $storeId = $this->getCustomerStoreId($customer);
 
         $translate = Mage::getSingleton('core/translate');
