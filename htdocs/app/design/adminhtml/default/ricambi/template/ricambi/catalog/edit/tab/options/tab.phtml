@@ -99,7 +99,7 @@ AssociateManager.prototype = {
             if (pos == -1)
                 this.obj.Product[this.SpareParts].Spare[this.Associated].push(productId);
         } else {
-            if (pos > 0)
+            if (pos >= 0)
                 this.obj.Product[this.SpareParts].Spare[this.Associated].splice(pos);
         }
 
